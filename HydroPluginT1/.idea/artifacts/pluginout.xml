@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="pluginout">
-    <output-path>$PROJECT_DIR$/../../../../../_mcserver/plugins</output-path>
-    <root id="archive" name="ElytraPluginT2.jar">
-      <element id="module-output" name="ElytraPluginT2" />
-    </root>
-  </artifact>
-</component>
