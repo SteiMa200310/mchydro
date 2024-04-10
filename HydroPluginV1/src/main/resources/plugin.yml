@@ -1,4 +1,0 @@
-name: HydroPluginV1
-version: '${project.version}'
-main: com.mdfg.hydropluginv1.HydroPluginV
-api-version: '1.20'
