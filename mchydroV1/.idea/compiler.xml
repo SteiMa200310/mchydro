@@ -9,8 +9,5 @@
         <module name="mchydroV1" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="mchydroV1" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

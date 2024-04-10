@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mchydroV1:Steini">
+    <output-path>D:/MC_Server/HydroTestServer/plugins</output-path>
+    <root id="archive" name="mchydroV1_Steini.jar">
+      <element id="module-output" name="mchydroV1" />
+    </root>
+  </artifact>
+</component>
