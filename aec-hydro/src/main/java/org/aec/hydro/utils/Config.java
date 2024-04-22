@@ -31,7 +31,7 @@ public class Config {
         File fabDir = FabricLoader.getInstance().getConfigDir().toFile();
         File dir = new File(fabDir, "hydro");
 
-        // if dir spsmc does not exist in config folder, create it
+        // if dir hydro does not exist in config folder, create it
         if (!dir.exists()) {
             dir.mkdirs();
 
