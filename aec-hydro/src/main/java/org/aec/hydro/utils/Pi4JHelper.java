@@ -50,13 +50,6 @@ public class Pi4JHelper {
             inputHashMap.clear();
             outputHashMap.clear();
 
-            /*
-            if (displayThread != null) {
-                displayThread.interrupt();
-            }
-
-             */
-
             pi4jContext.shutdown();
             pi4jGpio.shutdown();
         }
@@ -104,25 +97,11 @@ public class Pi4JHelper {
             createDO(doPin);
         }
 
-        //System.out.println(inputHashMap);
-        //System.out.println(outputHashMap);
-        ctxGlobal.getSource().sendMessage(Text.translatable("generic.spsmc.configure_cmd").formatted(Formatting.GREEN));
+        ctxGlobal.getSource().sendMessage(Text.translatable("generic.hydro.configure_cmd").formatted(Formatting.GREEN));
 
     }
 
     private void createDI(int pinNumber, DigitalStateChangeListener listener) {
-        /*
-        DigitalInputConfigBuilder inputConfigBuilder = DigitalInput.newConfigBuilder(pi4jContext)
-                .id("PIN-" + pinNumber) // e.g. PIN-9
-                .name("Digital Input Pin " + pinNumber) // e.g. Digital Input Pin 9
-                .address(pinNumber)
-                .pull(PullResistance.PULL_UP) // configure input as pull-up
-                .provider("pigpio-digital-input");
-                //.provider("linuxfs-digital-input");
-
-        DigitalInput input = pi4jContext.create(inputConfigBuilder);
-
-         */
         DigitalInputConfig inputConfig = DigitalInput.newConfigBuilder(pi4jContext)
                 .id("PIN-" + pinNumber) // e.g. PIN-9
                 .name("Digital Input Pin " + pinNumber) // e.g. Digital Input Pin 9
@@ -139,20 +118,7 @@ public class Pi4JHelper {
         inputHashMap.put(input, pinNumber);
     }
 
-    private void createDO(int pinNumber/*, DigitalStateChangeListener listener*/) {
-        /*
-        DigitalOutputConfigBuilder outputConfigBuilder = DigitalOutput.newConfigBuilder(pi4jContext)
-                .id("PIN-" + pinNumber) // e.g. PIN-11
-                .name("Digital Output Pin " + pinNumber) // e.g. Digital Output Pin 11
-                .address(pinNumber)
-                .shutdown(DigitalState.LOW)
-                .initial(DigitalState.LOW)
-                .provider("pigpio-digital-output");
-                //.provider("linuxfs-digital-output");
-
-        DigitalOutput output = pi4jContext.create(outputConfigBuilder);
-
-         */
+    private void createDO(int pinNumber) {
         DigitalOutputConfig outputConfig = DigitalOutput.newConfigBuilder(pi4jContext)
                 .id("PIN-" + pinNumber) // e.g. PIN-11
                 .name("Digital Output Pin " + pinNumber) // e.g. Digital Output Pin 11
@@ -164,10 +130,7 @@ public class Pi4JHelper {
 
         DigitalOutput output = pi4jContext.dout().create(outputConfig);
 
-        //output.addListener(listener);
-
         // put configured input into HashMap to access it later
-        //outputHashMap.put(pinNumber, output);
         outputHashMap.put(pinNumber, output);
     }
 
@@ -182,19 +145,13 @@ public class Pi4JHelper {
 
         }
 
-        AECHydro.LOGGER.info(Text.translatable("generic.spsmc.di_update", pinNumber, shouldPower ? "HIGH" : "LOW").getString());
+        AECHydro.LOGGER.info(Text.translatable("generic.hydro.di_update", pinNumber, shouldPower ? "HIGH" : "LOW").getString());
 
     }
 
     private void updateDIBlocks(DigitalStateChangeEvent e) {
-        //System.out.println(e.state());
-        //System.out.println(e.source());
-
-        //System.out.println(inputHashMap.get((DigitalInput) e.source()));
-
         // inverse logic, default state is HIGH (0), so if pin is LOW --> 1
         setStateForDIBlocks(inputHashMap.get((DigitalInput) e.source()), e.state().getName().equals("LOW"));
-
     }
 
     public void updateDOs(int pinNumber, boolean state) {
@@ -203,7 +160,7 @@ public class Pi4JHelper {
 
         outputHashMap.get(pinNumber).setState(state);
 
-        AECHydro.LOGGER.info(Text.translatable("generic.spsmc.do_update", pinNumber, state ? "HIGH" : "LOW").getString());
+        AECHydro.LOGGER.info(Text.translatable("generic.hydro.do_update", pinNumber, state ? "HIGH" : "LOW").getString());
     }
 
 }

@@ -14,9 +14,7 @@ public class ModItemGroups {
     public static final ItemGroup Hydro = Registry.register(Registries.ITEM_GROUP,
             new Identifier(AECHydro.MOD_ID, "hydro"),
             FabricItemGroup.builder().displayName(Text.translatable("itemGroup.hydro"))
-                    .icon(() -> new ItemStack(HydroBlocks.TEST_BLOCK)).entries((displayContext, entries) -> {
-                        entries.add(HydroBlocks.TEST_BLOCK);
-                        entries.add(HydroBlocks.TEST_POWER_BLOCK);
+                    .icon(() -> new ItemStack(HydroBlocks.DI_BLOCK)).entries((displayContext, entries) -> {
                         entries.add(HydroBlocks.DI_BLOCK);
                     }).build());
 

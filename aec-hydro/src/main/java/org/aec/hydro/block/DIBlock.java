@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DIBlock extends Block {
-
-    // see PressurePlateBlock.class, AbstractPressurePlateBlock.class
     public static final BooleanProperty POWERED = Properties.POWERED;
 
     public DIBlock(Settings settings) {
@@ -35,7 +33,6 @@ public class DIBlock extends Block {
         this.setDefaultState(this.getDefaultState().with(Properties.POWERED, false));
     }
 
-    // set / return custom name for block
     @Override
     public MutableText getName() {
         return Text.translatable("block.hydro.di_block");
@@ -44,9 +41,6 @@ public class DIBlock extends Block {
     // if block is being broken, remove it from list
     @Override
     public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-
-        // check if event is being called on server, because it is called on server and client, therefore triggered twice
-        // code can only be run on server because it accesses the config file
         if (world.isClient()) return;
 
         // check if block is in DI/DO list
@@ -65,8 +59,6 @@ public class DIBlock extends Block {
     // right-click event
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-
-        // check if event is being called on server, because it is called on server and client, therefore triggered twice
         if (world.isClient()) return ActionResult.SUCCESS;
 
         // check if block has already been added to DI/DO list
@@ -82,22 +74,15 @@ public class DIBlock extends Block {
         }
         // remove all pins used by DOs
         pinList.removeAll(usedDoPinList);
-
-        //System.out.println(usedDoPinList);
-        //System.out.println(pinList);
-
         // if block has not been added to list, add it to list with default configuration
         if (!ConfigHelper.posInList(diBlockList, pos)) {
-
             JSONObject object = new JSONObject();
             object.put("pin", -1);
             object.put("pos", ConfigHelper.blockPosToString(pos));
 
             diBlockList.put(object);
 
-            //System.out.println(config);
             Config.updateConfig(config);
-
         }
 
         // increment pin and display to player
@@ -124,16 +109,12 @@ public class DIBlock extends Block {
     }
 
     public int getRedstoneOutput(BlockState state) {
-        return (Boolean)state.get(POWERED) ? 15 : 0;
+        return state.get(POWERED) ? 100 : 0;
     }
 
     public void setRedstoneOutput(World world, BlockPos pos, boolean shouldPower) {
         world.setBlockState(pos, world.getBlockState(pos).with(POWERED, shouldPower), 2);
         updateNeighbors(world, pos);
-    }
-
-    protected int getRedstoneOutput(World world, BlockPos pos) {
-        return (Boolean)world.getBlockState(pos).get(POWERED) ? 15 : 0;
     }
 
     protected void updateNeighbors(World world, BlockPos pos) {

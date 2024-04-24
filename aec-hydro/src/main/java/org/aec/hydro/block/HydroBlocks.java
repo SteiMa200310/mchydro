@@ -12,9 +12,6 @@ import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
 
 public class HydroBlocks {
-    public static final Block TEST_BLOCK = registerBlock("testblock", new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f, 6.0f)));
-    public static final Block TEST_POWER_BLOCK = registerBlock("test_power_block", new TestBlock(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f, 6.0f)));
-
     public static final Block DI_BLOCK = registerBlock("di_block", new DIBlock(FabricBlockSettings.copyOf(Blocks.REDSTONE_LAMP)));
 
 

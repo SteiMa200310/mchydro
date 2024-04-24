@@ -26,7 +26,5 @@
   "error.hydro.not_di": "Command only works on DI Blocks",
   "error_interrupted_exception": "Thread with ID %1$d was interrupted!",
 
-  "itemGroup.hydro": "Hydro",
-  "block.hydro.testblock": "Test Block en",
-  "block.hydro.test_power_block": "Test Power Block"
+  "itemGroup.hydro": "Hydro"
 }
