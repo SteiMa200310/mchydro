@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "hydro",
+	"version": "${version}",
+	"name": "AEC-Hydro",
+	"description": "AEC Hydro mod",
+	"authors": [
+		"Ehrenhuber Simon",
+		"Husli Roberto",
+		"Steininger Matthias"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/hydro/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"org.aec.hydro.AECHydro"
+		]
+	},
+	"mixins": [
+		"aec-hydro.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.10",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
