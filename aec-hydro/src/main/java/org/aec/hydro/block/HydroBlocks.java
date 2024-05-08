@@ -12,7 +12,8 @@ import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
 
 public class HydroBlocks {
-    public static final Block DI_BLOCK = registerBlock("di_block", new DIBlock(FabricBlockSettings.copyOf(Blocks.REDSTONE_LAMP)));
+    public static final Block DI_BLOCK = registerBlock("di_block", new DIBlock(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block SOLAR_PANEL = registerBlock("solar_panel", new SolarPanel(FabricBlockSettings.copyOf(Blocks.STONE)));
 
 
     private static Block registerBlock(String name, Block block){

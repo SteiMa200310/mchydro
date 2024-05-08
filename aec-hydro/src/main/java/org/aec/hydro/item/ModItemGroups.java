@@ -16,6 +16,7 @@ public class ModItemGroups {
             FabricItemGroup.builder().displayName(Text.translatable("itemGroup.hydro"))
                     .icon(() -> new ItemStack(HydroBlocks.DI_BLOCK)).entries((displayContext, entries) -> {
                         entries.add(HydroBlocks.DI_BLOCK);
+                        entries.add(HydroBlocks.SOLAR_PANEL);
                     }).build());
 
 

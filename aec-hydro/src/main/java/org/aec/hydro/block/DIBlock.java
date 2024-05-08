@@ -2,6 +2,7 @@ package org.aec.hydro.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -30,7 +31,10 @@ public class DIBlock extends Block {
 
     public DIBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.getDefaultState().with(Properties.POWERED, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(Properties.POWERED, false));
+    }
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(POWERED);
     }
 
     @Override
@@ -55,7 +59,6 @@ public class DIBlock extends Block {
         diBlockList.remove(indexInList);
         Config.updateConfig(config);
     }
-
     // right-click event
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -130,9 +133,5 @@ public class DIBlock extends Block {
     @Override
     public boolean emitsRedstonePower(BlockState state) {
         return true;
-    }
-
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(POWERED);
     }
 }
