@@ -1,6 +1,8 @@
 {
   "block.hydro.do_block": "Digital Output",
   "block.hydro.di_block": "Digital Input",
+  "block.hydro.pipe": "Pipe",
+  "block.hydro.solar_panel": "Solar Panel",
 
   "generic.hydro.initialize": "Initializing Hydro...",
   "generic.hydro.shutdown": "Shutting down Hydro...",

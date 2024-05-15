@@ -17,6 +17,7 @@ public class ModItemGroups {
                     .icon(() -> new ItemStack(HydroBlocks.DI_BLOCK)).entries((displayContext, entries) -> {
                         entries.add(HydroBlocks.DI_BLOCK);
                         entries.add(HydroBlocks.SOLAR_PANEL);
+                        entries.add(HydroBlocks.PIPE);
                     }).build());
 
 
