@@ -16,7 +16,6 @@ public class HydroBlocks {
     public static final Block SOLAR_PANEL = registerBlock("solar_panel", new SolarPanel(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block PIPE = registerBlock("pipe", new Pipe(FabricBlockSettings.copyOf(Blocks.STONE)));
 
-
     private static Block registerBlock(String name, Block block){
         registerBlockItem(name, block);
         return Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, name), block);
