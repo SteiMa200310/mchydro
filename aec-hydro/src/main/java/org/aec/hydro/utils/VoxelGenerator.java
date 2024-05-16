@@ -20,6 +20,17 @@ public class VoxelGenerator {
         return shape;
     }
 
+    public static VoxelShape makeWindmillShape() {
+        return VoxelShapes.union(
+                VoxelShapes.cuboid(0.375, 0, 0.375, 0.625, 4.9375, 0.625),
+                VoxelShapes.cuboid(0.3125, 4.875, 0.3125, 0.6875, 5.25, 0.6875),
+                VoxelShapes.cuboid(0.375, 5.1875, 0.125, 0.625, 8.125, 0.25),
+                VoxelShapes.cuboid(0.375, 4.9375, 0.0625, 0.625, 5.1875, 0.3125),
+                VoxelShapes.cuboid(0.375, 5.1875, 0.125, 0.625, 8.125, 0.25),
+                VoxelShapes.cuboid(0.375, 5.1875, 0.125, 0.625, 8.125, 0.25)
+        );
+    }
+
     public static VoxelShape createTestShape(){
         VoxelShape shape = VoxelShapes.empty();
         shape = VoxelShapes.union(shape, VoxelShapes.cuboid(-1.625, 0, -1.75, 3.5625, 0.125, 3.4375));
