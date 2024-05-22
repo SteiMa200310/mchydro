@@ -4,6 +4,7 @@
   "block.hydro.pipe": "Pipe",
   "block.hydro.pipe_v2": "Pipe_v2",
   "block.hydro.solar_panel": "Solar Panel",
+  "block.hydro.windmill": "Windrad",
 
   "generic.hydro.initialize": "Initializing Hydro...",
   "generic.hydro.shutdown": "Shutting down Hydro...",
