@@ -10,21 +10,20 @@ import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
-import org.aec.hydro.block.HydroBlocks;
+import org.aec.hydro.block._HydroBlocks;
 
 public class ModItemGroups {
     public static final Item WIND_MILL_ITEM = registerItem("windmill", new WindMillItem(HydroBlocks.WIND_MILL, new FabricItemSettings()));
     public static final ItemGroup Hydro = Registry.register(Registries.ITEM_GROUP,
             new Identifier(AECHydro.MOD_ID, "hydro"),
             FabricItemGroup.builder().displayName(Text.translatable("itemGroup.hydro"))
-                    .icon(() -> new ItemStack(HydroBlocks.DI_BLOCK)).entries((displayContext, entries) -> {
-                        entries.add(HydroBlocks.DI_BLOCK);
-                        entries.add(HydroBlocks.SOLAR_PANEL);
-                        entries.add(HydroBlocks.PIPE);
+                    .icon(() -> new ItemStack(_HydroBlocks.DI_BLOCK)).entries((displayContext, entries) -> {
+                        entries.add(_HydroBlocks.DI_BLOCK);
+                        entries.add(_HydroBlocks.SOLAR_PANEL);
+                        entries.add(_HydroBlocks.PIPE);
+                        entries.add(_HydroBlocks.PIPEV2);
                         entries.add(WIND_MILL_ITEM);
                     }).build());
-
-
 
     private static Item registerItem(String name, Item item){
         return Registry.register(Registries.ITEM, new Identifier(AECHydro.MOD_ID, name), item);
