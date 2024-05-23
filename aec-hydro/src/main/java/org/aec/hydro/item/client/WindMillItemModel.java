@@ -2,8 +2,7 @@ package org.aec.hydro.item.client;
 
 import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
-import org.aec.hydro.block.entity.WindMillBlockEntity;
-import org.aec.hydro.item.WindMillItem;
+import org.aec.hydro.item.custom.WindMillItem;
 import software.bernie.geckolib.model.GeoModel;
 
 public class WindMillItemModel extends GeoModel<WindMillItem> {

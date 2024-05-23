@@ -3,12 +3,10 @@ package org.aec.hydro;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
-import org.aec.hydro.block.HydroBlocks;
+import org.aec.hydro.block._HydroBlocks;
 import org.aec.hydro.block.entity.HydroBlockEntities;
-import org.aec.hydro.block.entity.client.WindMillRenderer;
 import org.aec.hydro.commands.ConfigureCommand;
 import org.aec.hydro.item.ModItemGroups;
 import org.aec.hydro.utils.Config;
@@ -34,7 +32,7 @@ public class AECHydro implements ModInitializer {
 		GeckoLib.initialize();
 
 		// Register Hydro
-		HydroBlocks.registerHydroBlocks();
+		_HydroBlocks.registerHydroBlocks();
 		ModItemGroups.registerHydroItemGroup();
 		HydroBlockEntities.registerHydroBlockEntities();
 
