@@ -16,6 +16,7 @@ public class _HydroBlocks {
     public static final Block DI_BLOCK = registerBlock("di_block", new DIBlock(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block SOLAR_PANEL = registerBlock("solar_panel", new SolarPanel(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block PIPE = registerBlock("pipe", new Pipe(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block PIPEV2 = registerBlock("pipe_v2", new PipeV2(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     //Blocks With Blockentity
     public static final Block WIND_MILL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "windmill"), new WindMill(FabricBlockSettings.copyOf(Blocks.STONE)));

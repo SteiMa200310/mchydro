@@ -11,6 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
 import org.aec.hydro.block._HydroBlocks;
+
 import org.aec.hydro.item.custom.WindMillItem;
 
 public class ModItemGroups {
@@ -22,10 +23,9 @@ public class ModItemGroups {
                         entries.add(_HydroBlocks.DI_BLOCK);
                         entries.add(_HydroBlocks.SOLAR_PANEL);
                         entries.add(_HydroBlocks.PIPE);
+                        entries.add(_HydroBlocks.PIPEV2);
                         entries.add(WIND_MILL_ITEM);
                     }).build());
-
-
 
     private static Item registerItem(String name, Item item){
         return Registry.register(Registries.ITEM, new Identifier(AECHydro.MOD_ID, name), item);
