@@ -1,9 +1,6 @@
 package org.aec.hydro.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.Hopper;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -13,10 +10,19 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
+import java.security.InvalidParameterException;
+
 public class PipeV2 extends HorizontalFacingBlock {
+    private static final VoxelShape SHAPE_UP_DOWN = VoxelGenerator.makePipeV2Shape_UP_DOWN();
+    private static final VoxelShape SHAPE_EAST_WEST = VoxelGenerator.makePipeV2Shape_EAST_WEST();
+    private static final VoxelShape SHAPE_NORTH_SOUTH = VoxelGenerator.makePipeV2Shape_NORTH_SOUTH();
+
     public static final DirectionProperty FACING = Properties.FACING; //horizontal Facing cannot save vertical
 
     public PipeV2(Settings settings) {
@@ -45,17 +51,20 @@ public class PipeV2 extends HorizontalFacingBlock {
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (!world.isClient) {
-            Direction facing = state.get(FACING);
-            BlockPos neighbor1 = pos.offset(facing.rotateYClockwise());
-            BlockPos neighbor2 = pos.offset(facing.rotateYCounterclockwise());
-            BlockState neighborState1 = world.getBlockState(neighbor1);
-            BlockState neighborState2 = world.getBlockState(neighbor2);
-            if (neighborState1.getBlock() == this && neighborState2.getBlock() == this) {
-                // Replace this block with your desired block when placed between two other PipeV2 blocks
-                world.setBlockState(pos, Blocks.STONE.getDefaultState());
-            }
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+        switch ((Direction)state.get(FACING)) {
+            case UP:
+            case DOWN:
+                return PipeV2.SHAPE_UP_DOWN;
+            case NORTH:
+            case SOUTH:
+                return PipeV2.SHAPE_NORTH_SOUTH;
+            case EAST:
+            case WEST:
+                return PipeV2.SHAPE_EAST_WEST;
+            default :
+                System.out.println("shape did not match any case");
+                throw new InvalidParameterException("shape did not match any case");
         }
     }
 }

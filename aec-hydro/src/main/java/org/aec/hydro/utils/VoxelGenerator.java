@@ -36,6 +36,28 @@ public class VoxelGenerator {
         );
     }
 
+    public static VoxelShape makePipeV2Shape_NORTH_SOUTH() {
+        return VoxelShapes.union(
+                VoxelShapes.cuboid(0.25, 0.25, 0.0625, 0.75, 0.75, 0.9375),
+                VoxelShapes.cuboid(0.1875, 0.1875, 0, 0.8125, 0.8125, 0.0625),
+                VoxelShapes.cuboid(0.1875, 0.1875, 0.9375, 0.8125, 0.8125, 1)
+        );
+    }
+    public static VoxelShape makePipeV2Shape_EAST_WEST() {
+        return VoxelShapes.union(
+                VoxelShapes.cuboid(0.0625, 0.25, 0.25, 0.9375, 0.75, 0.75),
+                VoxelShapes.cuboid(0.9375, 0.1875, 0.1875, 1, 0.8125, 0.8125),
+                VoxelShapes.cuboid(0, 0.1875, 0.1875, 0.0625, 0.8125, 0.8125)
+        );
+    }
+    public static VoxelShape makePipeV2Shape_UP_DOWN() {
+        return VoxelShapes.union(
+                VoxelShapes.cuboid(0.25, 0.0625, 0.25, 0.75, 0.9375, 0.75),
+                VoxelShapes.cuboid(0.1875, 0, 0.1875, 0.8125, 0.0625, 0.8125),
+                VoxelShapes.cuboid(0.1875, 0.9375, 0.1875, 0.8125, 1, 0.8125)
+        );
+    }
+
     public static VoxelShape createTestShape(){
         VoxelShape shape = VoxelShapes.empty();
         shape = VoxelShapes.union(shape, VoxelShapes.cuboid(-1.625, 0, -1.75, 3.5625, 0.125, 3.4375));
