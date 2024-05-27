@@ -12,8 +12,10 @@ import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
 import org.aec.hydro.block._HydroBlocks;
 
+import org.aec.hydro.item.custom.WindMillItem;
+
 public class ModItemGroups {
-    public static final Item WIND_MILL_ITEM = registerItem("windmill", new WindMillItem(HydroBlocks.WIND_MILL, new FabricItemSettings()));
+    public static final Item WIND_MILL_ITEM = registerItem("windmill", new WindMillItem(_HydroBlocks.WIND_MILL, new FabricItemSettings()));
     public static final ItemGroup Hydro = Registry.register(Registries.ITEM_GROUP,
             new Identifier(AECHydro.MOD_ID, "hydro"),
             FabricItemGroup.builder().displayName(Text.translatable("itemGroup.hydro"))

@@ -1,5 +1,8 @@
 {
-  "variants":{
-    "": { "model": "hydro:block/windmill"}
+  "variants": {
+    "facing=north": {"model": "hydro:block/windmill"},
+    "facing=south": {"model": "hydro:block/windmill", "y":  180},
+    "facing=east": {"model": "hydro:block/windmill", "y":  90},
+    "facing=west": {"model": "hydro:block/windmill", "y":  270}
   }
 }

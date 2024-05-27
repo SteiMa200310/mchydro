@@ -1,4 +1,4 @@
-package org.aec.hydro.item;
+package org.aec.hydro.item.custom;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
