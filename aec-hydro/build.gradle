@@ -30,6 +30,8 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	// Geckolib
 	modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
 	implementation("com.eliotlash.mclib:mclib:20")
 
@@ -74,6 +76,9 @@ def libsToInclude = ["pi4j-plugin-raspberrypi-2.3.0.jar",
 					 "pi4j-core-2.3.0.jar",
 					 "gson-2.10.jar",
 					 "json-20240303.jar",
+					 "geckolib-fabric-1.20.1-4.4.3.jar",
+					 "mclib-20.jar"
+
 					 //"jsch-0.1.55.jar",
 					 //"pi4j-plugin-linuxfs-2.3.0.jar",
 					 //"pi4j-library-linuxfs-2.3.0.jar"

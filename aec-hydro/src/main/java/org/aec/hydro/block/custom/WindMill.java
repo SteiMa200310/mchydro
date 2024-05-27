@@ -2,7 +2,9 @@ package org.aec.hydro.block.custom;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -16,6 +18,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.aec.hydro.AECHydro;
 import org.aec.hydro.block.entity.WindMillBlockEntity;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
@@ -64,5 +67,16 @@ public class WindMill extends BlockWithEntity {
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        if(!world.isClient()){
+            AECHydro.LOGGER.info("Server Placed");
+        } else {
+            AECHydro.LOGGER.info("Client Placed");
+        }
+
+        super.onPlaced(world, pos, state, placer, itemStack);
     }
 }
