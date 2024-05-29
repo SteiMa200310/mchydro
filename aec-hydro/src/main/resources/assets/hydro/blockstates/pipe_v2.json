@@ -2,7 +2,7 @@
   "multipart": [
     {
       "when": {
-        "pipeId": "F1"
+        "pipe_id": "f1"
       },
       "apply": {
         "model": "hydro:block/pipe_v2",
@@ -12,7 +12,7 @@
     },
     {
       "when": {
-        "pipeId": "F2"
+        "pipe_id": "f2"
       },
       "apply": {
         "model": "hydro:block/pipe_v2",
@@ -22,7 +22,7 @@
     },
     {
       "when": {
-        "pipeId": "F3"
+        "pipe_id": "f3"
       },
       "apply": {
         "model": "hydro:block/pipe_v2",
@@ -32,17 +32,7 @@
     },
     {
       "when": {
-        "pipeId": "E1"
-      },
-      "apply": {
-        "model": "hydro:block/pipe_v2_edge",
-        "y": 0,
-        "x": 0
-      }
-    },
-    {
-      "when": {
-        "pipeId": "E2"
+        "pipe_id": "e1"
       },
       "apply": {
         "model": "hydro:block/pipe_v2_edge",
@@ -52,17 +42,7 @@
     },
     {
       "when": {
-        "pipeId": "E3"
-      },
-      "apply": {
-        "model": "hydro:block/pipe_v2_edge",
-        "y": 0,
-        "x": 90
-      }
-    },
-    {
-      "when": {
-        "pipeId": "E4"
+        "pipe_id": "e2"
       },
       "apply": {
         "model": "hydro:block/pipe_v2_edge",
@@ -72,7 +52,7 @@
     },
     {
       "when": {
-        "pipeId": "E5"
+        "pipe_id": "e3"
       },
       "apply": {
         "model": "hydro:block/pipe_v2_edge",
@@ -82,27 +62,27 @@
     },
     {
       "when": {
-        "pipeId": "E6"
+        "pipe_id": "e4"
       },
       "apply": {
         "model": "hydro:block/pipe_v2_edge",
         "y": 0,
-        "x": 180
+        "x": 0
       }
     },
     {
       "when": {
-        "pipeId": "E7"
+        "pipe_id": "e5"
       },
       "apply": {
         "model": "hydro:block/pipe_v2_edge",
-        "y": 0,
+        "y": 90,
         "x": 270
       }
     },
     {
       "when": {
-        "pipeId": "E8"
+        "pipe_id": "e6"
       },
       "apply": {
         "model": "hydro:block/pipe_v2_edge",
@@ -112,27 +92,17 @@
     },
     {
       "when": {
-        "pipeId": "E9"
+        "pipe_id": "e7"
       },
       "apply": {
         "model": "hydro:block/pipe_v2_edge",
-        "y": 90,
-        "x": 180
-      }
-    },
-    {
-      "when": {
-        "pipeId": "E10"
-      },
-      "apply": {
-        "model": "hydro:block/pipe_v2_edge",
-        "y": 90,
+        "y": 180,
         "x": 270
       }
     },
     {
       "when": {
-        "pipeId": "E11"
+        "pipe_id": "e8"
       },
       "apply": {
         "model": "hydro:block/pipe_v2_edge",
@@ -142,11 +112,41 @@
     },
     {
       "when": {
-        "pipeId": "E12"
+        "pipe_id": "e9"
       },
       "apply": {
         "model": "hydro:block/pipe_v2_edge",
         "y": 270,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e10"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 270,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e11"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 0,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e12"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 0,
         "x": 90
       }
     }
