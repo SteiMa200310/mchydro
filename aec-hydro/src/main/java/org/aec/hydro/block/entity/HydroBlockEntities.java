@@ -1,5 +1,7 @@
 package org.aec.hydro.block.entity;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
@@ -16,7 +18,5 @@ public class HydroBlockEntities {
                     FabricBlockEntityTypeBuilder.create(WindMillBlockEntity::new, _HydroBlocks.WIND_MILL).build());
     public static void registerHydroBlockEntities(){
         AECHydro.LOGGER.info("Registering Hydro Block Entities for " + AECHydro.MOD_ID);
-
-        BlockEntityRendererFactories.register(HydroBlockEntities.WINDMILL_BLOCK_ENTITY, WindMillRenderer::new);
     }
 }

@@ -18,13 +18,13 @@ import org.aec.hydro.item.custom.WindMillItem;
 
 public class ModItemGroups {
     public static final Item WIND_MILL_ITEM = registerItem("windmill", new WindMillItem(_HydroBlocks.WIND_MILL, new FabricItemSettings()));
+
     public static final ItemGroup Hydro = Registry.register(Registries.ITEM_GROUP,
             new Identifier(AECHydro.MOD_ID, "hydro"),
             FabricItemGroup.builder().displayName(Text.translatable("itemGroup.hydro"))
-                    .icon(() -> new ItemStack(_HydroBlocks.DI_BLOCK)).entries((displayContext, entries) -> {
+                    .icon(() -> new ItemStack(WIND_MILL_ITEM)).entries((displayContext, entries) -> {
                         entries.add(_HydroBlocks.DI_BLOCK);
                         entries.add(_HydroBlocks.SOLAR_PANEL);
-                        entries.add(_HydroBlocks.PIPE);
                         entries.add(_HydroBlocks.PIPEV2);
                         entries.add(WIND_MILL_ITEM);
                     }).build());

@@ -1,10 +1,13 @@
 package org.aec.hydro.item.client;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
 import org.aec.hydro.item.custom.WindMillItem;
 import software.bernie.geckolib.model.GeoModel;
 
+@Environment(EnvType.CLIENT)
 public class WindMillItemModel extends GeoModel<WindMillItem> {
 
     @Override
