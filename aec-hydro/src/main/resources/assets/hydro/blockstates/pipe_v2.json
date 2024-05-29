@@ -1,10 +1,154 @@
 {
-  "variants": {
-    "facing=north": {"model": "hydro:block/pipe_v2", "y":  0, "x": 0},
-    "facing=south": {"model": "hydro:block/pipe_v2", "y":  180, "x": 0},
-    "facing=west": {"model": "hydro:block/pipe_v2", "y":  270, "x": 0},
-    "facing=east": {"model": "hydro:block/pipe_v2", "y":  90, "x": 0},
-    "facing=down": {"model": "hydro:block/pipe_v2", "y":  0, "x": 90},
-    "facing=up": {"model": "hydro:block/pipe_v2", "y":  0, "x": 90}
-  }
+  "multipart": [
+    {
+      "when": {
+        "pipeId": "F1"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2",
+        "y": 0,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipeId": "F2"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2",
+        "y": 90,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipeId": "F3"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2",
+        "y": 0,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E1"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 0,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E2"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 90,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E3"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 0,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E4"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 180,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E5"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 270,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E6"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 0,
+        "x": 180
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E7"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 0,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E8"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 90,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E9"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 90,
+        "x": 180
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E10"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 90,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E11"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 180,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipeId": "E12"
+      },
+      "apply": {
+        "model": "hydro:block/pipe_v2_edge",
+        "y": 270,
+        "x": 90
+      }
+    }
+  ]
 }

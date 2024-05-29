@@ -4,10 +4,13 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.Hopper;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -24,6 +27,15 @@ public class PipeV2 extends HorizontalFacingBlock {
     private static final VoxelShape SHAPE_NORTH_SOUTH = VoxelGenerator.makePipeV2Shape_NORTH_SOUTH();
 
     public static final DirectionProperty FACING = Properties.FACING; //horizontal Facing cannot save vertical
+
+    public static final BooleanProperty NORTH = BooleanProperty.of("north");
+    public static final BooleanProperty EAST = BooleanProperty.of("east");
+    public static final BooleanProperty SOUTH = BooleanProperty.of("south");
+    public static final BooleanProperty WEST = BooleanProperty.of("west");
+    public static final BooleanProperty UP = BooleanProperty.of("up");
+    public static final BooleanProperty DOWN = BooleanProperty.of("down");
+
+
 
     public PipeV2(Settings settings) {
         super(settings);
@@ -47,7 +59,7 @@ public class PipeV2 extends HorizontalFacingBlock {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, NORTH, EAST, SOUTH, WEST, UP, DOWN);
     }
 
     @Override
@@ -66,5 +78,37 @@ public class PipeV2 extends HorizontalFacingBlock {
                 System.out.println("shape did not match any case");
                 throw new InvalidParameterException("shape did not match any case");
         }
+    }
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        updateNeighborStates(world, pos);
+    }
+
+    private void updateNeighborStates(World world, BlockPos pos) {
+        BlockState state = world.getBlockState(pos);
+
+        boolean north = hasSameBlock(world, pos, Direction.NORTH);
+        boolean south = hasSameBlock(world, pos, Direction.SOUTH);
+        boolean east = hasSameBlock(world, pos, Direction.EAST);
+        boolean west = hasSameBlock(world, pos, Direction.WEST);
+        boolean up = hasSameBlock(world, pos, Direction.UP);
+        boolean down = hasSameBlock(world, pos, Direction.DOWN);
+
+        world.setBlockState(pos, state
+                .with(NORTH, north)
+                .with(SOUTH, south)
+                .with(EAST, east)
+                .with(WEST, west)
+                .with(UP, up)
+                .with(DOWN, down)
+        );
+    }
+
+    private boolean hasSameBlock(World world, BlockPos pos, Direction direction) {
+        BlockPos neighborPos = pos.offset(direction);
+        BlockState neighborState = world.getBlockState(neighborPos);
+        BlockState currentState = world.getBlockState(pos);
+        return neighborState.getBlock().equals(currentState.getBlock());
     }
 }
