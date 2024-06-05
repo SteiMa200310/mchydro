@@ -16,6 +16,7 @@ die solution (mchydro)
 		von microsoft gekauft 2014 (september)
 		verschiedenste wasserstoff bausteine / utensilien hinzugefügt
 		um den wasserstoff kreislauf einfach und spielerisch erkundbar zu machen	
+		microsoft sieht vorgänger / erste version von metaverse / virtual reality
 mission / vision (kinder und jugendliche)
 	kinder und jugendtlichen einfach und spielerisch wissern zu vermitteln
 	dafür
@@ -31,7 +32,7 @@ businessplan - AB HIER SIMON
 	wir sind ein NPO
 	keine direkten einnanhmen über kunden(lehrer / eltern) oder user (schüler)
 	Ziel nummer 1 ist wissens vermittlung und nicht kohle
-	damit das project trotzdem wachsen kann setzten wir statliche förderungen
+	damit das project trotzdem wachsen kann setzten wir auf statliche förderungen
 	und mögliche investoren / sponsoren - wie linzag oder bosch die breits in kooperation mit uns stehen
 	vertrieb
 		außerdem bekommen wir die möglichkeit das projekt im aec ab november auszustellen
@@ -39,6 +40,8 @@ businessplan - AB HIER SIMON
 		uns macht unique das wir ein kompliziertes wasserstoff model
 		einfach und spielerisch in minecraft erkundbarmachen kann
 		und ihn hautnah erleben kann
+	NEIN - EVTL: Tempel (Inovativ, Zukunftssicher, Einfach, Spielerisch)
+	USP -> einfach und spielerisch komplizierte Dinge lernen
 team
 	roberot husli
 		designer
