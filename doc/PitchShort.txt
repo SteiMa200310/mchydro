@@ -26,7 +26,8 @@ mission / vision (kinder und jugendliche)
 	vision
 		das in zukunft mehr menschen die möglichkeit haben wasserstoff zu entdecken
 		um sich nicht von der nächste energie revolution überrennen zu lassen
-businessplan
+	es ist für eltern leichter gelassen in die zukunft zugehen wenn sie wissen das ihre kinder eine Ahnung von dem haben was kommt
+businessplan - AB HIER SIMON
 	wir sind ein NPO
 	keine direkten einnanhmen über kunden(lehrer / eltern) oder user (schüler)
 	Ziel nummer 1 ist wissens vermittlung und nicht kohle
