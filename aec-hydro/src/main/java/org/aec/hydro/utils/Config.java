@@ -9,18 +9,17 @@ import static org.aec.hydro.AECHydro.LOGGER;
 
 import java.io.*;
 
+//TODO when block not found delete it from list
 public class Config {
 
     private static final String CONFIG_STRING = """
             {
                 "_description": "Config file for Hydrogen in Minecraft, a mod for simulating the cycle of hydrogen",
-                
                 "di_do_list": {
                     "_description": "list of blocks that act like DI/DOs",
                     "di": [],
                     "do": []
                 },
-                
                 "pin_list": {
                     "_description": "list of pins that can be used (based on pi4j documentation, BCM pinout)",
                     "pins": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]

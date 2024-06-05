@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.RailPlacementHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -17,7 +18,6 @@ import org.aec.hydro.block.custom.WindMill;
 public class _HydroBlocks {
     public static final Block DI_BLOCK = registerBlock("di_block", new DIBlock(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block SOLAR_PANEL = registerBlock("solar_panel", new SolarPanel(FabricBlockSettings.copyOf(Blocks.STONE)));
-    public static final Block PIPE = registerBlock("pipe", new Pipe(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block PIPEV2 = registerBlock("pipe_v2", new PipeV2(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     //Blocks With Blockentity
