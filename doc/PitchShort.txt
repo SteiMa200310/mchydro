@@ -1,0 +1,60 @@
+wow bang
+	frage (FOLIE - wasserstoff ?)
+das problem 
+	wasserstoff wird immer präsenter
+	die zukunft
+	keiner kennt sich aus
+	fakten und daten über die zukunft 2030 / 2050 (50% energiebedraf des industriesektors der eu gedeckt mit wasserstoff)
+	jule verne hat schon 1875 profezeite das wasserstoff auf unabsehbare zeit die zukunft sein wird
+die solution (mchydro)
+	übergang
+		wegen dem problem haben wir es uns bei mchydro zur Aufgabe gemacht
+		wasserstoff einfach und spielerisch zu entdecken
+		dafür haben wir ein addon für ein bekanntes und vorallem beliebtes spiel bei kindern und jugentlichen geschrieben
+	minecraft erklären
+		verkaufszahlen (https://de.statista.com/statistik/daten/studie/36854/umfrage/verkaufszahlen-der-weltweit-meistverkauften-videospiele/)
+		von microsoft gekauft 2014 (september)
+		verschiedenste wasserstoff bausteine / utensilien hinzugefügt
+		um den wasserstoff kreislauf einfach und spielerisch erkundbar zu machen	
+mission / vision (kinder und jugendliche)
+	kinder und jugendtlichen einfach und spielerisch wissern zu vermitteln
+	dafür
+		in minecraft potetntial gesehen um wasserstoff zugänglich zu machen
+		da unsere Zielgruppe großteils vertraut mit minecraft ist und wir wissen das
+		wissensübermittlung auf dieser art und weise am besten funktioniert
+		wir als ehemalige zielgruppe wissen wovon wir reden
+	vision
+		das in zukunft mehr menschen die möglichkeit haben wasserstoff zu entdecken
+		um sich nicht von der nächste energie revolution überrennen zu lassen
+businessplan
+	wir sind ein NPO
+	keine direkten einnanhmen über kunden(lehrer / eltern) oder user (schüler)
+	Ziel nummer 1 ist wissens vermittlung und nicht kohle
+	damit das project trotzdem wachsen kann setzten wir statliche förderungen
+	und mögliche investoren / sponsoren - wie linzag oder bosch die breits in kooperation mit uns stehen
+	vertrieb
+		außerdem bekommen wir die möglichkeit das projekt im aec ab november auszustellen
+	markt
+		uns macht unique das wir ein kompliziertes wasserstoff model
+		einfach und spielerisch in minecraft erkundbarmachen kann
+		und ihn hautnah erleben kann
+team
+	roberot husli
+		designer
+	simon ehrenhuber
+		developer
+	matthias steininger
+		developer
+zukunfts
+	roadmap:
+	development
+	beta testing - oktober
+	ausstellung - november
+	an schulen bringen - zukunft evtl
+schluss (call to action)
+	Wie Jule Verne damals 1875 schon prophezeit hat wird Wasserstoff die Zukunft. 
+	Und wer immer noch glaubt, dass ihn dies nicht betrifft denkt daran, dass 2050 mit hoher warscheinlichkeit schon
+	alle Wirtschaftsektoren mit Wasserstoff zu tun haben werden.
+	Also geben sie ihren kindern jetzt die Chance mit MC-Hydro die Welt des Wasserstoffs einfach und spielerisch zu entdecken
+	und schlussendlich auch das nötige Wissen für die Zukunft zu erlangen
+	MC-Hydro Wasserstoff einfach & spielerisch entdecken
