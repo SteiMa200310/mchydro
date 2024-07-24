@@ -13,15 +13,20 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
+import org.aec.hydro.block.custom.Cable;
+import org.aec.hydro.block.custom.SolarPanel;
+import org.aec.hydro.block.custom.Waterwheel;
 import org.aec.hydro.block.custom.WindMill;
 
 public class _HydroBlocks {
     public static final Block DI_BLOCK = registerBlock("di_block", new DIBlock(FabricBlockSettings.copyOf(Blocks.STONE)));
-    public static final Block SOLAR_PANEL = registerBlock("solar_panel", new SolarPanel(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block PIPEV2 = registerBlock("pipe_v2", new PipeV2(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     //Blocks With Blockentity
     public static final Block WIND_MILL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "windmill"), new WindMill(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block SOLAR_PANEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "solar_panel"), new SolarPanel(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block CABLE = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "cable"), new Cable(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block WATERWHEEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "waterwheel"), new Waterwheel(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     private static Block registerBlock(String name, Block block){
         registerBlockItem(name, block);

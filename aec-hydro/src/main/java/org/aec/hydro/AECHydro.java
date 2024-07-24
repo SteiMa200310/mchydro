@@ -6,7 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import org.aec.hydro.block._HydroBlocks;
 
-import org.aec.hydro.block.entity.HydroBlockEntities;
+import org.aec.hydro.block.entity._HydroBlockEntities;
 
 import org.aec.hydro.commands.ConfigureCommand;
 import org.aec.hydro.item.ModItemGroups;
@@ -37,7 +37,7 @@ public class AECHydro implements ModInitializer {
 		GeckoLib.initialize();
 
 		ModItemGroups.registerHydroItemGroup();
-		HydroBlockEntities.registerHydroBlockEntities();
+		_HydroBlockEntities.registerHydroBlockEntities();
 
 
 		new ConfigureCommand("reconfigure");

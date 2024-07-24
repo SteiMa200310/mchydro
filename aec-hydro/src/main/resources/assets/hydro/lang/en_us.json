@@ -4,7 +4,9 @@
   "block.hydro.pipe_v2": "Pipe",
   "block.hydro.solar_panel": "Solar Panel",
   "block.hydro.windmill": "Windmill",
-  
+  "block.hydro.cable": "Cable",
+  "block.hydro.waterwheel": "Waterwheel",
+
   "generic.hydro.initialize": "Initializing Hydro...",
   "generic.hydro.shutdown": "Shutting down Hydro...",
   "generic.hydro.configure": "Configuring RPI Pins...",
