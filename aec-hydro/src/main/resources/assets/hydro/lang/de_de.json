@@ -1,10 +1,11 @@
 {
   "block.hydro.do_block": "Digitaler Ausgang",
   "block.hydro.di_block": "Digitaler Eingang",
-  "block.hydro.pipe": "Pipe",
-  "block.hydro.pipe_v2": "Pipe_v2",
+  "block.hydro.pipe_v2": "Rohr",
   "block.hydro.solar_panel": "Solar Panel",
   "block.hydro.windmill": "Windrad",
+  "block.hydro.cable": "Kabel",
+  "block.hydro.waterwheel": "Wasserrad",
 
   "generic.hydro.initialize": "Initializing Hydro...",
   "generic.hydro.shutdown": "Shutting down Hydro...",
@@ -30,5 +31,5 @@
   "error.hydro.not_di": "Command only works on DI Blocks",
   "error_interrupted_exception": "Thread with ID %1$d was interrupted!",
 
-  "itemGroup.hydro": "Hydro"
+  "itemGroup.hydro": "Wasserstoff"
 }

@@ -68,15 +68,4 @@ public class WindMill extends BlockWithEntity {
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
-
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if(!world.isClient()){
-            AECHydro.LOGGER.info("Server Placed");
-        } else {
-            AECHydro.LOGGER.info("Client Placed");
-        }
-
-        super.onPlaced(world, pos, state, placer, itemStack);
-    }
 }

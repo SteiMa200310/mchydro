@@ -19,7 +19,10 @@
 	"entrypoints": {
 		"main": [
 			"org.aec.hydro.AECHydro"
-		]
+		],
+		"client": [
+            "org.aec.hydro.AECHydroClient"
+        ]
 	},
 	"mixins": [
 		"aec-hydro.mixins.json"
@@ -28,9 +31,7 @@
 		"fabricloader": ">=0.15.10",
 		"minecraft": "~1.20.1",
 		"java": ">=17",
+		"geckolib": ">=4.4.3",
 		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
 	}
 }

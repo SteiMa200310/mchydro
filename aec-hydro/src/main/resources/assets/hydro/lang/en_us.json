@@ -1,11 +1,12 @@
 {
   "block.hydro.do_block": "Digital Output",
   "block.hydro.di_block": "Digital Input",
-  "block.hydro.pipe": "Pipe",
-  "block.hydro.pipe_v2": "Pipe_v2",
+  "block.hydro.pipe_v2": "Pipe",
   "block.hydro.solar_panel": "Solar Panel",
   "block.hydro.windmill": "Windmill",
-  
+  "block.hydro.cable": "Cable",
+  "block.hydro.waterwheel": "Waterwheel",
+
   "generic.hydro.initialize": "Initializing Hydro...",
   "generic.hydro.shutdown": "Shutting down Hydro...",
   "generic.hydro.configure": "Configuring RPI Pins...",

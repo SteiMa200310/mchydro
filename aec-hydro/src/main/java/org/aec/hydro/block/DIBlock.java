@@ -3,7 +3,9 @@ package org.aec.hydro.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RedstoneWireBlock;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -20,6 +22,7 @@ import net.minecraft.world.WorldAccess;
 import org.aec.hydro.AECHydro;
 import org.aec.hydro.utils.Config;
 import org.aec.hydro.utils.ConfigHelper;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -133,5 +136,15 @@ public class DIBlock extends Block {
     @Override
     public boolean emitsRedstonePower(BlockState state) {
         return true;
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        if(!world.isClient()){
+            AECHydro.LOGGER.info("Server Placed");
+        } else {
+            AECHydro.LOGGER.info("Client Placed");
+        }
+        super.onPlaced(world, pos, state, placer, itemStack);
     }
 }

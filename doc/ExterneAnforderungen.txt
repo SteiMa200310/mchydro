@@ -1,0 +1,25 @@
+Brennstoffzelle direkt -> Wasser, Strom
+Wasserstoffverbrenner -> Wasser, Strom nicht direkt so wie bei der Brennstoffzelle sondern über eine Turbine die angetrieben wird
+Verwenden als Werkstoff
+
+HERSTELLER (Bosch):
+	Brennstoffzelle - LKW / PWK
+	Wasserstoffverbrenner - Schiff
+
+WEG:
+Strom erzeugung (grün)
+	Wind / Wasser / Sonne / Realer input -> strom erzeugung
+
+Elektrolysör von Strom in Wasserstoff
+	PEM - Elektrolyse (Elektrolysör) - grüner Wasserstoff
+	
+Wasserstoff in Pipe verteilen auf
+	Langzeitspeicherspeicher in der Erde
+		im speicher evtl. Sandstein
+	In die Industrie (Vöst z.b.)
+		Roheisen -> Stahl
+	Linz AG Kraftwerk - Wasserstoffverbrenner
+		(sobald versorgt)
+		STROM - Stromleitung zu haus das leuchtet
+		WÄRME - fernwärme / heis wasser pivpe
+	Art der Transporation (Schiff!!! (WERFT) / Baumaschinen - kran (Brennstoffzelle), bagger - KEIN BUS / AUTO)

@@ -11,8 +11,9 @@ import software.bernie.geckolib.core.object.PlayState;
 
 public class WindMillBlockEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    public WindMillBlockEntity( BlockPos pos, BlockState state) {
-            super(HydroBlockEntities.WINDMILL_BLOCK_ENTITY, pos, state);
+
+    public WindMillBlockEntity(BlockPos pos, BlockState state) {
+            super(_HydroBlockEntities.WINDMILL_BLOCK_ENTITY, pos, state);
     }
 
     @Override

@@ -1,10 +1,13 @@
 package org.aec.hydro.block.entity.client;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
 import org.aec.hydro.block.entity.WindMillBlockEntity;
 import software.bernie.geckolib.model.GeoModel;
 
+@Environment(EnvType.CLIENT)
 public class WindMillModel extends GeoModel<WindMillBlockEntity> {
     @Override
     public Identifier getModelResource(WindMillBlockEntity animatable) {

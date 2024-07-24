@@ -1,14 +1,12 @@
 package org.aec.hydro;
 
 import net.fabricmc.api.ModInitializer;
-
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import org.aec.hydro.block._HydroBlocks;
 
-import org.aec.hydro.block.entity.HydroBlockEntities;
-import org.aec.hydro.block.entity.client.WindMillRenderer;
+import org.aec.hydro.block.entity._HydroBlockEntities;
 
 import org.aec.hydro.commands.ConfigureCommand;
 import org.aec.hydro.item.ModItemGroups;
@@ -34,11 +32,12 @@ public class AECHydro implements ModInitializer {
 		//Registry Hydro
 		_HydroBlocks.registerHydroBlocks();
 
+
 		//Initialize Geckolib
 		GeckoLib.initialize();
 
 		ModItemGroups.registerHydroItemGroup();
-		HydroBlockEntities.registerHydroBlockEntities();
+		_HydroBlockEntities.registerHydroBlockEntities();
 
 
 		new ConfigureCommand("reconfigure");
@@ -48,7 +47,6 @@ public class AECHydro implements ModInitializer {
 	}
 
 	private void onShutdown(MinecraftServer server) {
-
 		LOGGER.info(Text.translatable("generic.hydro.shutdown").getString());
 	}
 }
