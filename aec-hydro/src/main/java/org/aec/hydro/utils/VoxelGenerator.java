@@ -1,6 +1,7 @@
 package org.aec.hydro.utils;
 
 import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 

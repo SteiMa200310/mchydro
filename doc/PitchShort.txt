@@ -1,0 +1,83 @@
+wow bang
+<<<<<<< HEAD
+	frage (FOLIE - wasserstoff?)
+das problem 
+	wasserstoff wird immer präsenter
+	die zukunft
+	keiner kennt sich aus
+	fakten und daten über die zukunft 2030 / 2050 (50% energiebedraf des industriesektors der eu gedeckt mit wasserstoff)
+	jule verne hat schon 1875 profezeite das wasserstoff auf unabsehbare zeit die zukunft sein wird
+=======
+	wer kennt denn begriff wasserstoff? (bitte kurz ein handzeichen)
+	und wer weis wieso er so vorteilhaft ist bzw. was beim wasserstoff kreislauf passiert?
+	DAS PROBLEM ->
+das problem
+	(das wir alle haben meine damen und herrn)
+	wasserstoff wird immer präsenter (PRÄSENTER)
+	jedoch keiner kennt sich aus (KAUM WER KENNT SICH AUS)
+	prognosen besagen: (PROGNOSEN)
+		das 2030 die erzeugungskosten von grünem wasserstoff um 30 - 50% sinken werden (in 6 jahren)
+		das 2050 die hälfte der benötigten energie im industriesektur der eu mit wasserstoff gedeckt sein wird
+	jules verne hat schon 1875 profezeite das wasserstoff auf unabsehbare zeit die zukunft sein wird - und jetzt sieht es immer mehr dannach aus
+	all das spricht dafür das wasserstoff in punkto wichtigkeit immer mehr und mehr zunimmt
+	(JULES VERN UNABSEHBARE ZEIT ZUKUNFT - SIEHT DANNACH AUS)
+>>>>>>> bf153a76325097d2977469e9d14b23c129f60158
+die solution (mchydro)
+	übergang
+		für genau dieses problem (der unklarheit im bezug auf wasserstoff - haben wir mc hydro gegründet) (WEGEN DEM PROBLEM)
+		wasserstoff einfach und spielerisch entdeckbar zu machen (AUFGABGE GEMACHT)
+		dafür haben wir ein addon für ein bekanntes und vorallem beliebtes spiel bei kindern und jugentlichen geschrieben
+		(ADDON FÜR MC BEKANNT / BELIEBT)
+	minecraft erklären
+		minecraft imitation der echten welt - multiplayer
+		meist verkauftes spiel der welt: verkaufszahlen (https://de.statista.com/statistik/daten/studie/36854/umfrage/verkaufszahlen-der-weltweit-meistverkauften-videospiele/)
+		von microsoft gekauft 2014 (september) (MICROSOFT GEKAUFT)
+		microsoft sieht vorgänger / erste version von metaverse / virtual reality (VR)
+		verschiedenste wasserstoff bausteine / componenten / utensilien hinzugefügt (WASSERSTOFF BAUSTEINE ERWEITERUNG)
+mission / vision (kinder und jugendliche)
+	kinder und jugendtlichen einfach und spielerisch wissern zu vermitteln
+	dafür (POTENTIAL MINECRAFT VERTRAUT - SELBST ZIELGRUPPEN WIR WISSEN)
+		in minecraft potetntial gesehen um wasserstoff zugänglich zu machen
+		da unsere Zielgruppe großteils vertraut mit minecraft ist und wir wissen das
+		wissensübermittlung auf dieser art und weise am besten funktioniert
+		wir als ehemalige zielgruppe wissen wovon wir reden
+	vision (ENERGIE REVOLUTION)
+		das in zukunft mehr menschen die möglichkeit haben wasserstoff zu entdecken
+		um sich nicht von der nächste energie revolution überrennen zu lassen
+	zukunft (GELASSENE ZUKUNFT)
+	es ist für eltern leichter gelassen in die zukunft zugehen wenn sie wissen das ihre kinder eine Ahnung von dem haben was kommt
+businessplan - AB HIER SIMON
+	wir bei mchydro sind grundsätzlich als eine NonProfiOrganisation (NPO) aufgestellt
+	keine direkten einnanhmen über kunden(lehrer / eltern) oder user (schüler)
+	Ziel nummer 1 ist wissens vermittlung und nicht kohle PROBLEM
+	damit das project trotzdem wachsen kann setzten wir auf statliche förderungen
+	und mögliche investoren / sponsoren - wie linzag oder bosch die breits in kooperation mit uns stehen
+	vertrieb
+		außerdem bekommen wir die möglichkeit das projekt im aec ab november auszustellen
+	markt
+		uns macht unique das wir ein kompliziertes wasserstoff model
+		einfach und spielerisch in minecraft erkundbarmachen kann
+		und ihn hautnah erleben kann
+	USP -> einfach und spielerisch komplizierte Dinge lernen
+	
+	NEIN - EVTL: Tempel (Inovativ, Zukunftssicher, Einfach, Spielerisch)
+team
+	roberto husli
+		designer
+	simon ehrenhuber
+		marketing leiter
+	matthias steininger
+		developer
+zukunfts
+	roadmap:
+	development
+	beta testing - oktober
+	ausstellung - november
+	an schulen bringen - zukunft evtl
+schluss (call to action)
+	Wie Jule Verne damals 1875 (aufgreifen) schon prophezeit hat wird Wasserstoff die Zukunft.
+	Und wer immer noch glaubt, dass ihn dies nicht betrifft denkt daran, dass 2050 mit hoher warscheinlichkeit schon
+	alle Wirtschaftsektoren von Wasserstoff abhängig sein werden.
+	Ein investment in uns ist ein investment in die Zukunft.
+	Also gebt jetzt euren Kindern und vieleicht sogar euch selbst die chance wasserstoff einfach und spielerisch zu entdecken.
+	Und das nötige Wissen für die Zukunft zu erlangen. DANKE.
