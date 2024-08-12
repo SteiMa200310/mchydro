@@ -1,4 +1,4 @@
-package org.aec.hydro.block.entity.client;
+package org.aec.hydro.block.entity.client.cable;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -4,8 +4,15 @@
   "block.hydro.pipe_v2": "Pipe",
   "block.hydro.solar_panel": "Solar Panel",
   "block.hydro.windmill": "Windmill",
-  "block.hydro.cable": "Cable",
   "block.hydro.waterwheel": "Waterwheel",
+  "block.hydro.cable": "Cable",
+  "block.hydro.cable_merger": "Cable Merger",
+  "block.hydro.cable_splitter": "Cable Splitter",
+  "block.hydro.pipe_merger": "Pipe Merger",
+  "block.hydro.pipe_splitter": "Pipe Splitter",
+  "block.hydro.elektrolyseur": "Electrolyser",
+  "block.hydro.brenstoffzelle": "Fuel Cell",
+
 
   "generic.hydro.initialize": "Initializing Hydro...",
   "generic.hydro.shutdown": "Shutting down Hydro...",

@@ -1,4 +1,4 @@
-package org.aec.hydro.item.client;
+package org.aec.hydro.item.client.cable;
 
 import org.aec.hydro.item.custom.CableItem;
 import software.bernie.geckolib.renderer.GeoItemRenderer;

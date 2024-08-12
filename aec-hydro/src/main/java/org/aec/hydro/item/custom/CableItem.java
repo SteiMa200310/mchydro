@@ -3,7 +3,7 @@ package org.aec.hydro.item.custom;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.item.BlockItem;
-import org.aec.hydro.item.client.CableItemRenderer;
+import org.aec.hydro.item.client.cable.CableItemRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.RenderProvider;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
