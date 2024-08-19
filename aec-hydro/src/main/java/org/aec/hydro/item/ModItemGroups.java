@@ -29,6 +29,12 @@ public class ModItemGroups {
     public static final Item ELEKTROLYSEUR_ITEM = registerItem("elektrolyseur", new ElektrolyseurItem(_HydroBlocks.ELEKTROLYSEUR, new FabricItemSettings()));
     public static final Item BRENSTOFFZELLE_ITEM = registerItem("brenstoffzelle", new BrennstoffzelleItem(_HydroBlocks.BRENSTOFFZELLE, new FabricItemSettings()));
 
+    //Custom Items
+    public static final Item VOLTMETER = registerItem("voltmeter", new Item(new FabricItemSettings()));
+    public static final Item ANODE = registerItem("anode", new Item(new FabricItemSettings()));
+    public static final Item KATHODE = registerItem("kathode", new Item(new FabricItemSettings()));
+    public static final Item MEMBRAN = registerItem("membran", new Item(new FabricItemSettings()));
+
     public static final ItemGroup Hydro = Registry.register(Registries.ITEM_GROUP,
             new Identifier(AECHydro.MOD_ID, "hydro"),
             FabricItemGroup.builder().displayName(Text.translatable("itemGroup.hydro"))
@@ -45,6 +51,10 @@ public class ModItemGroups {
                         entries.add(PIPE_SPLITTER_ITEM);
                         entries.add(ELEKTROLYSEUR_ITEM);
                         entries.add(BRENSTOFFZELLE_ITEM);
+                        entries.add(VOLTMETER);
+                        entries.add(ANODE);
+                        entries.add(KATHODE);
+                        entries.add(MEMBRAN);
                     }).build());
 
     private static Item registerItem(String name, Item item){

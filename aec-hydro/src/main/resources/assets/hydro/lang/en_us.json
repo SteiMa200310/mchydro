@@ -10,8 +10,12 @@
   "block.hydro.cable_splitter": "Cable Splitter",
   "block.hydro.pipe_merger": "Pipe Merger",
   "block.hydro.pipe_splitter": "Pipe Splitter",
-  "block.hydro.elektrolyseur": "Electrolyser",
+  "block.hydro.elektrolyseur": "Electrolyzer",
   "block.hydro.brenstoffzelle": "Fuel Cell",
+  "item.hydro.voltmeter": "Voltmeter",
+  "item.hydro.anode": "Anode",
+  "item.hydro.kathode": "Cathode",
+  "item.hydro.membran": "Membrane",
 
 
   "generic.hydro.initialize": "Initializing Hydro...",

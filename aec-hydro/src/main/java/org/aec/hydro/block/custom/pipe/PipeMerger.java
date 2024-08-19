@@ -1,20 +1,28 @@
 package org.aec.hydro.block.custom.pipe;
 
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.ShapeContext;
+import net.fabricmc.loader.impl.launch.knot.MixinStringPropertyKey;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.PistonBlockEntity;
+import net.minecraft.block.enums.PistonType;
+import net.minecraft.block.piston.PistonHandler;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
-import org.aec.hydro.block.entity.CableMergerBlockEntity;
 import org.aec.hydro.block.entity.PipeMergerBlockEntity;
+import org.aec.hydro.utils.PipeType;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
 public class PipeMerger extends BlockWithEntity {
-    public PipeMerger(Settings settings) { super(settings); }
+     //public static final EnumProperty<PipeType> PIPETYPE = EnumProperty.of("type", PipeType.class);
+    public PipeMerger(Settings settings) {
+        super(settings);
+        //this.setDefaultState(this.getStateManager().getDefaultState().with(PIPETYPE, PipeType.WATER));
+    }
 
     @Nullable
     @Override
