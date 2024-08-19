@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "AMC",
+    "III"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "A": {
+      "item": "hydro:anode"
+    },
+    "M": {
+      "item": "hydro:membran"
+    },
+    "C": {
+      "item": "hydro:kathode"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "result": {
+    "item": "hydro:elektrolyseur"
+  }
+}

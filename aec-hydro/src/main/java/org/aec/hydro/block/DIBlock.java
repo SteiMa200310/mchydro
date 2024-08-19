@@ -2,6 +2,7 @@ package org.aec.hydro.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.RedstoneBlock;
 import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

@@ -1,4 +1,4 @@
-package org.aec.hydro.item.client;
+package org.aec.hydro.item.client.cable;
 
 import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
@@ -8,7 +8,7 @@ import software.bernie.geckolib.model.GeoModel;
 public class CableItemModel extends GeoModel<CableItem> {
     @Override
     public Identifier getModelResource(CableItem animatable) {
-        return new Identifier(AECHydro.MOD_ID, "geo/cable.geo.json");
+        return new Identifier(AECHydro.MOD_ID, "geo/cable_item.geo.json");
     }
 
     @Override
