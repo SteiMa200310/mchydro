@@ -1,23 +1,18 @@
 package org.aec.hydro.block;
 
 import net.minecraft.block.*;
-import net.minecraft.block.entity.Hopper;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.*;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.aec.hydro.utils.PipeID;
-import org.aec.hydro.utils.VoxelGenerator;
+import org.aec.hydro.utils.*;
 import org.jetbrains.annotations.Nullable;
-
-import java.security.InvalidParameterException;
 
 public class PipeV2 extends HorizontalFacingBlock {
     private static final VoxelShape SHAPE_UP_DOWN = VoxelGenerator.makePipeV2Shape_UP_DOWN();
@@ -29,36 +24,58 @@ public class PipeV2 extends HorizontalFacingBlock {
     //will leave this though just for clarification
 
     public static final EnumProperty<PipeID> PIPE_ID = EnumProperty.of("pipe_id", PipeID.class);
+    //public static final EnumProperty<PipeConnectionState> PIPE_CONNECTION_STATE = EnumProperty.of("pipe_connection_state", PipeConnectionState.class);
+    //is not a property since its basicly calculated based on neighbors
 
     public PipeV2(Settings settings) {
         super(settings);
     }
 
+    //System.out.println(ctx.getPlayerLookDirection().toString()); //getHorizontalPlayerFacing()
+
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        //System.out.println(ctx.getPlayerLookDirection().toString()); //getHorizontalPlayerFacing()
-        BlockState state = this.getDefaultState();
+        BlockState defaultState = this.getDefaultState();
 
-        switch (ctx.getPlayerLookDirection().getOpposite()) {
-            case NORTH:
-            case SOUTH:
-                state = state.with(PIPE_ID, PipeID.F1);
-                break;
-            case EAST:
-            case WEST:
-                state = state.with(PIPE_ID, PipeID.F2);
-                break;
-            case UP:
-            case DOWN:
-                state = state.with(PIPE_ID, PipeID.F3);
-                break;
-            default:
-                //System.out.println("look direction did not match any case");
-                break;
-        }
+        Direction opposite = ctx.getPlayerLookDirection().getOpposite();
+        return switch (opposite) {
+            case NORTH, SOUTH -> defaultState.with(PIPE_ID, PipeID.F1);
+            case EAST, WEST -> defaultState.with(PIPE_ID, PipeID.F2);
+            case UP, DOWN -> defaultState.with(PIPE_ID, PipeID.F3);
+        };
 
-        return state;
+//        SurroundingEqualsInfo info = new SurroundingEqualsInfo(ctx.getWorld(), ctx.getBlockPos());
+//        info.EvaluateMatch(defaultState.getBlock());
+//        //need to get based on Match since -> by the time placing the state is still what is was before -> most likly air
+//
+//        int amount = info.AmountOfConnectableNeighbors();
+//        System.out.println(amount);
+//
+//        Direction opposite = ctx.getPlayerLookDirection().getOpposite();
+//
+//        if (amount == 0) {
+//            defaultState = switch (opposite) {
+//                case NORTH, SOUTH -> defaultState.with(PIPE_ID, PipeID.F1);
+//                case EAST, WEST -> defaultState.with(PIPE_ID, PipeID.F2);
+//                case UP, DOWN -> defaultState.with(PIPE_ID, PipeID.F3);
+//            };
+//        }
+//
+//        if (amount == 1) {
+//            info.SetLookingDirection(opposite);
+//            return GetStateBasedOnSurroundings(defaultState, info);
+//        }
+//
+//        if (amount > 1) {
+//            return GetStateBasedOnSurroundings(defaultState, info);
+//        }
+
+        //is connected to one or two
+        //block update immediately on place
+        //voxel shape
+
+//        return defaultState;
     }
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
@@ -92,94 +109,82 @@ public class PipeV2 extends HorizontalFacingBlock {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        BlockState updatedState = getUpdatedState(state, world, pos);
-        world.setBlockState(pos, updatedState);
+        SurroundingEqualsInfo info = new SurroundingEqualsInfo(world, pos);
+        info.EvaluateSame();
+
+        System.out.println(new SurroundingBlocksInfoV2(world, pos).GetPipeConnectionState().toString());
+//        world.setBlockState(pos, );
     }
 
     //customs
-    private BlockState getUpdatedState(BlockState state, World world, BlockPos pos) {
-        boolean north = hasSameBlock(world, pos, Direction.NORTH);
-        boolean south = hasSameBlock(world, pos, Direction.SOUTH);
-        boolean east = hasSameBlock(world, pos, Direction.EAST);
-        boolean west = hasSameBlock(world, pos, Direction.WEST);
-        boolean up = hasSameBlock(world, pos, Direction.UP);
-        boolean down = hasSameBlock(world, pos, Direction.DOWN);
-
-        System.out.println("n:" + north + " s:" + south + " e:" + east + " w:" + west + " up:" + up + " down:" + down);
+    private BlockState GetStateBasedOnSurroundings(BlockState current, SurroundingEqualsInfo info) {
+        //System.out.println("n:" + info.north + " s:" + info.south + " e:" + info.east + " w:" + info.west + " up:" + info.up + " down:" + info.down);
+        BlockState state = this.getDefaultState();
 
         //3
-        if (north && south) {
-            System.out.println("ns");
+        if (info.ConnectableInNorth() && info.ConnectableInSouth()) {
             return state.with(PIPE_ID, PipeID.F1);
         }
 
-        if (east && west) {
-            System.out.println("ew");
+        if (info.ConnectableInEast() && info.ConnectableInWest()) {
             return state.with(PIPE_ID, PipeID.F2);
         }
 
-        if (up && down) {
-            System.out.println("ud");
+        if (info.ConnectableInUp() && info.ConnectableInDown()) {
             return state.with(PIPE_ID, PipeID.F3);
         }
 
         //12
-        if (north && east) {
-            System.out.println("ne");
+        if (info.ConnectableInNorth() && info.ConnectableInEast()) {
             return state.with(PIPE_ID, PipeID.E1);
         }
 
-        if (east && south) {
+        if (info.ConnectableInEast() && info.ConnectableInSouth()) {
             return state.with(PIPE_ID, PipeID.E2);
         }
 
-        if (south && west) {
+        if (info.ConnectableInSouth() && info.ConnectableInWest()) {
             return state.with(PIPE_ID, PipeID.E3);
         }
 
-        if (west && north) {
+        if (info.ConnectableInWest() && info.ConnectableInNorth()) {
             return state.with(PIPE_ID, PipeID.E4);
         }
 
-        if (north && up) {
+
+        if (info.ConnectableInNorth() && info.ConnectableInUp()) {
             return state.with(PIPE_ID, PipeID.E5);
         }
 
-        if (north && down) {
+        if (info.ConnectableInNorth() && info.ConnectableInDown()) {
             return state.with(PIPE_ID, PipeID.E6);
         }
 
-        if (east && up) {
+        if (info.ConnectableInEast() && info.ConnectableInUp()) {
             return state.with(PIPE_ID, PipeID.E7);
         }
 
-        if (east && down) {
+        if (info.ConnectableInEast() && info.ConnectableInDown()) {
             return state.with(PIPE_ID, PipeID.E8);
         }
 
-        if (south && up) {
+
+        if (info.ConnectableInSouth() && info.ConnectableInUp()) {
             return state.with(PIPE_ID, PipeID.E9);
         }
 
-        if (south && down) {
+        if (info.ConnectableInSouth() && info.ConnectableInDown()) {
             return state.with(PIPE_ID, PipeID.E10);
         }
 
-        if (west && up) {
+        if (info.ConnectableInWest() && info.ConnectableInUp()) {
             return state.with(PIPE_ID, PipeID.E11);
         }
 
-        if (west && down) {
+        if (info.ConnectableInWest() && info.ConnectableInDown()) {
             return state.with(PIPE_ID, PipeID.E12);
         }
 
-        return state;
-    }
-
-    private boolean hasSameBlock(World world, BlockPos pos, Direction direction) {
-        BlockPos neighborPos = pos.offset(direction);
-        BlockState neighborState = world.getBlockState(neighborPos);
-        BlockState currentState = world.getBlockState(pos);
-        return neighborState.getBlock().equals(currentState.getBlock());
+        return  current;
     }
 }
