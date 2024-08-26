@@ -6,6 +6,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -39,12 +40,17 @@ public class PipeV2 extends HorizontalFacingBlock {
         SurroundingPipesInfo info = new SurroundingPipesInfo(ctx.getWorld(), ctx.getBlockPos());
         info.EvaluateMatch(defaultState.getBlock()); //evaluate by match since the current block would be air
 
+        Direction dir = ctx.getPlayerLookDirection();
+        if(ctx.getWorld().getBlockState(ctx.getBlockPos().offset(ctx.getSide().getOpposite())).getBlock() == this.getDefaultState().getBlock()) {
+            dir = ctx.getSide().getOpposite();
+        }
+
         int amount = info.AmountOfConnectionSeekingOrAlreadyConnectedNeighbors();
         System.out.println(amount);
 
         if (amount == 1 || amount == 0) {
             //if i always set it could get priority over a real block which is not what i want
-            info.SetLookingDirection(ctx.getPlayerLookDirection());
+            info.SetLookingDirection(dir);
         }
 
         //is connected to one or two
