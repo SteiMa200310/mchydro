@@ -1,7 +1,10 @@
 package org.aec.hydro.utils;
 
 import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -118,7 +121,7 @@ public class VoxelGenerator {
     }
 
     public static VoxelShape rotateShape(int aoX, int aoY, int aoZ, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+        VoxelShape finalShape;
 
         //consider the following in real life x y are the 2d axis and z is the up/down axis
         //where as in minecraft x and z are the 2d axis and y is the up/down axis
@@ -136,12 +139,28 @@ public class VoxelGenerator {
         //but its actually wrong -> rotation on the x axis means that you spin the object around the x axis based on its core - if you visualize that in your head it makes perfect sense
         //then the coordinates are of cours based on minecraft directions which is what i hoped to be the truth and it is
 
+        finalShape = RotateX(aoX, shape);
+        finalShape = RotateY(aoY, finalShape);
+
+        return RotateZ(aoZ, finalShape);
+    }
+
+    public static VoxelShape RotateX(int aoX, VoxelShape shape)
+    {
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+
         for(int i = 0; i < aoX; i++) {
             buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) ->
                     buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX, 1 - maxZ, minY, maxX, 1 - minZ, maxY)));
             buffer[0] = buffer[1];
             buffer[1] = VoxelShapes.empty();
         }
+        return buffer[0];
+    }
+
+    public static VoxelShape RotateY(int aoY, VoxelShape shape)
+    {
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
 
         for(int i = 0; i < aoY; i++) {
             buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) ->
@@ -149,6 +168,13 @@ public class VoxelGenerator {
             buffer[0] = buffer[1];
             buffer[1] = VoxelShapes.empty();
         }
+
+        return buffer[0];
+    }
+
+    public static VoxelShape RotateZ(int aoZ, VoxelShape shape)
+    {
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
 
         for(int i = 0; i < aoZ; i++) {
             buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) ->
@@ -158,5 +184,60 @@ public class VoxelGenerator {
         }
 
         return buffer[0];
+    }
+
+    /**
+     * Rotates a VoxelShape around multiple axes by given angles.
+     *
+     * @param shape The VoxelShape to rotate.
+     * @param angleX The angle to rotate around the X-axis, in degrees.
+     * @param angleY The angle to rotate around the Y-axis, in degrees.
+     * @param angleZ The angle to rotate around the Z-axis, in degrees.
+     * @return The rotated VoxelShape.
+     */
+    public static VoxelShape rotateVoxelShape(VoxelShape shape, double angleX, double angleY, double angleZ) {
+        // Convert angles to radians and calculate sin and cos values
+        double sinX = MathHelper.sin((float) Math.toRadians(angleX));
+        double cosX = MathHelper.cos((float) Math.toRadians(angleX));
+        double sinY = MathHelper.sin((float) Math.toRadians(angleY));
+        double cosY = MathHelper.cos((float) Math.toRadians(angleY));
+        double sinZ = MathHelper.sin((float) Math.toRadians(angleZ));
+        double cosZ = MathHelper.cos((float) Math.toRadians(angleZ));
+
+        VoxelShape[] rotatedShapes = {VoxelShapes.empty()};
+
+        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            // Rotate each corner of the box
+            Vec3d min = rotateVec(new Vec3d(minX, minY, minZ), sinX, cosX, sinY, cosY, sinZ, cosZ);
+            Vec3d max = rotateVec(new Vec3d(maxX, maxY, maxZ), sinX, cosX, sinY, cosY, sinZ, cosZ);
+
+            // Create a new box with the rotated coordinates
+            Box rotatedBox = new Box(min, max);
+
+            // Combine the rotated boxes into one VoxelShape
+            rotatedShapes[0] = VoxelShapes.union(rotatedShapes[0], VoxelShapes.cuboid(rotatedBox));
+        });
+
+        return rotatedShapes[0];
+    }
+
+    private static Vec3d rotateVec(Vec3d vec, double sinX, double cosX, double sinY, double cosY, double sinZ, double cosZ) {
+        double x = vec.x;
+        double y = vec.y;
+        double z = vec.z;
+
+        // Rotate around X-axis
+        double y1 = y * cosX - z * sinX;
+        double z1 = y * sinX + z * cosX;
+
+        // Rotate around Y-axis
+        double x2 = x * cosY + z1 * sinY;
+        double z2 = -x * sinY + z1 * cosY;
+
+        // Rotate around Z-axis
+        double x3 = x2 * cosZ - y1 * sinZ;
+        double y3 = x2 * sinZ + y1 * cosZ;
+
+        return new Vec3d(x3, y3, z2);
     }
 }
