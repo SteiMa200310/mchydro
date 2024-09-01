@@ -2,29 +2,21 @@ package org.aec.hydro.block.custom;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
+import net.minecraft.state.property.*;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import org.aec.hydro.AECHydro;
 import org.aec.hydro.block.entity.WindMillBlockEntity;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
 public class WindMill extends BlockWithEntity {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+
     public WindMill(Settings settings) {
         super(settings);
     }
@@ -51,7 +43,11 @@ public class WindMill extends BlockWithEntity {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        BlockState state = this.getDefaultState()
+                .with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        System.out.println(ctx.getHorizontalPlayerFacing().getOpposite().toString());
+
+        return state;
     }
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {

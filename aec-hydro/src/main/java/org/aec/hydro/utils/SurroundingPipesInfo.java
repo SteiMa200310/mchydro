@@ -6,13 +6,19 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.aec.hydro.block.custom.WindMill;
+
+import java.util.List;
 
 public class SurroundingPipesInfo {
     private final World World;
     private final BlockPos Pos;
+    private final List<Block> PowerProviders;
     private boolean IsEvaluated;
 
     private Direction LookingDirection;
+    private Direction CorrectlyFacingPowerProviderDirection;
+
     private BlockState BlockState;
     private Pair<Direction, Direction> OpenFaces;
 
@@ -23,12 +29,15 @@ public class SurroundingPipesInfo {
     private SurroundingPipesInfo up;
     private SurroundingPipesInfo down;
 
-    public SurroundingPipesInfo(World world, BlockPos pos) {
+    public SurroundingPipesInfo(World world, BlockPos pos, List<Block> powerProviders) {
         this.World = world;
         this.Pos = pos;
+        this.PowerProviders = powerProviders;
         this.IsEvaluated = false;
 
         this.LookingDirection = null;
+        this.CorrectlyFacingPowerProviderDirection = null;
+
         this.BlockState = null;
         this.OpenFaces = null;
 
@@ -43,27 +52,29 @@ public class SurroundingPipesInfo {
     public void Evaluate() {
         this.BlockState = World.getBlockState(Pos);
         this.OpenFaces = SurroundingPipesInfo.GetOpenFacesBasedOnPipeId(this.BlockState.get(PipeProperties.PIPE_ID));
+        this.CorrectlyFacingPowerProviderDirection = GetDirectionOfPossiblePowerProducerOrNull();
 
-        this.north = SurroundingPipesInfo.HasSameBlockInDir(World, Pos, Direction.NORTH);
-        this.south = SurroundingPipesInfo.HasSameBlockInDir(World, Pos, Direction.SOUTH);
-        this.east = SurroundingPipesInfo.HasSameBlockInDir(World, Pos, Direction.EAST);
-        this.west = SurroundingPipesInfo.HasSameBlockInDir(World, Pos, Direction.WEST);
-        this.up = SurroundingPipesInfo.HasSameBlockInDir(World, Pos, Direction.UP);
-        this.down = SurroundingPipesInfo.HasSameBlockInDir(World, Pos, Direction.DOWN);
+        this.north = SurroundingPipesInfo.HasSameInDir(World, Pos, this.PowerProviders, Direction.NORTH);
+        this.south = SurroundingPipesInfo.HasSameInDir(World, Pos, this.PowerProviders, Direction.SOUTH);
+        this.east = SurroundingPipesInfo.HasSameInDir(World, Pos, this.PowerProviders, Direction.EAST);
+        this.west = SurroundingPipesInfo.HasSameInDir(World, Pos, this.PowerProviders, Direction.WEST);
+        this.up = SurroundingPipesInfo.HasSameInDir(World, Pos, this.PowerProviders, Direction.UP);
+        this.down = SurroundingPipesInfo.HasSameInDir(World, Pos, this.PowerProviders, Direction.DOWN);
 
         this.IsEvaluated = true;
     }
 
-    public void EvaluateMatch(Block match) {
-        this.BlockState = match.getDefaultState();
+    public void EvaluateMatch(Block pipe) {
+        this.BlockState = pipe.getDefaultState();
         this.OpenFaces = SurroundingPipesInfo.GetOpenFacesBasedOnPipeId(this.BlockState.get(PipeProperties.PIPE_ID));
+        this.CorrectlyFacingPowerProviderDirection = GetDirectionOfPossiblePowerProducerOrNull();
 
-        this.north = SurroundingPipesInfo.HasMatchBlockInDir(World, Pos, Direction.NORTH, match);
-        this.south = SurroundingPipesInfo.HasMatchBlockInDir(World, Pos, Direction.SOUTH, match);
-        this.east = SurroundingPipesInfo.HasMatchBlockInDir(World, Pos, Direction.EAST, match);
-        this.west = SurroundingPipesInfo.HasMatchBlockInDir(World, Pos, Direction.WEST, match);
-        this.up = SurroundingPipesInfo.HasMatchBlockInDir(World, Pos, Direction.UP, match);
-        this.down = SurroundingPipesInfo.HasMatchBlockInDir(World, Pos, Direction.DOWN, match);
+        this.north = SurroundingPipesInfo.HasPipeInDir(World, Pos, this.PowerProviders, Direction.NORTH, pipe);
+        this.south = SurroundingPipesInfo.HasPipeInDir(World, Pos, this.PowerProviders, Direction.SOUTH, pipe);
+        this.east = SurroundingPipesInfo.HasPipeInDir(World, Pos, this.PowerProviders, Direction.EAST, pipe);
+        this.west = SurroundingPipesInfo.HasPipeInDir(World, Pos, this.PowerProviders, Direction.WEST, pipe);
+        this.up = SurroundingPipesInfo.HasPipeInDir(World, Pos, this.PowerProviders, Direction.UP, pipe);
+        this.down = SurroundingPipesInfo.HasPipeInDir(World, Pos, this.PowerProviders, Direction.DOWN, pipe);
 
         this.IsEvaluated = true;
     }
@@ -72,7 +83,34 @@ public class SurroundingPipesInfo {
         return this.IsEvaluated;
     }
 
-    public int AmountOfNeighbors() {
+    //does only take those into account that actually look into me
+    public Direction GetDirectionOfPossiblePowerProducerOrNull() {
+        for(Block powerProvider : this.PowerProviders) {
+            BlockState bsNorth = SurroundingPipesInfo.GetCertainBlockStateInDirectionOrNull(World, Pos, Direction.NORTH, powerProvider);
+            if (bsNorth != null && bsNorth.get(WindMill.FACING) == Direction.SOUTH) { //implement facing property for power sources like i did with pipe properties
+                return Direction.NORTH;
+            }
+
+            BlockState bsSouth = SurroundingPipesInfo.GetCertainBlockStateInDirectionOrNull(World, Pos, Direction.SOUTH, powerProvider);
+            if (bsSouth != null && bsSouth.get(WindMill.FACING) == Direction.NORTH) {
+                return Direction.SOUTH;
+            }
+
+            BlockState bsEast = SurroundingPipesInfo.GetCertainBlockStateInDirectionOrNull(World, Pos, Direction.EAST, powerProvider);
+            if (bsEast != null && bsEast.get(WindMill.FACING) == Direction.WEST) {
+                return Direction.EAST;
+            }
+
+            BlockState bsWest = SurroundingPipesInfo.GetCertainBlockStateInDirectionOrNull(World, Pos, Direction.WEST, powerProvider);
+            if (bsWest != null && bsWest.get(WindMill.FACING) == Direction.EAST) {
+                return Direction.WEST;
+            }
+        }
+
+        return null;
+    }
+
+    public int AmountOfPipeNeighbors() {
         if (!IsEvaluated())
             Evaluate();
 
@@ -87,17 +125,17 @@ public class SurroundingPipesInfo {
         return sum;
     }
 
-    public int AmountOfConnectionSeekingOrAlreadyConnectedNeighbors() {
+    public int AmountOfCALPs() {
         if (!IsEvaluated())
             Evaluate();
 
         int sum = 0;
-        sum += this.IsInNorthConnectionSeekerOrAlreadyConnected() ? 1 : 0;
-        sum += this.IsInSouthConnectionSeekerOrAlreadyConnected() ? 1 : 0;
-        sum += this.IsInEastConnectionSeekerOrAlreadyConnected() ? 1 : 0;
-        sum += this.IsInWestConnectionSeekerOrAlreadyConnected() ? 1 : 0;
-        sum += this.IsInUpConnectionSeekerOrAlreadyConnected() ? 1 : 0;
-        sum += this.IsInDownConnectionSeekerOrAlreadyConnected() ? 1 : 0;
+        sum += this.IsInNorthCALP() ? 1 : 0;
+        sum += this.IsInSouthCALP() ? 1 : 0;
+        sum += this.IsInEastCALP() ? 1 : 0;
+        sum += this.IsInWestCALP() ? 1 : 0;
+        sum += this.IsInUpCALP() ? 1 : 0;
+        sum += this.IsInDownCALP() ? 1 : 0;
 
         return sum;
     }
@@ -110,7 +148,7 @@ public class SurroundingPipesInfo {
         if (this.GetPipeConnectionState() == PipeConnectionState.Full)
             return this.BlockState;
 
-        int amount = this.AmountOfConnectionSeekingOrAlreadyConnectedNeighbors();
+        int amount = this.AmountOfCALPs();
 
         if (amount == 0 && this.LookingDirection != null) {
             return switch (this.LookingDirection.getOpposite()) {
@@ -121,42 +159,38 @@ public class SurroundingPipesInfo {
         }
 
         if (amount == 1) {
-            if (north != null) {
-                if (CheckPipeConnectedTo(north, Direction.NORTH))
-                    return this.BlockState;
+            //when breaking pipe on the edge then the edge triggers a neighbor update
+            //therefore i check in here weather or not that pipe is still connected to the other pipe if yes one of those six cases below hits
+            if (north != null && CheckPipeConnectedTo(north, Direction.NORTH)) {
+                return this.BlockState;
             }
-            if (south != null) {
-                if (CheckPipeConnectedTo(south, Direction.SOUTH))
-                    return this.BlockState;
+            if (south != null && CheckPipeConnectedTo(south, Direction.SOUTH)) {
+                return this.BlockState;
             }
-            if (east != null) {
-                if (CheckPipeConnectedTo(east, Direction.EAST))
-                    return this.BlockState;
+            if (east != null && CheckPipeConnectedTo(east, Direction.EAST)) {
+                return this.BlockState;
             }
-            if (west != null) {
-                if (CheckPipeConnectedTo(west, Direction.WEST))
-                    return this.BlockState;
+            if (west != null && CheckPipeConnectedTo(west, Direction.WEST)) {
+                return this.BlockState;
             }
-            if (up != null) {
-                if (CheckPipeConnectedTo(up, Direction.UP))
-                    return this.BlockState;
+            if (up != null && CheckPipeConnectedTo(up, Direction.UP)) {
+                return this.BlockState;
             }
-            if (down != null) {
-                if (CheckPipeConnectedTo(down, Direction.DOWN))
-                    return this.BlockState;
+            if (down != null && CheckPipeConnectedTo(down, Direction.DOWN)) {
+                return this.BlockState;
             }
 
-            if (this.IsInNorthConnectionSeekerOrAlreadyConnected() || this.IsInSouthConnectionSeekerOrAlreadyConnected()) {
-                //and i am not connected to north then connect there -> but afterwards when i already used the logic to determine which direction i have looked in already use E piece -> this should not be hit
-                //where as when a block is placed to a not correctly facing pipe then it should be hit
+            //on the other hand when placing a new block and i have a neighbor that is not connected to anything i align the new block in the neighbor direction and into my looking direction which is the code with > 1 amout of neighbors
+            //and i also align the neighbor into the newly place pipe in a straigh maner since he only has one neighbor -> this is what happens in the below 3 cases
+            if (this.IsInNorthCALP() || this.IsInSouthCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.F1);
             }
 
-            if (this.IsInEastConnectionSeekerOrAlreadyConnected() || this.IsInWestConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInEastCALP() || this.IsInWestCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.F2);
             }
 
-            if (this.IsInUpConnectionSeekerOrAlreadyConnected() || this.IsInDownConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInUpCALP() || this.IsInDownCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.F3);
             }
         }
@@ -165,66 +199,66 @@ public class SurroundingPipesInfo {
             //Priority Ifs
 
             //3
-            if (this.IsInNorthConnectionSeekerOrAlreadyConnected() && this.IsInSouthConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInNorthCALP() && this.IsInSouthCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.F1);
             }
 
-            if (this.IsInEastConnectionSeekerOrAlreadyConnected() && this.IsInWestConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInEastCALP() && this.IsInWestCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.F2);
             }
 
-            if (this.IsInUpConnectionSeekerOrAlreadyConnected() && this.IsInDownConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInUpCALP() && this.IsInDownCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.F3);
             }
 
             //12
-            if (this.IsInNorthConnectionSeekerOrAlreadyConnected() && this.IsInEastConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInNorthCALP() && this.IsInEastCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E1);
             }
 
-            if (this.IsInEastConnectionSeekerOrAlreadyConnected() && this.IsInSouthConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInEastCALP() && this.IsInSouthCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E2);
             }
 
-            if (this.IsInSouthConnectionSeekerOrAlreadyConnected() && this.IsInWestConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInSouthCALP() && this.IsInWestCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E3);
             }
 
-            if (this.IsInWestConnectionSeekerOrAlreadyConnected() && this.IsInNorthConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInWestCALP() && this.IsInNorthCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E4);
             }
 
 
-            if (this.IsInNorthConnectionSeekerOrAlreadyConnected() && this.IsInUpConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInNorthCALP() && this.IsInUpCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E5);
             }
 
-            if (this.IsInNorthConnectionSeekerOrAlreadyConnected() && this.IsInDownConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInNorthCALP() && this.IsInDownCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E6);
             }
 
-            if (this.IsInEastConnectionSeekerOrAlreadyConnected() && this.IsInUpConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInEastCALP() && this.IsInUpCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E7);
             }
 
-            if (this.IsInEastConnectionSeekerOrAlreadyConnected() && this.IsInDownConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInEastCALP() && this.IsInDownCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E8);
             }
 
 
-            if (this.IsInSouthConnectionSeekerOrAlreadyConnected() && this.IsInUpConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInSouthCALP() && this.IsInUpCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E9);
             }
 
-            if (this.IsInSouthConnectionSeekerOrAlreadyConnected() && this.IsInDownConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInSouthCALP() && this.IsInDownCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E10);
             }
 
-            if (this.IsInWestConnectionSeekerOrAlreadyConnected() && this.IsInUpConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInWestCALP() && this.IsInUpCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E11);
             }
 
-            if (this.IsInWestConnectionSeekerOrAlreadyConnected() && this.IsInDownConnectionSeekerOrAlreadyConnected()) {
+            if (this.IsInWestCALP() && this.IsInDownCALP()) {
                 return this.BlockState.with(PipeProperties.PIPE_ID, PipeID.E12);
             }
         }
@@ -236,42 +270,50 @@ public class SurroundingPipesInfo {
         this.LookingDirection = dir;
     }
 
-    public boolean IsInNorthConnectionSeekerOrAlreadyConnected() {
-        return this.IsInDirConnectionSeekerOrAlreadyConnected(north, Direction.NORTH);
+    public boolean IsInNorthCALP() {
+        return this.IsInDirCALP(north, Direction.NORTH);
     }
-    public boolean IsInSouthConnectionSeekerOrAlreadyConnected() {
-        return this.IsInDirConnectionSeekerOrAlreadyConnected(south, Direction.SOUTH);
+    public boolean IsInSouthCALP() {
+        return this.IsInDirCALP(south, Direction.SOUTH);
     }
-    public boolean IsInEastConnectionSeekerOrAlreadyConnected() {
-        return this.IsInDirConnectionSeekerOrAlreadyConnected(east, Direction.EAST);
+    public boolean IsInEastCALP() {
+        return this.IsInDirCALP(east, Direction.EAST);
     }
-    public boolean IsInWestConnectionSeekerOrAlreadyConnected() {
-        return this.IsInDirConnectionSeekerOrAlreadyConnected(west, Direction.WEST);
+    public boolean IsInWestCALP() {
+        return this.IsInDirCALP(west, Direction.WEST);
     }
-    public boolean IsInUpConnectionSeekerOrAlreadyConnected() {
-        return this.IsInDirConnectionSeekerOrAlreadyConnected(up, Direction.UP);
+    public boolean IsInUpCALP() {
+        return this.IsInDirCALP(up, Direction.UP);
     }
-    public boolean IsInDownConnectionSeekerOrAlreadyConnected() {
-        return this.IsInDirConnectionSeekerOrAlreadyConnected(down, Direction.DOWN);
+    public boolean IsInDownCALP() {
+        return this.IsInDirCALP(down, Direction.DOWN);
     }
 
-    //Is In Dir Valid means ->
+    //Is In Dir Valid means // CALP MEANS (starting chars) ->
     //Connection Seeker OR
-    //Already Connected OR
-    //Looking Direction OR
-    public boolean IsInDirConnectionSeekerOrAlreadyConnected(SurroundingPipesInfo info, Direction dir) {
+    //Already Connected (btw means already connected to this / yourself) OR
+    //Looking Direction (could also be named fake neighbor - since im faking the beeing of someone whos seeking connection - which is something I DONT DO in the CheckPipeConnectedTo so keep that in mind) OR
+    //Power Producer Direction
+    public boolean IsInDirCALP(SurroundingPipesInfo info, Direction dir) {
         if (!IsEvaluated())
             Evaluate();
 
-        boolean LookingDir = this.LookingDirection != null && this.LookingDirection.getOpposite() == dir;
-        if (LookingDir) return true;
+        //check for looking dir
+        if (this.LookingDirection != null && this.LookingDirection.getOpposite() == dir) //faking dir
+            return true;
 
+        //check for power provider
+        if (this.CorrectlyFacingPowerProviderDirection != null && this.CorrectlyFacingPowerProviderDirection == dir)
+            return true;
+
+        //check on neighbor
         if (info != null) {
             if (!info.IsEvaluated())
                 info.Evaluate();
 
             PipeConnectionState state = info.GetPipeConnectionState();
 
+            //check for connection seeker or already connected
             return  state == PipeConnectionState.Not ||
                     state == PipeConnectionState.One ||
                     this.CheckPipeConnectedTo(info, dir);
@@ -286,7 +328,7 @@ public class SurroundingPipesInfo {
         if (!IsEvaluated())
             Evaluate();
 
-        if (AmountOfNeighbors() == 0)
+        if (AmountOfPipeNeighbors() == 0)
             return PipeConnectionState.Not;
 
         int connectionsFound = 0;
@@ -317,6 +359,9 @@ public class SurroundingPipesInfo {
         //this can be even easier demonstrated with two pipes facing north south and another facing north south
         if (this.OpenFaces.getLeft() != dirOfNeighbor && this.OpenFaces.getRight() != dirOfNeighbor)
             return false;
+
+        if (this.CorrectlyFacingPowerProviderDirection != null && this.CorrectlyFacingPowerProviderDirection == dirOfNeighbor)
+            return true;
 
         if (neighborInfo != null) {
             if (!neighborInfo.IsEvaluated())
@@ -355,7 +400,7 @@ public class SurroundingPipesInfo {
         };
     }
 
-    public static SurroundingPipesInfo HasSameBlockInDir(World world, BlockPos pos, Direction direction) {
+    public static SurroundingPipesInfo HasSameInDir(World world, BlockPos pos, List<Block> powerProviders, Direction direction) {
         BlockPos neighborBlockPos = pos.offset(direction);
 
         BlockState blockState = world.getBlockState(pos);
@@ -364,14 +409,21 @@ public class SurroundingPipesInfo {
         Block block = blockState.getBlock();
         Block neighborBlock = neighborBlockState.getBlock();
 
-        return neighborBlock.equals(block) ? new SurroundingPipesInfo(world, neighborBlockPos) : null;
+        return neighborBlock.equals(block) ? new SurroundingPipesInfo(world, neighborBlockPos, powerProviders) : null;
     }
 
-    public static SurroundingPipesInfo HasMatchBlockInDir(World world, BlockPos pos, Direction direction, Block match) {
+    public static SurroundingPipesInfo HasPipeInDir(World world, BlockPos pos, List<Block> powerProviders, Direction direction, Block pipe) {
         BlockPos neighborBlockPos = pos.offset(direction);
         BlockState neighborBlockState = world.getBlockState(neighborBlockPos);
         Block neighborBlock = neighborBlockState.getBlock();
 
-        return neighborBlock.equals(match) ? new SurroundingPipesInfo(world, neighborBlockPos) : null;
+        return neighborBlock.equals(pipe) ? new SurroundingPipesInfo(world, neighborBlockPos, powerProviders) : null;
+    }
+
+    public static BlockState GetCertainBlockStateInDirectionOrNull(World world, BlockPos pos, Direction direction, Block block) {
+        BlockPos neighborBlockPos = pos.offset(direction);
+        BlockState neighborBlockState = world.getBlockState(neighborBlockPos);
+
+        return neighborBlockState.getBlock().equals(block) ? neighborBlockState : null;
     }
 }
