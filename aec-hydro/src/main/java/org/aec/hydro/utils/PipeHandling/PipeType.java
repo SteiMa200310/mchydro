@@ -1,4 +1,4 @@
-package org.aec.hydro.utils;
+package org.aec.hydro.utils.PipeHandling;
 
 import net.minecraft.util.StringIdentifiable;
 

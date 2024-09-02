@@ -1,24 +1,30 @@
 package org.aec.hydro.block;
 
 import net.minecraft.block.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.aec.hydro.utils.*;
+import org.aec.hydro.utils.PipeHandling.PipeProperties;
+import org.aec.hydro.utils.PipeHandling.PipeShapeWrapper;
+import org.aec.hydro.utils.PipeHandling.SurroundingPipesInfo;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class PipeV2 extends HorizontalFacingBlock {
-    private static final PipeShapeWrapper PipeShapeWrapper = new PipeShapeWrapper(
+    private static final org.aec.hydro.utils.PipeHandling.PipeShapeWrapper PipeShapeWrapper = new PipeShapeWrapper(
         VoxelGenerator.makePipeV2LongShape_NORTH_SOUTH(),
         VoxelGenerator.makePipeV2EdgeShape_NORTH_EAST()
     );
@@ -47,7 +53,7 @@ public class PipeV2 extends HorizontalFacingBlock {
 //        }
 
         int amount = info.AmountOfCALPs();
-        System.out.println(amount);
+//        System.out.println(amount);
 
         if (amount == 1 || amount == 0) {
             //if i always set it could get priority over a real block which is not what i want
@@ -80,7 +86,14 @@ public class PipeV2 extends HorizontalFacingBlock {
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         SurroundingPipesInfo info = new SurroundingPipesInfo(world, pos, Arrays.asList(_HydroBlocks.WIND_MILL));
 
-        System.out.println(info.GetPipeConnectionState().toString() + " " + pos.toString());
+//        System.out.println(info.GetPipeConnectionState().toString() + " " + pos.toString());
         world.setBlockState(pos, info.GetCorrectState());
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        player.sendMessage(Text.of("Power Level: " + world.getBlockState(pos).get(PipeProperties.PowerLevel) + " || " + world.getBlockState(pos).get(PipeProperties.PIPE_ID)), true);
+
+        return super.onUse(state, world, pos, player, hand, hit);
     }
 }

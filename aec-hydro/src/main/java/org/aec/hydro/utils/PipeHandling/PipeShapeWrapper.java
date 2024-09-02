@@ -1,7 +1,7 @@
-package org.aec.hydro.utils;
+package org.aec.hydro.utils.PipeHandling;
 
 import net.minecraft.util.shape.VoxelShape;
-import org.aec.hydro.block.PipeV2;
+import org.aec.hydro.utils.VoxelGenerator;
 
 public class PipeShapeWrapper {
     public VoxelShape SHAPE_NORTH_SOUTH;

@@ -1,8 +1,7 @@
-package org.aec.hydro.utils;
+package org.aec.hydro.utils.PipeHandling;
 
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Property;
 
 public class PipeProperties {
     public static final EnumProperty<PipeID> PIPE_ID = EnumProperty.of("pipe_id", PipeID.class);
