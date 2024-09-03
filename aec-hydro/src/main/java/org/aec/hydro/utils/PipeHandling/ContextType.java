@@ -1,6 +1,7 @@
 package org.aec.hydro.utils.PipeHandling;
 
-public enum PipeNeighborType {
+public enum ContextType {
+    FakeConnectie,
     Pipe,
     PowerProvider
 }
