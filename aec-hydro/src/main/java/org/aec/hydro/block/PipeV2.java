@@ -44,7 +44,7 @@ public class PipeV2 extends HorizontalFacingBlock {
     //private static final VoxelShape SHAPE_WEST_UP = VoxelGenerator.rotateShape(1, 2, 0, SHAPE_NORTH_EAST);
     private static final VoxelShape SHAPE_WEST_UP = VoxelGenerator.rotateShape(1, 2, 0, SHAPE_NORTH_EAST);
     //private static final VoxelShape SHAPE_WEST_DOWN = VoxelGenerator.rotateShape(1, 2, 1, SHAPE_NORTH_EAST);
-    private static final VoxelShape SHAPE_WEST_DOWN = VoxelGenerator.rotateShape(3, 2, 0, SHAPE_NORTH_EAST);;
+    private static final VoxelShape SHAPE_WEST_DOWN = VoxelGenerator.rotateShape(3, 2, 0, SHAPE_NORTH_EAST);
 
     public PipeV2(Settings settings) {
         super(settings);

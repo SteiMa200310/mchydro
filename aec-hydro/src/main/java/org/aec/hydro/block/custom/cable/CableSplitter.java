@@ -2,6 +2,9 @@ package org.aec.hydro.block.custom.cable;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -10,6 +13,10 @@ import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
 public class CableSplitter extends BlockWithEntity {
+    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makeCableSplitterShape();
+    private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(0,1,0, NORTH_SHAPE);
+    private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.rotateShape(0,2,0, NORTH_SHAPE);
+    private static final VoxelShape WEST_SHAPE = VoxelGenerator.rotateShape(0,3,0, NORTH_SHAPE);
     public CableSplitter(AbstractBlock.Settings settings) { super(settings); }
 
     @Nullable
@@ -23,9 +30,24 @@ public class CableSplitter extends BlockWithEntity {
         return BlockRenderType.MODEL;
     }
 
-    //TODO Voxlshape Splitter
+    @Nullable
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return getDefaultState().with(Properties.FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(Properties.FACING);
+    }
+
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return VoxelGenerator.makeCableShape();
+        return switch (state.get(Properties.FACING)) {
+            case DOWN, NORTH, UP -> NORTH_SHAPE;
+            case EAST -> EAST_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+        };
     }
 }

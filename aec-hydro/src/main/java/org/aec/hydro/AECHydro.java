@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import org.aec.hydro.block._HydroBlocks;
 
+import org.aec.hydro.block.entity.WindMillBlockEntity;
 import org.aec.hydro.block.entity._HydroBlockEntities;
 
 import org.aec.hydro.commands.ConfigureCommand;
@@ -15,6 +16,9 @@ import org.aec.hydro.utils.Pi4JHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.bernie.geckolib.GeckoLib;
+import team.reborn.energy.api.EnergyStorage;
+
+import java.util.function.BiFunction;
 
 public class AECHydro implements ModInitializer {
 	public static final String MOD_ID = "hydro";
