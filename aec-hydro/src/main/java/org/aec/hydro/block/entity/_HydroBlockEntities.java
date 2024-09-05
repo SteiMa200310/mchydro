@@ -43,10 +43,6 @@ public class _HydroBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(AECHydro.MOD_ID, "brenstoffzelle_entity"),
                     FabricBlockEntityTypeBuilder.create(BrennstoffzelleBlockEntity::new, _HydroBlocks.BRENSTOFFZELLE).build());
 
-    public static BlockEntityType<PipeBlockEntity> PIPE_BLOCK_ENTITY =
-            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(AECHydro.MOD_ID, "pipe_entity"),
-                    FabricBlockEntityTypeBuilder.create(PipeBlockEntity::new, _HydroBlocks.PIPE).build());
-
     public static void registerHydroBlockEntities(){
         AECHydro.LOGGER.info("Registering Hydro Block Entities for " + AECHydro.MOD_ID);
     }
