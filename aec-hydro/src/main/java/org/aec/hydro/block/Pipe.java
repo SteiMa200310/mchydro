@@ -1,12 +1,12 @@
 package org.aec.hydro.block;
 
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -15,13 +15,19 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.aec.hydro.block.custom.WindMill;
+import org.aec.hydro.block.entity.PipeBlockEntity;
+import org.aec.hydro.block.entity._HydroBlockEntities;
 import org.aec.hydro.utils.*;
 import org.aec.hydro.utils.PipeHandling.*;
+import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.text.Text;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
-public class Pipe extends HorizontalFacingBlock {
+public class Pipe extends BlockWithEntity  {
     private static final org.aec.hydro.utils.PipeHandling.PipeShapeWrapper PipeShapeWrapper = new PipeShapeWrapper(
         VoxelGenerator.makePipeV2LongShape_NORTH_SOUTH(),
         VoxelGenerator.makePipeV2EdgeShape_NORTH_EAST()
@@ -61,6 +67,11 @@ public class Pipe extends HorizontalFacingBlock {
     }
 
     @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(PipeProperties.PIPE_ID);
         builder.add(PipeProperties.PowerLevel);
@@ -81,10 +92,65 @@ public class Pipe extends HorizontalFacingBlock {
         world.setBlockState(pos, info.GetCorrectedState());
     }
 
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new PipeBlockEntity(pos,state);
+    }
+
+    // Called when the block is added to the world
+    @Override
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        super.onBlockAdded(state, world, pos, oldState, notify);
+
+        if (!world.isClient) {
+            PipeBlockEntity pipeEntity = (PipeBlockEntity) world.getBlockEntity(pos);
+            if (pipeEntity != null) {
+                // Perform the connection logic when the block is added
+                pipeEntity.checkAndPropagatePower(world, pos);
+            }
+        }
+    }
+
+    // Called when the block is broken by a player or an event
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
+
+        if (!world.isClient) {
+            PipeBlockEntity pipeEntity = (PipeBlockEntity) world.getBlockEntity(pos);
+            if (pipeEntity != null) {
+                // Remove power and propagate disconnection to any other connected pipes
+                pipeEntity.removePowerFromDisconnectedPipes(world, pos, new HashSet<>());
+            }
+        }
+    }
+
+    // Called when the block state is replaced (including destruction)
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (!state.isOf(newState.getBlock())) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof PipeBlockEntity) {
+                PipeBlockEntity pipeEntity = (PipeBlockEntity) blockEntity;
+
+                // Check if this pipe's removal disconnects any pipes from power
+                pipeEntity.removePowerFromDisconnectedPipes(world, pos, new HashSet<>());
+            }
+            super.onStateReplaced(state, world, pos, newState, moved);
+        }
+    }
+
+    // Handle player interaction with the block (optional)
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        player.sendMessage(Text.of("Power Level: " + world.getBlockState(pos).get(PipeProperties.PowerLevel) + " || " + world.getBlockState(pos).get(PipeProperties.PIPE_ID) + " || " + "Reciever Face: " + world.getBlockState(pos).get(PipeProperties.RecieverFace) + " || " + "Provider Face: " + world.getBlockState(pos).get(PipeProperties.ProviderFace)+ " || " + "Provider: " + world.getBlockState(pos).get(PipeProperties.IsProvider)), true);
-
-        return super.onUse(state, world, pos, player, hand, hit);
+        if (!world.isClient) {
+            PipeBlockEntity pipeEntity = (PipeBlockEntity) world.getBlockEntity(pos);
+            if (pipeEntity != null) {
+                // Example: Display the current power level to the player
+                player.sendMessage(Text.literal("Power Level: " + pipeEntity.getPowerLevel() + " || " + "Is Connected To Power " + pipeEntity.isConnectedToPowerSource(world, pos, new HashSet<>())), true);
+            }
+        }
+        return ActionResult.SUCCESS;
     }
 }

@@ -50,6 +50,10 @@ public class PipeContext {
 
         ID = getPipeID();
 
+        if(ID == null) return this.ToBeUsedBlockState;
+        return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, ID);
+
+        /*
         if(this.PipeContextType == ContextType.PowerProvider) return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, ID);
 
         if(ID != null){
@@ -61,9 +65,10 @@ public class PipeContext {
                 return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, ID).with(PipeProperties.PowerLevel, 10);
             }
         }
+        */
 
         //backup
-        return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, null).with(PipeProperties.ProviderFace, CustomDirection.NONE).with(PipeProperties.RecieverFace, CustomDirection.NONE).with(PipeProperties.IsProvider, false);
+        //return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, null).with(PipeProperties.ProviderFace, CustomDirection.NONE).with(PipeProperties.RecieverFace, CustomDirection.NONE).with(PipeProperties.IsProvider, false);
     }
 
     public int GetPowerLevelBasedOnRecieverFace(){
