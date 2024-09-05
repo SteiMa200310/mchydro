@@ -47,6 +47,7 @@ public class ContextConnectionState {
     public boolean IsOne() {
         return this.State.equals("one");
     }
+
     public boolean IsFull() {
         return this.State.equals("full");
     }

@@ -4,6 +4,7 @@ import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -38,6 +39,7 @@ public class Pipe extends HorizontalFacingBlock {
         this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.PowerLevel, 0));
         this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.RecieverFace, CustomDirection.NONE));
         this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.ProviderFace, CustomDirection.NONE));
+        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.IsProvider, false));
     }
 
     @Nullable
@@ -64,6 +66,8 @@ public class Pipe extends HorizontalFacingBlock {
         builder.add(PipeProperties.PowerLevel);
         builder.add(PipeProperties.RecieverFace);
         builder.add(PipeProperties.ProviderFace);
+        builder.add(PipeProperties.IsProvider);
+        builder.add(Properties.FACING);
     }
 
     @Override
@@ -79,7 +83,7 @@ public class Pipe extends HorizontalFacingBlock {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        player.sendMessage(Text.of("Power Level: " + world.getBlockState(pos).get(PipeProperties.PowerLevel) + " || " + world.getBlockState(pos).get(PipeProperties.PIPE_ID)), true);
+        player.sendMessage(Text.of("Power Level: " + world.getBlockState(pos).get(PipeProperties.PowerLevel) + " || " + world.getBlockState(pos).get(PipeProperties.PIPE_ID) + " || " + "Reciever Face: " + world.getBlockState(pos).get(PipeProperties.RecieverFace) + " || " + "Provider Face: " + world.getBlockState(pos).get(PipeProperties.ProviderFace)+ " || " + "Provider: " + world.getBlockState(pos).get(PipeProperties.IsProvider)), true);
 
         return super.onUse(state, world, pos, player, hand, hit);
     }

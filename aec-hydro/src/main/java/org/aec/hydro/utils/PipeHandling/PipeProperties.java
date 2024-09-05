@@ -1,5 +1,6 @@
 package org.aec.hydro.utils.PipeHandling;
 
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 
@@ -8,4 +9,5 @@ public class PipeProperties {
     public static final EnumProperty<CustomDirection> RecieverFace = EnumProperty.of("recieverface", CustomDirection.class);
     public static final EnumProperty<CustomDirection> ProviderFace = EnumProperty.of("providerface", CustomDirection.class);
     public static final IntProperty PowerLevel = IntProperty.of("powerlevel", 0, 10);
+    public static final BooleanProperty IsProvider = BooleanProperty.of("isprovider");
 }

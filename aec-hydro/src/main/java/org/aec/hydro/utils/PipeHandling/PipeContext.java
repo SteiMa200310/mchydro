@@ -2,14 +2,13 @@ package org.aec.hydro.utils.PipeHandling;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.aec.hydro.block._HydroBlocks;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class PipeContext {
@@ -18,6 +17,8 @@ public class PipeContext {
     private final List<Block> PowerProviders;
     private final ContextType PipeContextType;
     private boolean IsEvaluated = false;
+    private PipeID ID;
+    private Pair<CustomDirection, CustomDirection> FlowDirection;
 
     private BlockState ToBeUsedBlockState = null;
     private PipeContext North = null;
@@ -41,140 +42,191 @@ public class PipeContext {
 
         //prevents pipes that are already connected to still seek for new connections
         ContextConnectionState state = this.GetConnectionState();
+
         if (state.IsFull()) {
             //can also be just a triggered neighbor update where im prefectly fine
             return this.ToBeUsedBlockState;
         }
 
+        ID = getPipeID();
+
+        if(this.PipeContextType == ContextType.PowerProvider) return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, ID);
+
+        if(ID != null){
+            this.ToBeUsedBlockState = CalculateFlowDirection(GetOpenFacesBasedOnPipeId(ID));
+            int pwLvL = GetPowerLevelBasedOnRecieverFace();
+            if(pwLvL != -1) {
+                return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, ID).with(PipeProperties.PowerLevel, pwLvL).with(PipeProperties.IsProvider, true);
+            } else {
+                return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, ID).with(PipeProperties.PowerLevel, 10);
+            }
+        }
+
+        //backup
+        return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, null).with(PipeProperties.ProviderFace, CustomDirection.NONE).with(PipeProperties.RecieverFace, CustomDirection.NONE).with(PipeProperties.IsProvider, false);
+    }
+
+    public int GetPowerLevelBasedOnRecieverFace(){
+        Direction dir = CustomDirectionToDirection(this.ToBeUsedBlockState.get(PipeProperties.RecieverFace));
+        if(dir ==null) return -1;
+
+        PipeContext ctx = GetContextBasedOnDirection(dir);
+        if(ctx == null) return -1;
+        return ctx.GetActualBlockState().get(PipeProperties.PowerLevel);
+    }
+
+    public BlockState CalculateFlowDirection(Pair<Direction, Direction> openFaces){
+        PipeContext dir1ctx = GetContextBasedOnDirection(openFaces.getLeft());
+        PipeContext dir2ctx = GetContextBasedOnDirection(openFaces.getRight());
+
+        if(dir1ctx != null && dir1ctx.PipeContextType == ContextType.PowerProvider) {
+            return this.ToBeUsedBlockState.with(PipeProperties.RecieverFace, DirectionToCustomDirection(openFaces.getLeft())).with(PipeProperties.ProviderFace, DirectionToCustomDirection(openFaces.getRight()));
+        }
+
+        if(dir2ctx != null && dir2ctx.PipeContextType == ContextType.PowerProvider) {
+            return this.ToBeUsedBlockState.with(PipeProperties.ProviderFace, DirectionToCustomDirection(openFaces.getLeft())).with(PipeProperties.RecieverFace, DirectionToCustomDirection(openFaces.getRight()));
+        }
+
+        return this.ToBeUsedBlockState.with(PipeProperties.RecieverFace, CustomDirection.NONE).with(PipeProperties.ProviderFace, CustomDirection.NONE);
+    }
+
+    public CustomDirection DirectionToCustomDirection(Direction dir){
+        return switch (dir){
+            case NORTH -> CustomDirection.NORTH;
+            case EAST -> CustomDirection.EAST;
+            case SOUTH -> CustomDirection.SOUTH;
+            case WEST -> CustomDirection.WEST;
+            case UP -> CustomDirection.UP;
+            case DOWN -> CustomDirection.DOWN;
+        };
+    }
+
+    public Direction CustomDirectionToDirection(CustomDirection dir){
+        return switch (dir){
+            case NORTH -> Direction.NORTH;
+            case EAST -> Direction.EAST;
+            case SOUTH -> Direction.SOUTH;
+            case WEST -> Direction.WEST;
+            case UP -> Direction.UP;
+            case DOWN -> Direction.DOWN;
+            case NONE -> null;
+        };
+    }
+
+    public PipeID getPipeID(){
         //BEGIN Priority Ifs ------------------- (null check unnessecary)
         //3
         if (this.North != null && PipeContext.CSH_INCW(this, Direction.NORTH) && this.South != null && PipeContext.CSH_INCW(this, Direction.SOUTH)) {
-            return this.ToBeUsedBlockState
-                .with(PipeProperties.PIPE_ID, PipeID.F1);
+            return PipeID.F1;
         }
 
         if (this.East != null && PipeContext.CSH_INCW(this, Direction.EAST) && this.West != null && PipeContext.CSH_INCW(this, Direction.WEST)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.F2);
+            return PipeID.F2;
         }
 
         if (this.Up != null && PipeContext.CSH_INCW(this, Direction.UP) && this.Down != null && PipeContext.CSH_INCW(this, Direction.DOWN)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.F3);
+            return PipeID.F3;
         }
 
         //12
         if (this.North != null && PipeContext.CSH_INCW(this, Direction.NORTH) && this.East != null && PipeContext.CSH_INCW(this, Direction.EAST)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E1);
+            return PipeID.E1;
         }
 
         if (this.East != null && PipeContext.CSH_INCW(this, Direction.EAST) && this.South != null && PipeContext.CSH_INCW(this, Direction.SOUTH)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E2);
+            return PipeID.E2;
         }
 
         if (this.South != null && PipeContext.CSH_INCW(this, Direction.SOUTH) && this.West != null && PipeContext.CSH_INCW(this, Direction.WEST)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E3);
+            return PipeID.E3;
         }
 
         if (this.West != null && PipeContext.CSH_INCW(this, Direction.WEST) && this.North != null && PipeContext.CSH_INCW(this, Direction.NORTH)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E4);
+            return PipeID.E4;
         }
 
 
         if (this.North != null && PipeContext.CSH_INCW(this, Direction.NORTH) && this.Up != null && PipeContext.CSH_INCW(this, Direction.UP)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E5);
+            return PipeID.E5;
         }
 
         if (this.North != null && PipeContext.CSH_INCW(this, Direction.NORTH) && this.Down != null && PipeContext.CSH_INCW(this, Direction.DOWN)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E6);
+            return PipeID.E6;
         }
 
         if (this.East != null && PipeContext.CSH_INCW(this, Direction.EAST) && this.Up != null && PipeContext.CSH_INCW(this, Direction.UP)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E7);
+            return PipeID.E7;
         }
 
         if (this.East != null && PipeContext.CSH_INCW(this, Direction.EAST) && this.Down != null && PipeContext.CSH_INCW(this, Direction.DOWN)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E8);
+            return PipeID.E8;
         }
 
 
         if (this.South != null && PipeContext.CSH_INCW(this, Direction.SOUTH) && this.Up != null && PipeContext.CSH_INCW(this, Direction.UP)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E9);
+            return PipeID.E9;
         }
 
         if (this.South != null && PipeContext.CSH_INCW(this, Direction.SOUTH) && this.Down != null && PipeContext.CSH_INCW(this, Direction.DOWN)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E10);
+            return PipeID.E10;
         }
 
         if (this.West != null && PipeContext.CSH_INCW(this, Direction.WEST) && this.Up != null && PipeContext.CSH_INCW(this, Direction.UP)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E11);
+            return PipeID.E11;
         }
 
         if (this.West != null && PipeContext.CSH_INCW(this, Direction.WEST) && this.Down != null && PipeContext.CSH_INCW(this, Direction.DOWN)) {
-            return this.ToBeUsedBlockState
-                    .with(PipeProperties.PIPE_ID, PipeID.E12);
+            return PipeID.E12;
         }
         //END Priority Ifs -------------------
 
         if (this.North != null && this.ConnectedToContext(Direction.NORTH))
-            return this.ToBeUsedBlockState;
+            return null;
 
         if (this.South != null && this.ConnectedToContext(Direction.SOUTH))
-            return this.ToBeUsedBlockState;
+            return null;
 
         if (this.East != null && this.ConnectedToContext(Direction.EAST))
-            return this.ToBeUsedBlockState;
+            return null;
 
         if (this.West != null && this.ConnectedToContext(Direction.WEST))
-            return this.ToBeUsedBlockState;
+            return null;
 
         if (this.Up != null && this.ConnectedToContext(Direction.UP))
-            return this.ToBeUsedBlockState;
+            return null;
 
         if (this.Down != null && this.ConnectedToContext(Direction.DOWN))
-            return this.ToBeUsedBlockState;
+            return null;
 
         //if no actuals hit then look for looking direction
         for (Direction dir : Direction.values()) {
             PipeContext cur = this.GetContextBasedOnDirection(dir);
             if (cur != null && cur.PipeContextType == ContextType.FakeConnectie) {
                 if (dir == Direction.NORTH || dir == Direction.SOUTH) {
-                    return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F1);
+                    return PipeID.F1;
                 }
 
                 if (dir == Direction.EAST || dir == Direction.WEST) {
-                    return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F2);
+                    return PipeID.F2;
                 }
 
                 if (dir == Direction.UP || dir == Direction.DOWN) {
-                    return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F3);
+                    return PipeID.F3;
                 }
             }
         }
 
         //here would be the logic with that one error to preserve one edge of the previously existing connection not sure if that would fit into the context logic tho
         if (this.North != null && this.North.PipeContextType == ContextType.Pipe || this.South != null && this.South.PipeContextType == ContextType.Pipe)
-            return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F1);
+            return PipeID.F1;
 
         if (this.East != null && this.East.PipeContextType == ContextType.Pipe || this.West != null && this.West.PipeContextType == ContextType.Pipe)
-            return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F2);
+            return PipeID.F2;
 
         if (this.Up != null && this.Up.PipeContextType == ContextType.Pipe || this.Down != null && this.Down.PipeContextType == ContextType.Pipe)
-            return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F3);
+            return PipeID.F3;
 
-        //backup
-        return this.ToBeUsedBlockState;
+        return null;
     }
 
     //Evaluators
@@ -251,6 +303,7 @@ public class PipeContext {
     public BlockState GetActualBlockState() {
         return this.World.getBlockState(this.Pos);
     }
+
     public Pair<Direction, Direction> GetOpenFaces() {
         if (this.PipeContextType == ContextType.Pipe)
             return PipeContext.GetOpenFacesBasedOnPipeId(this.ToBeUsedBlockState.get(PipeProperties.PIPE_ID));
@@ -391,11 +444,11 @@ public class PipeContext {
         Block block = blockState.getBlock();
         Block neighborBlock = neighborBlockState.getBlock();
 
-        if (neighborBlock.equals(block))
-            return new PipeContext(world, neighborBlockPos, ContextType.Pipe, powerProviders);
+        if ((neighborBlock.equals(_HydroBlocks.PIPE) || neighborBlock.equals(_HydroBlocks.WIND_MILL)) && neighborBlockState.get(PipeProperties.IsProvider))
+            return new PipeContext(world, neighborBlockPos, ContextType.PowerProvider,powerProviders);
 
-        if (powerProviders.stream().anyMatch(b -> b.equals(neighborBlock)))
-            return new PipeContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders);
+        if (neighborBlock.equals(_HydroBlocks.PIPE))
+            return new PipeContext(world, neighborBlockPos, ContextType.Pipe, powerProviders);
 
         return null;
     }
@@ -404,11 +457,11 @@ public class PipeContext {
         BlockState neighborBlockState = world.getBlockState(neighborBlockPos);
         Block neighborBlock = neighborBlockState.getBlock();
 
-        if (neighborBlock.equals(block))
-            return new PipeContext(world, neighborBlockPos, ContextType.Pipe, powerProviders);
-
-        if (powerProviders.stream().anyMatch(b -> b.equals(neighborBlock)))
+        if ((neighborBlock.equals(_HydroBlocks.PIPE) || neighborBlock.equals(_HydroBlocks.WIND_MILL)) && neighborBlockState.get(PipeProperties.IsProvider))
             return new PipeContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders);
+
+        if (neighborBlock.equals(_HydroBlocks.PIPE))
+            return new PipeContext(world, neighborBlockPos, ContextType.Pipe, powerProviders);
 
         return null;
     }

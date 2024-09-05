@@ -11,12 +11,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import org.aec.hydro.block.entity.WindMillBlockEntity;
+import org.aec.hydro.utils.PipeHandling.PipeProperties;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
 public class WindMill extends BlockWithEntity {
     public WindMill(Settings settings) {
         super(settings);
+
+        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.PowerLevel, 1));
+        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.IsProvider, true));
     }
 
     // Block Entity
@@ -50,16 +54,7 @@ public class WindMill extends BlockWithEntity {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(Properties.FACING);
-    }
-
-    // FACING Property
-    @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(Properties.FACING)));
+        builder.add(PipeProperties.PowerLevel);
+        builder.add(PipeProperties.IsProvider);
     }
 }
