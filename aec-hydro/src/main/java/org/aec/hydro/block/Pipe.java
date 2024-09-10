@@ -4,7 +4,6 @@ import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -18,8 +17,6 @@ import net.minecraft.world.World;
 import org.aec.hydro.utils.*;
 import org.aec.hydro.utils.PipeHandling.*;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
 
 public class Pipe extends HorizontalFacingBlock {
     private static final org.aec.hydro.utils.PipeHandling.PipeShapeWrapper PipeShapeWrapper = new PipeShapeWrapper(
@@ -35,17 +32,17 @@ public class Pipe extends HorizontalFacingBlock {
     public Pipe(Settings settings) {
         super(settings);
 
-        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.PIPE_ID, PipeID.F1));
-        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.PowerLevel, 0));
-        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.RecieverFace, CustomDirection.NONE));
-        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.ProviderFace, CustomDirection.NONE));
-        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.IsProvider, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.PIPE_ID, PipeID.F1)
+                .with(PipeProperties.PowerLevel, 0)
+                .with(PipeProperties.RecieverFace, CustomDirection.NONE)
+                .with(PipeProperties.ProviderFace, CustomDirection.NONE)
+                .with(PipeProperties.IsProvider, false));
     }
 
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        PipeContext info = new PipeContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL));
+        PipeContext info = new PipeContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe);
         info.EvaluateMatch(_HydroBlocks.PIPE);
         //need to get based on Match since -> by the time placing the state is still what is was before -> most likly air
 
@@ -77,7 +74,7 @@ public class Pipe extends HorizontalFacingBlock {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        PipeContext info = new PipeContext(world, pos, ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL));
+        PipeContext info = new PipeContext(world, pos, ContextType.Pipe);
         world.setBlockState(pos, info.GetCorrectedState());
     }
 
