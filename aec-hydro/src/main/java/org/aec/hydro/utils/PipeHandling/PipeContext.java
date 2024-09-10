@@ -17,6 +17,7 @@ public class PipeContext {
     private final BlockPos Pos;
     private final List<Block> PowerProviders;
     private final ContextType PipeContextType;
+    private Direction FakeConnectie = null;
     private boolean IsEvaluated = false;
 
     private BlockState ToBeUsedBlockState = null;
@@ -34,10 +35,16 @@ public class PipeContext {
         PipeContextType = contextType;
     }
 
+    //fake connectie not working in specific case when real but fully connected is there -> fixed
+    //power provider can only take on to connect
+    //3 faces in different direction where all would connect the 3th not prio one will still change its direction to there
+
     //Logic
     public BlockState GetCorrectedState() {
         if (!this.IsEvaluated)
             this.Evaluate();
+
+        System.out.println(this.Pos);
 
         //prevents pipes that are already connected to still seek for new connections
         ContextConnectionState state = this.GetConnectionState();
@@ -48,80 +55,80 @@ public class PipeContext {
 
         //BEGIN Priority Ifs ------------------- (null check unnessecary)
         //3
-        if (this.North != null && PipeContext.CSH_INCW(this, Direction.NORTH) && this.South != null && PipeContext.CSH_INCW(this, Direction.SOUTH)) {
+        if (PipeContext.CSH_INCW(this, Direction.NORTH, Direction.SOUTH)) {
             return this.ToBeUsedBlockState
                 .with(PipeProperties.PIPE_ID, PipeID.F1);
         }
 
-        if (this.East != null && PipeContext.CSH_INCW(this, Direction.EAST) && this.West != null && PipeContext.CSH_INCW(this, Direction.WEST)) {
+        if (PipeContext.CSH_INCW(this, Direction.EAST, Direction.WEST)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.F2);
         }
 
-        if (this.Up != null && PipeContext.CSH_INCW(this, Direction.UP) && this.Down != null && PipeContext.CSH_INCW(this, Direction.DOWN)) {
+        if (PipeContext.CSH_INCW(this, Direction.UP, Direction.DOWN)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.F3);
         }
 
         //12
-        if (this.North != null && PipeContext.CSH_INCW(this, Direction.NORTH) && this.East != null && PipeContext.CSH_INCW(this, Direction.EAST)) {
+        if (PipeContext.CSH_INCW(this, Direction.NORTH, Direction.EAST)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E1);
         }
 
-        if (this.East != null && PipeContext.CSH_INCW(this, Direction.EAST) && this.South != null && PipeContext.CSH_INCW(this, Direction.SOUTH)) {
+        if (PipeContext.CSH_INCW(this, Direction.EAST, Direction.SOUTH)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E2);
         }
 
-        if (this.South != null && PipeContext.CSH_INCW(this, Direction.SOUTH) && this.West != null && PipeContext.CSH_INCW(this, Direction.WEST)) {
+        if (PipeContext.CSH_INCW(this, Direction.SOUTH, Direction.WEST)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E3);
         }
 
-        if (this.West != null && PipeContext.CSH_INCW(this, Direction.WEST) && this.North != null && PipeContext.CSH_INCW(this, Direction.NORTH)) {
+        if (PipeContext.CSH_INCW(this, Direction.WEST, Direction.NORTH)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E4);
         }
 
 
-        if (this.North != null && PipeContext.CSH_INCW(this, Direction.NORTH) && this.Up != null && PipeContext.CSH_INCW(this, Direction.UP)) {
+        if (PipeContext.CSH_INCW(this, Direction.NORTH, Direction.UP)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E5);
         }
 
-        if (this.North != null && PipeContext.CSH_INCW(this, Direction.NORTH) && this.Down != null && PipeContext.CSH_INCW(this, Direction.DOWN)) {
+        if (PipeContext.CSH_INCW(this, Direction.NORTH, Direction.DOWN)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E6);
         }
 
-        if (this.East != null && PipeContext.CSH_INCW(this, Direction.EAST) && this.Up != null && PipeContext.CSH_INCW(this, Direction.UP)) {
+        if (PipeContext.CSH_INCW(this, Direction.EAST, Direction.UP)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E7);
         }
 
-        if (this.East != null && PipeContext.CSH_INCW(this, Direction.EAST) && this.Down != null && PipeContext.CSH_INCW(this, Direction.DOWN)) {
+        if (PipeContext.CSH_INCW(this, Direction.EAST, Direction.DOWN)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E8);
         }
 
 
-        if (this.South != null && PipeContext.CSH_INCW(this, Direction.SOUTH) && this.Up != null && PipeContext.CSH_INCW(this, Direction.UP)) {
+        if (PipeContext.CSH_INCW(this, Direction.SOUTH, Direction.UP)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E9);
         }
 
-        if (this.South != null && PipeContext.CSH_INCW(this, Direction.SOUTH) && this.Down != null && PipeContext.CSH_INCW(this, Direction.DOWN)) {
+        if (PipeContext.CSH_INCW(this, Direction.SOUTH, Direction.DOWN)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E10);
         }
 
-        if (this.West != null && PipeContext.CSH_INCW(this, Direction.WEST) && this.Up != null && PipeContext.CSH_INCW(this, Direction.UP)) {
+        if (PipeContext.CSH_INCW(this, Direction.WEST, Direction.UP)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E11);
         }
 
-        if (this.West != null && PipeContext.CSH_INCW(this, Direction.WEST) && this.Down != null && PipeContext.CSH_INCW(this, Direction.DOWN)) {
+        if (PipeContext.CSH_INCW(this, Direction.WEST, Direction.DOWN)) {
             return this.ToBeUsedBlockState
                     .with(PipeProperties.PIPE_ID, PipeID.E12);
         }
@@ -146,31 +153,28 @@ public class PipeContext {
             return this.ToBeUsedBlockState;
 
         //if no actuals hit then look for looking direction
-        for (Direction dir : Direction.values()) {
-            PipeContext cur = this.GetContextBasedOnDirection(dir);
-            if (cur != null && cur.PipeContextType == ContextType.FakeConnectie) {
-                if (dir == Direction.NORTH || dir == Direction.SOUTH) {
-                    return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F1);
-                }
+        if (this.FakeConnectie != null) {
+            if (this.FakeConnectie == Direction.NORTH || this.FakeConnectie == Direction.SOUTH) {
+                return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F1);
+            }
 
-                if (dir == Direction.EAST || dir == Direction.WEST) {
-                    return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F2);
-                }
+            if (this.FakeConnectie == Direction.EAST || this.FakeConnectie == Direction.WEST) {
+                return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F2);
+            }
 
-                if (dir == Direction.UP || dir == Direction.DOWN) {
-                    return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F3);
-                }
+            if (this.FakeConnectie == Direction.UP || this.FakeConnectie == Direction.DOWN) {
+                return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F3);
             }
         }
 
         //here would be the logic with that one error to preserve one edge of the previously existing connection not sure if that would fit into the context logic tho
-        if (this.North != null && this.North.PipeContextType == ContextType.Pipe || this.South != null && this.South.PipeContextType == ContextType.Pipe)
+        if (this.North != null && this.North.PipeContextType == ContextType.Pipe && PipeContext.CSH_INCW(this, Direction.NORTH) || this.South != null && this.South.PipeContextType == ContextType.Pipe && PipeContext.CSH_INCW(this, Direction.SOUTH))
             return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F1);
 
-        if (this.East != null && this.East.PipeContextType == ContextType.Pipe || this.West != null && this.West.PipeContextType == ContextType.Pipe)
+        if (this.East != null && this.East.PipeContextType == ContextType.Pipe && PipeContext.CSH_INCW(this, Direction.EAST) || this.West != null && this.West.PipeContextType == ContextType.Pipe && PipeContext.CSH_INCW(this, Direction.WEST))
             return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F2);
 
-        if (this.Up != null && this.Up.PipeContextType == ContextType.Pipe || this.Down != null && this.Down.PipeContextType == ContextType.Pipe)
+        if (this.Up != null && this.Up.PipeContextType == ContextType.Pipe && PipeContext.CSH_INCW(this, Direction.UP) || this.Down != null && this.Down.PipeContextType == ContextType.Pipe && PipeContext.CSH_INCW(this, Direction.DOWN))
             return this.ToBeUsedBlockState.with(PipeProperties.PIPE_ID, PipeID.F3);
 
         //backup
@@ -218,9 +222,9 @@ public class PipeContext {
                 sum++;
 
                 if (connectedDirection1 == null)
-                    connectedDirection1 = Direction.NORTH;
+                    connectedDirection1 = direction;
                 else if (connectedDirection2 == null)
-                    connectedDirection2 = Direction.NORTH;
+                    connectedDirection2 = direction;
                 else
                     System.out.println("ERROR: both connected directions already set");
             }
@@ -301,12 +305,15 @@ public class PipeContext {
         if (this.GetAmoutOfWillingNeighbors() >= 2)
             return;
 
-        PipeContext ctx = this.GetContextBasedOnDirection(direction);
-        if (ctx == null)
-            this.SetContextBasedOnDirection(
-                    direction,
-                    new PipeContext(World, this.Pos.offset(direction), ContextType.FakeConnectie, PowerProviders)
-            );
+//        PipeContext ctx = this.GetContextBasedOnDirection(direction);
+//        if (ctx == null)
+//            this.SetContextBasedOnDirection(
+//                    direction,
+//                    new PipeContext(World, this.Pos.offset(direction), ContextType.FakeConnectie, PowerProviders)
+//            );
+
+        //leave AmoutOfWillingNeighbors as check for now -> since on more than 2 fakeconnectie should be ignored anyways
+        this.FakeConnectie = direction;
 
         //note that this function has lower priority than if an actual neighbor is detected so its only taken into account if there is not already a neighbor there
         //and if there are less than two neighbors
@@ -317,7 +324,7 @@ public class PipeContext {
             return false;
 
         PipeContext neighborInfo = this.GetContextBasedOnDirection(direction);
-        if (neighborInfo != null && neighborInfo.PipeContextType != ContextType.FakeConnectie) { //cannot be connected to FakeConnectie
+        if (neighborInfo != null) { //cannot be connected to FakeConnectie -> would have needed to check if context Type could still be fake connectie
             if (!neighborInfo.IsEvaluated)
                 neighborInfo.Evaluate(); //does eveluate by the actual block type which is why i then can request properties on demand
 
@@ -415,21 +422,17 @@ public class PipeContext {
 
     //Statics - CSH (Corrected State Helper)
     //IsNeighbourConnectionWilling
-//    public static boolean CSH_INCW(PipeContext self, Direction dir1, Direction dir2) {
-//        PipeContext ctx1 = self.GetContextBasedOnDirection(dir1);
-//        PipeContext ctx2 = self.GetContextBasedOnDirection(dir2);
-//
-//        return  ctx1 != null || self.ConnectedToContext(dir1) &&
-//                ctx2 != null || self.ConnectedToContext(dir2);
-//    }
+    public static boolean CSH_INCW(PipeContext self, Direction dir1, Direction dir2) {
+        return CSH_INCW(self, dir1) && CSH_INCW(self, dir2);
+    }
     public static boolean CSH_INCW(PipeContext self, Direction dir1) {
         PipeContext ctx = self.GetContextBasedOnDirection(dir1);
 
-        if (ctx == null)
+        if (ctx == null) {
+            if (self.FakeConnectie != null && self.FakeConnectie == dir1)
+                return true;
             return false;
-
-        if (ctx.PipeContextType == ContextType.FakeConnectie)
-            return true;
+        }
 
         return !ctx.GetConnectionState().IsFull() || self.ConnectedToContext(dir1);
     }
