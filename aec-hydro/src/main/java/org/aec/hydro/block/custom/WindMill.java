@@ -15,6 +15,10 @@ import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
 public class WindMill extends BlockWithEntity {
+    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makeWindmillShape();
+    private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(0,1,0, NORTH_SHAPE);
+    private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.rotateShape(0,2,0, NORTH_SHAPE);
+    private static final VoxelShape WEST_SHAPE = VoxelGenerator.rotateShape(0,3,0, NORTH_SHAPE);
     public WindMill(Settings settings) {
         super(settings);
     }
@@ -34,32 +38,23 @@ public class WindMill extends BlockWithEntity {
     //Voxelshape
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return VoxelGenerator.makeWindmillShape();
+        return switch (state.get(Properties.FACING)) {
+            case DOWN, NORTH, UP -> NORTH_SHAPE;
+            case EAST -> EAST_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+        };
     }
 
     //Properties
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState state = this.getDefaultState()
+        return this.getDefaultState()
                 .with(Properties.FACING, ctx.getHorizontalPlayerFacing().getOpposite());
-        System.out.println(ctx.getHorizontalPlayerFacing().getOpposite().toString());
-
-        return state;
     }
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(Properties.FACING);
-    }
-
-    // FACING Property
-    @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(Properties.FACING)));
     }
 }
