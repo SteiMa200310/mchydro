@@ -43,8 +43,8 @@ public class Pipe extends HorizontalFacingBlock {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        PipeContext info = new PipeContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL));
-        info.EvaluateMatch(_HydroBlocks.PIPE);
+        PipeContext info = new PipeContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), _HydroBlocks.PIPE);
+        info.EvaluateJustPlaced();
         //need to get based on Match since -> by the time placing the state is still what is was before -> most likly air
 
         Direction dir = ctx.getPlayerLookDirection().getOpposite();
@@ -73,7 +73,7 @@ public class Pipe extends HorizontalFacingBlock {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        PipeContext info = new PipeContext(world, pos, ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL));
+        PipeContext info = new PipeContext(world, pos, ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), _HydroBlocks.PIPE);
         world.setBlockState(pos, info.GetCorrectedState());
     }
 

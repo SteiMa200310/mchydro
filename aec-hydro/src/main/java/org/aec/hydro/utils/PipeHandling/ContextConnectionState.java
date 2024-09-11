@@ -38,7 +38,7 @@ public class ContextConnectionState {
         this.context2 = context2;
         this.contextDirection2 = contextDirection2;
 
-        this.State = "full";
+        this.State = "two";
     }
 
     public boolean IsNot() {
@@ -47,8 +47,8 @@ public class ContextConnectionState {
     public boolean IsOne() {
         return this.State.equals("one");
     }
-    public boolean IsFull() {
-        return this.State.equals("full");
+    public boolean IsTwo() {
+        return this.State.equals("two");
     }
 
     public static ContextConnectionState GetNot() {
@@ -57,7 +57,7 @@ public class ContextConnectionState {
     public static ContextConnectionState GetOne(PipeContext context, Direction direction) {
         return new ContextConnectionState(context, direction);
     }
-    public static ContextConnectionState GetFull(PipeContext context1, Direction contextDirection1, PipeContext context2, Direction contextDirection2) {
+    public static ContextConnectionState GetTwo(PipeContext context1, Direction contextDirection1, PipeContext context2, Direction contextDirection2) {
         return new ContextConnectionState(context1, contextDirection1, context2, contextDirection2);
     }
 }
