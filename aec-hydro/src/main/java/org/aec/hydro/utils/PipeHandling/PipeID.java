@@ -1,7 +1,6 @@
-package org.aec.hydro.utils;
+package org.aec.hydro.utils.PipeHandling;
 
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.Direction;
 
 public enum PipeID implements StringIdentifiable {
     F1,

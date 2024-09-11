@@ -1,7 +1,7 @@
 {
   "block.hydro.do_block": "Digitaler Ausgang",
   "block.hydro.di_block": "Digitaler Eingang",
-  "block.hydro.pipe_v2": "Rohr",
+  "block.hydro.pipe": "Rohr",
   "block.hydro.solar_panel": "Solar Panel",
   "block.hydro.windmill": "Windrad",
   "block.hydro.waterwheel": "Wasserrad",
