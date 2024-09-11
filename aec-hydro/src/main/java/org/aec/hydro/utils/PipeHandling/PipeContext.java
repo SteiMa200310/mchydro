@@ -57,7 +57,7 @@ public class PipeContext {
             return this.ActualBlockState;
         }
 
-        //BEGIN Priority Ifs ------------------- (null check unnessecary)
+        //BEGIN Priority Ifs -------------------
         //3
         if (PipeContext.CSH_INCW(this, Direction.NORTH, Direction.SOUTH)) {
             return this.ActualBlockState
@@ -403,7 +403,21 @@ public class PipeContext {
             case E12 -> new Pair<>(Direction.WEST, Direction.DOWN);
         };
     }
-//    public static PipeContext GetContextInDir(World world, BlockPos pos, List<Block> powerProviders, Direction direction) {
+
+    public static PipeContext GetContextInDir(World world, BlockPos pos, List<Block> powerProviders, Direction direction, Block block) {
+        BlockPos neighborBlockPos = pos.offset(direction);
+        BlockState neighborBlockState = world.getBlockState(neighborBlockPos);
+        Block neighborBlock = neighborBlockState.getBlock();
+
+        if (neighborBlock.equals(block))
+            return new PipeContext(world, neighborBlockPos, ContextType.Pipe, powerProviders, block);
+
+        if (powerProviders.stream().anyMatch(b -> b.equals(neighborBlock)))
+            return new PipeContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders, block);
+
+        return null;
+
+        //    public static PipeContext GetContextInDir(World world, BlockPos pos, List<Block> powerProviders, Direction direction) {
 //        BlockPos neighborBlockPos = pos.offset(direction);
 //
 //        BlockState blockState = world.getBlockState(pos);
@@ -420,18 +434,6 @@ public class PipeContext {
 //
 //        return null;
 //    }
-    public static PipeContext GetContextInDir(World world, BlockPos pos, List<Block> powerProviders, Direction direction, Block block) {
-        BlockPos neighborBlockPos = pos.offset(direction);
-        BlockState neighborBlockState = world.getBlockState(neighborBlockPos);
-        Block neighborBlock = neighborBlockState.getBlock();
-
-        if (neighborBlock.equals(block))
-            return new PipeContext(world, neighborBlockPos, ContextType.Pipe, powerProviders, block);
-
-        if (powerProviders.stream().anyMatch(b -> b.equals(neighborBlock)))
-            return new PipeContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders, block);
-
-        return null;
     }
 
     //Statics - CSH (Corrected State Helper)
