@@ -34,10 +34,13 @@ public class Pipe extends HorizontalFacingBlock {
     public Pipe(Settings settings) {
         super(settings);
 
-        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.PIPE_ID, PipeID.F1));
-        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.PowerLevel, 0));
-        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.RecieverFace, CustomDirection.NONE));
-        this.setDefaultState(this.stateManager.getDefaultState().with(PipeProperties.ProviderFace, CustomDirection.NONE));
+        this.setDefaultState(
+            this.stateManager.getDefaultState()
+                .with(PipeProperties.PIPE_ID, PipeID.F1)
+                .with(PipeProperties.PowerLevel, 0)
+                .with(PipeProperties.RecieverFace, CustomDirection.NONE)
+                .with(PipeProperties.ProviderFace, CustomDirection.NONE)
+        );
     }
 
     @Nullable
