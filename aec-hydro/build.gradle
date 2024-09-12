@@ -78,6 +78,11 @@ jar {
 	from("LICENSE") {
 		rename { "${it}_${archives_base_name}"}
 	}
+	manifest {
+		attributes([
+				"MixinConfigs": "aec-hydro.mixins.json"
+		])
+	}
 
 	tasks.withType(Jar).configureEach {
 		duplicatesStrategy = DuplicatesStrategy.INCLUDE
