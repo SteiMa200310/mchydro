@@ -7,5 +7,5 @@ public class PipeProperties {
     public static final EnumProperty<PipeID> PIPE_ID = EnumProperty.of("pipe_id", PipeID.class);
     public static final EnumProperty<CustomDirection> RecieverFace = EnumProperty.of("recieverface", CustomDirection.class);
     public static final EnumProperty<CustomDirection> ProviderFace = EnumProperty.of("providerface", CustomDirection.class);
-    public static final IntProperty PowerLevel = IntProperty.of("powerlevel", 0, 10);
+    public static final IntProperty PowerLevel = IntProperty.of("powerlevel", 0, 30);
 }

@@ -48,6 +48,12 @@ public class PipeContext {
         if (!this.IsEvaluated)
             this.Evaluate();
 
+        if (this.PipeContextType != ContextType.Pipe) {
+            System.out.println("GetCorrectedState called on non pipe");
+            return this.ActualBlockState;
+        }
+
+
         System.out.println(this.Pos);
 
         //prevents pipes that are already connected to still seek for new connections
@@ -60,8 +66,13 @@ public class PipeContext {
         //BEGIN Priority Ifs -------------------
         //3
         if (PipeContext.CSH_INCW(this, Direction.NORTH, Direction.SOUTH)) {
+            PowerLevelInfo info = CSH_PowerLevelInConnectionWillings(this, Direction.NORTH, Direction.SOUTH);
+
             return this.ActualBlockState
-                .with(PipeProperties.PIPE_ID, PipeID.F1);
+                .with(PipeProperties.PIPE_ID, PipeID.F1)
+                .with(PipeProperties.PowerLevel, info.powerLevel())
+                .with(PipeProperties.ProviderFace, info.flowTo())
+                .with(PipeProperties.RecieverFace, info.flowFrom());
         }
 
         if (PipeContext.CSH_INCW(this, Direction.EAST, Direction.WEST)) {
@@ -463,5 +474,94 @@ public class PipeContext {
         }
 
         return false;
+    }
+
+    public static PowerLevelInfo CSH_PowerLevelInConnectionWillings(PipeContext self, Direction dir1, Direction dir2) {
+        //self soon to come open faces are dir1 and dir2 because those are the approximatly valid connection willings
+
+        if (self.PipeContextType != ContextType.Pipe)
+            return new PowerLevelInfo(0, CustomDirection.NONE, CustomDirection.NONE);
+
+        PipeContext neighbor1 = self.GetContextBasedOnDirection(dir1);
+        PipeContext neighbor2 = self.GetContextBasedOnDirection(dir2);
+        CustomDirection cdir1 = PipeContext.ConvertDirection(dir1);
+        CustomDirection cdir2 = PipeContext.ConvertDirection(dir2);
+
+        if (neighbor1 != null && !neighbor1.IsEvaluated)
+            neighbor1.Evaluate();
+
+        if (neighbor2 != null && !neighbor2.IsEvaluated)
+            neighbor2.Evaluate();
+
+        if (neighbor1 == null && neighbor2 == null)
+            return new PowerLevelInfo(0, CustomDirection.NONE, CustomDirection.NONE);
+
+        if (neighbor1 != null && neighbor2 == null) {
+            if (neighbor1.PipeContextType == ContextType.PowerProvider)
+                return new PowerLevelInfo(1, cdir1, cdir2);
+
+            if (neighbor1.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == dir2)
+                return new PowerLevelInfo(1, cdir1, cdir2);
+
+            Pair<CustomDirection, CustomDirection> flowDirection = neighbor1.GetFlowDirection();
+            if (flowDirection.getRight() == CustomDirection.NONE || flowDirection.getLeft() == CustomDirection.NONE) {
+                if (flowDirection.getLeft() == self.GetFlowDirection().getRight())
+                    return new PowerLevelInfo(1, cdir1, cdir2);
+                else {
+                    return new PowerLevelInfo(0, CustomDirection.NONE, CustomDirection.NONE);
+                }
+            }
+        }
+
+        if (neighbor1 == null && neighbor2 != null) {
+            if (neighbor2.PipeContextType == ContextType.PowerProvider)
+                return new PowerLevelInfo(1, cdir2, cdir1);
+
+            if (neighbor2.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == dir1)
+                return new PowerLevelInfo(1, cdir2, cdir1);
+
+            Pair<CustomDirection, CustomDirection> flowDirection = neighbor2.GetFlowDirection();
+            if (flowDirection.getRight() == CustomDirection.NONE || flowDirection.getLeft() == CustomDirection.NONE) {
+                if (flowDirection.getLeft() == self.GetFlowDirection().getRight())
+                    return new PowerLevelInfo(1, cdir2, cdir1);
+                else {
+                    return new PowerLevelInfo(0, CustomDirection.NONE, CustomDirection.NONE);
+                }
+            }
+        }
+
+        //check for looking direction -> or maybe only do things in with neighbor updates
+        if (neighbor1 != null && neighbor2 != null) {
+            if (neighbor1.PipeContextType == ContextType.PowerProvider && neighbor2.PipeContextType != ContextType.PowerProvider) {
+                return new PowerLevelInfo(1, cdir1, cdir2);
+            }
+            if (neighbor1.PipeContextType != ContextType.PowerProvider && neighbor2.PipeContextType == ContextType.PowerProvider) {
+                return new PowerLevelInfo(1, cdir2, cdir1);
+            }
+
+            if (neighbor1.PipeContextType == ContextType.PowerProvider && neighbor2.PipeContextType == ContextType.PowerProvider) {
+                return new PowerLevelInfo(30, CustomDirection.NONE, CustomDirection.NONE);
+            }
+
+            if (neighbor1.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == dir2) {
+                return new PowerLevelInfo(neighbor1.GetPowerLevel(), cdir1, cdir2);
+            }
+            if (neighbor2.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == dir2) {
+                return new PowerLevelInfo(neighbor2.GetPowerLevel(), cdir1, cdir2);
+            }
+        }
+
+        return new PowerLevelInfo(30, CustomDirection.NONE, CustomDirection.NONE);
+    }
+
+    public static CustomDirection ConvertDirection(Direction dir) {
+        return switch (dir) {
+            case NORTH -> CustomDirection.NORTH;
+            case SOUTH -> CustomDirection.SOUTH;
+            case EAST -> CustomDirection.EAST;
+            case WEST -> CustomDirection.WEST;
+            case UP -> CustomDirection.UP;
+            case DOWN -> CustomDirection.DOWN;
+        };
     }
 }
