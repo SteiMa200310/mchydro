@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="mchydroV1:Steini">
-    <output-path>$PROJECT_DIR$/../../../../../_mcserver/plugins</output-path>
-    <root id="archive" name="mchydroV1.jar">
-      <element id="module-output" name="mchydroV1" />
-    </root>
-  </artifact>
-</component>
