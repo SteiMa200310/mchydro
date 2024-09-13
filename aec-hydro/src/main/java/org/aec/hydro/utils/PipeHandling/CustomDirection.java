@@ -29,4 +29,16 @@ public enum CustomDirection implements StringIdentifiable {
             default -> null;
         };
     }
+
+    public CustomDirection getOpposite() {
+        return switch (this) {
+            case NORTH -> CustomDirection.SOUTH;
+            case SOUTH -> CustomDirection.NORTH;
+            case EAST -> CustomDirection.WEST;
+            case WEST -> CustomDirection.EAST;
+            case UP -> CustomDirection.DOWN;
+            case DOWN -> CustomDirection.UP;
+            default -> NONE;
+        };
+    }
 }
