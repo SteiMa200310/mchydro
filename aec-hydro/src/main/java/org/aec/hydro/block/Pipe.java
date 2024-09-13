@@ -86,6 +86,4 @@ public class Pipe extends HorizontalFacingBlock {
 
         return super.onUse(state, world, pos, player, hand, hit);
     }
-
-
 }

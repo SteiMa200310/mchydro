@@ -175,33 +175,33 @@ public class PipeContext {
         //END Priority Ifs -------------------
 
         if (this.North != null && this.ConnectedToContext(Direction.NORTH)) {
-            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.NORTH, null);
+            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.NORTH, this.GetOpenFaces().getLeft() == Direction.NORTH ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
 
         if (this.South != null && this.ConnectedToContext(Direction.SOUTH)) {
-            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.SOUTH, null);
+            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.SOUTH, this.GetOpenFaces().getLeft() == Direction.SOUTH ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
 
 
         if (this.East != null && this.ConnectedToContext(Direction.EAST)) {
-            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.EAST, null);
+            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.EAST, this.GetOpenFaces().getLeft() == Direction.EAST ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
 
         if (this.West != null && this.ConnectedToContext(Direction.WEST)) {
-            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.WEST, null);
+            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.WEST, this.GetOpenFaces().getLeft() == Direction.WEST ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
 
         if (this.Up != null && this.ConnectedToContext(Direction.UP)) {
-            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.UP, null);
+            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.UP, this.GetOpenFaces().getLeft() == Direction.UP ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
 
         if (this.Down != null && this.ConnectedToContext(Direction.DOWN)) {
-            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.DOWN, null);
+            PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.DOWN, this.GetOpenFaces().getLeft() == Direction.DOWN ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
 
@@ -333,6 +333,11 @@ public class PipeContext {
             System.out.println("ERROR: GetCurrentPowerLevelInfo called on non Pipe");
             return PowerLevelInfo.Error;
         }
+
+        if (this.ActualBlockState.get(PipeProperties.PowerLevel) == 30 &&
+            this.ActualBlockState.get(PipeProperties.RecieverFace) == CustomDirection.NONE &&
+            this.ActualBlockState.get(PipeProperties.ProviderFace) == CustomDirection.NONE)
+            return PowerLevelInfo.Error;
 
         return new PowerLevelInfo(
             this.ActualBlockState.get(PipeProperties.PowerLevel),

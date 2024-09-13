@@ -9,6 +9,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class PipeContextExtensions {
     private PipeContextExtensions() {}
@@ -115,15 +117,13 @@ public class PipeContextExtensions {
     public static PowerLevelInfo CSH_PowerLevelInConnectionWillings(PipeContext self, Direction dir1, Direction dir2) {
         //self soon to come open faces are dir1 and dir2 because those are the approximatly valid connection willings
 
-        //NOTE: NEED TO CHECK FOR IS NEIGHBOR ALREADY ERROR SINCE THIS DOES NOT CURRENLTY HAPPEN
-
         if (self.PipeContextType != ContextType.Pipe)
             return new PowerLevelInfo(0, CustomDirection.NONE, CustomDirection.NONE);
 
         PipeContext neighbor1 = dir1 != null ? self.GetContextBasedOnDirection(dir1) : null;
         PipeContext neighbor2 = dir2 != null ? self.GetContextBasedOnDirection(dir2) : null;
-        CustomDirection cdir1 = dir1 != null ? PipeContextExtensions.ConvertDirection(dir1) : null;
-        CustomDirection cdir2 = dir2 != null ? PipeContextExtensions.ConvertDirection(dir2) : null;
+        CustomDirection cdir1 = dir1 != null ? PipeContextExtensions.ConvertDirection(dir1) : CustomDirection.NONE;
+        CustomDirection cdir2 = dir2 != null ? PipeContextExtensions.ConvertDirection(dir2) : CustomDirection.NONE;
 
         if (neighbor1 != null && !neighbor1.IsEvaluated)
             neighbor1.Evaluate();
@@ -190,21 +190,30 @@ public class PipeContextExtensions {
                 Pair<CustomDirection, CustomDirection> neighborFlowDirection1 = neighbor1.GetFlowDirection();
                 Pair<CustomDirection, CustomDirection> neighborFlowDirection2 = neighbor1.GetFlowDirection();
 
-                if (neighborFlowDirection1.getRight() == cdir1.getOpposite() && neighborFlowDirection2.getLeft() == cdir2.getOpposite()) {
-                    return new PowerLevelInfo(neighbor1.GetPowerLevel(), cdir1, cdir2);
+                //causesing the 30 30 in both dirs
+                if (neighborFlowDirection1.getRight() == CustomDirection.NONE && neighborFlowDirection1.getLeft() == CustomDirection.NONE &&
+                    neighborFlowDirection2.getRight() == CustomDirection.NONE && neighborFlowDirection2.getLeft() == CustomDirection.NONE)
+                    return new PowerLevelInfo(0, CustomDirection.NONE, CustomDirection.NONE);
+
+                if (neighborFlowDirection1.getRight() == CustomDirection.NONE && neighborFlowDirection1.getLeft() == CustomDirection.NONE) {
+                    if (neighborFlowDirection2.getRight() == cdir1.getOpposite()) {
+                        return new PowerLevelInfo(neighbor1.GetPowerLevel(), cdir2, cdir1);
+                    }
                 }
 
-                if (neighborFlowDirection1.getRight() == cdir2.getOpposite() && neighborFlowDirection2.getLeft() == cdir1.getOpposite()) {
-                    return new PowerLevelInfo(neighbor2.GetPowerLevel(), cdir2, cdir1);
+                if (neighborFlowDirection2.getRight() == CustomDirection.NONE && neighborFlowDirection2.getLeft() == CustomDirection.NONE) {
+                    if (neighborFlowDirection1.getRight() == cdir2.getOpposite()) {
+                        return new PowerLevelInfo(neighbor2.GetPowerLevel(), cdir2, cdir1);
+                    }
                 }
+                //causesing the 30 30 in both dirs -> think it thru
             }
 
-            // && self.FakeConnectie != null && self.FakeConnectie == dir2
-            if (neighbor1.PipeContextType == ContextType.Pipe) {
+            if (neighbor1.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == dir2) {
                 return new PowerLevelInfo(neighbor1.GetPowerLevel(), cdir1, cdir2);
             }
-            // && self.FakeConnectie != null && self.FakeConnectie == dir1
-            if (neighbor2.PipeContextType == ContextType.Pipe) {
+
+            if (neighbor2.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == dir1) {
                 return new PowerLevelInfo(neighbor2.GetPowerLevel(), cdir2, cdir1);
             }
         }
