@@ -1,9 +1,9 @@
-package org.aec.hydro.utils.PipeHandling.Utils;
+package org.aec.hydro.pipeHandling.utils;
 
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 
-public enum CustomDirection implements StringIdentifiable {
+public enum PowerFlowDirection implements StringIdentifiable {
     NORTH,
     SOUTH,
     EAST,
@@ -30,26 +30,26 @@ public enum CustomDirection implements StringIdentifiable {
         };
     }
 
-    public CustomDirection getOpposite() {
+    public PowerFlowDirection getOpposite() {
         return switch (this) {
-            case NORTH -> CustomDirection.SOUTH;
-            case SOUTH -> CustomDirection.NORTH;
-            case EAST -> CustomDirection.WEST;
-            case WEST -> CustomDirection.EAST;
-            case UP -> CustomDirection.DOWN;
-            case DOWN -> CustomDirection.UP;
+            case NORTH -> PowerFlowDirection.SOUTH;
+            case SOUTH -> PowerFlowDirection.NORTH;
+            case EAST -> PowerFlowDirection.WEST;
+            case WEST -> PowerFlowDirection.EAST;
+            case UP -> PowerFlowDirection.DOWN;
+            case DOWN -> PowerFlowDirection.UP;
             default -> NONE;
         };
     }
 
-    public static CustomDirection ConvertDirection(Direction dir) {
+    public static PowerFlowDirection ConvertDirection(Direction dir) {
         return switch (dir) {
-            case NORTH -> CustomDirection.NORTH;
-            case SOUTH -> CustomDirection.SOUTH;
-            case EAST -> CustomDirection.EAST;
-            case WEST -> CustomDirection.WEST;
-            case UP -> CustomDirection.UP;
-            case DOWN -> CustomDirection.DOWN;
+            case NORTH -> PowerFlowDirection.NORTH;
+            case SOUTH -> PowerFlowDirection.SOUTH;
+            case EAST -> PowerFlowDirection.EAST;
+            case WEST -> PowerFlowDirection.WEST;
+            case UP -> PowerFlowDirection.UP;
+            case DOWN -> PowerFlowDirection.DOWN;
         };
     }
 }
