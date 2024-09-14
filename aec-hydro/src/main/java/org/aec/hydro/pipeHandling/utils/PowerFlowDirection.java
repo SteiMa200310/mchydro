@@ -1,4 +1,4 @@
-package org.aec.hydro.utils.PipeHandling;
+package org.aec.hydro.utils.PipeHandling.Utils;
 
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
@@ -39,6 +39,17 @@ public enum CustomDirection implements StringIdentifiable {
             case UP -> CustomDirection.DOWN;
             case DOWN -> CustomDirection.UP;
             default -> NONE;
+        };
+    }
+
+    public static CustomDirection ConvertDirection(Direction dir) {
+        return switch (dir) {
+            case NORTH -> CustomDirection.NORTH;
+            case SOUTH -> CustomDirection.SOUTH;
+            case EAST -> CustomDirection.EAST;
+            case WEST -> CustomDirection.WEST;
+            case UP -> CustomDirection.UP;
+            case DOWN -> CustomDirection.DOWN;
         };
     }
 }

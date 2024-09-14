@@ -1,4 +1,4 @@
-package org.aec.hydro.utils.PipeHandling;
+package org.aec.hydro.pipeHandling.core;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -7,7 +7,11 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.aec.hydro.pipeHandling.utils.PipeID;
+import org.aec.hydro.pipeHandling.utils.PipeProperties;
+import org.aec.hydro.pipeHandling.utils.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class PipeContext {
@@ -37,16 +41,13 @@ public class PipeContext {
         BasePipeBlock = basePipeBlock;
     }
 
-    //fake connectie not working in specific case when real but fully connected is there -> fixed
-    //power provider can only take on to connect -> fixed
-
-    //3 faces in different direction where all would connect the 3th not prio one will still change its direction to there
-    // -> leave this for now since its kind of an mc lifecycle problem
+    //TODO:
+    //3 faces in different direction where all would connect the 3th not prio one will still change its direction to there - leave for now
 
     //Logic
     public BlockState GetCorrectedState() {
         if (!this.IsEvaluated)
-            this.Evaluate();
+            this.EvaluateActual();
 
         if (this.PipeContextType != ContextType.Pipe) {
             System.out.println("GetCorrectedState called on non pipe");
@@ -56,7 +57,7 @@ public class PipeContext {
         System.out.println(this.Pos);
 
         //prevents pipes that are already connected to still seek for new connections
-        ContextConnectionState state = this.GetConnectionState();
+        PipeConnectionState state = this.GetConnectionState();
         if (state.IsTwo()) {
             //can also be just a triggered neighbor update where im prefectly fine
             PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, state.contextDirection1, state.contextDirection2);
@@ -174,33 +175,33 @@ public class PipeContext {
         }
         //END Priority Ifs -------------------
 
-        if (this.North != null && this.ConnectedToContext(Direction.NORTH)) {
+        if (this.North != null && this.IsConnectedToContext(Direction.NORTH)) {
             PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.NORTH, this.GetOpenFaces().getLeft() == Direction.NORTH ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
 
-        if (this.South != null && this.ConnectedToContext(Direction.SOUTH)) {
+        if (this.South != null && this.IsConnectedToContext(Direction.SOUTH)) {
             PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.SOUTH, this.GetOpenFaces().getLeft() == Direction.SOUTH ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
 
 
-        if (this.East != null && this.ConnectedToContext(Direction.EAST)) {
+        if (this.East != null && this.IsConnectedToContext(Direction.EAST)) {
             PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.EAST, this.GetOpenFaces().getLeft() == Direction.EAST ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
 
-        if (this.West != null && this.ConnectedToContext(Direction.WEST)) {
+        if (this.West != null && this.IsConnectedToContext(Direction.WEST)) {
             PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.WEST, this.GetOpenFaces().getLeft() == Direction.WEST ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
 
-        if (this.Up != null && this.ConnectedToContext(Direction.UP)) {
+        if (this.Up != null && this.IsConnectedToContext(Direction.UP)) {
             PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.UP, this.GetOpenFaces().getLeft() == Direction.UP ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
 
-        if (this.Down != null && this.ConnectedToContext(Direction.DOWN)) {
+        if (this.Down != null && this.IsConnectedToContext(Direction.DOWN)) {
             PowerLevelInfo info = PipeContextExtensions.CSH_PowerLevelInConnectionWillings(this, Direction.DOWN, this.GetOpenFaces().getLeft() == Direction.DOWN ? this.GetOpenFaces().getRight() : this.GetOpenFaces().getLeft());
             return PipeContextExtensions.SetPowerInfoOnBlockState(this.ActualBlockState, info);
         }
@@ -233,40 +234,55 @@ public class PipeContext {
         //backup
         return this.ActualBlockState
             .with(PipeProperties.PowerLevel, 0)
-            .with(PipeProperties.ProviderFace, CustomDirection.NONE)
-            .with(PipeProperties.RecieverFace, CustomDirection.NONE);
+            .with(PipeProperties.ProviderFace, PowerFlowDirection.NONE)
+            .with(PipeProperties.RecieverFace, PowerFlowDirection.NONE);
     }
 
     //Evaluators
-    public void Evaluate() {
-        this.ActualBlockState = this.GetActualBlockState(); //based on actual block at pos in world
+    public void EvaluateActual() {
+        this.ActualBlockState = this.World.getBlockState(this.Pos);
 
-        this.North = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.NORTH, this.BasePipeBlock);
-        this.South = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.SOUTH, this.BasePipeBlock);
-        this.East = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.EAST, this.BasePipeBlock);
-        this.West = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.WEST, this.BasePipeBlock);
-        this.Up = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.UP, this.BasePipeBlock);
-        this.Down = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.DOWN, this.BasePipeBlock);
-
+        this.EvaluateNeighboirs();
         this.IsEvaluated = true;
     }
-    public void EvaluateJustPlaced() {
-        this.ActualBlockState = this.BasePipeBlock.getDefaultState(); //based on dummy provided block
+    public void EvaluateBase() {
+        this.ActualBlockState = this.BasePipeBlock.getDefaultState();
 
-        this.North = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.NORTH, this.BasePipeBlock);
-        this.South = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.SOUTH, this.BasePipeBlock);
-        this.East = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.EAST, this.BasePipeBlock);
-        this.West = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.WEST, this.BasePipeBlock);
-        this.Up = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.UP, this.BasePipeBlock);
-        this.Down = PipeContextExtensions.GetContextInDir(this.World, this.Pos, this.PowerProviders, Direction.DOWN, this.BasePipeBlock);
-
+        this.EvaluateNeighboirs();
         this.IsEvaluated = true;
     }
+    private void EvaluateNeighboirs() {
+        GetContextInDirDelegate getContextInDirDelegate = (World world, BlockPos pos, List<Block> powerProviders, Block block, Direction direction) -> {
+            BlockPos neighborBlockPos = pos.offset(direction);
+            BlockState neighborBlockState = world.getBlockState(neighborBlockPos);
+            Block neighborBlock = neighborBlockState.getBlock();
 
-    //Helper
-    public ContextConnectionState GetConnectionState() {
+            if (neighborBlock.equals(block))
+                return new PipeContext(world, neighborBlockPos, ContextType.Pipe, powerProviders, block);
+
+            if (powerProviders.stream().anyMatch(b -> b.equals(neighborBlock)))
+                return new PipeContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders, block);
+
+            return null;
+        };
+
+        Arrays.stream(Direction.values()).forEach((direction) -> {
+            this.SetContextBasedOnDirection(direction,
+                getContextInDirDelegate.GetContextInDir(
+                    this.World,
+                    this.Pos,
+                    this.PowerProviders,
+                    this.BasePipeBlock,
+                    direction
+                )
+            );
+        });
+    }
+
+    //Context Functionalities
+    public PipeConnectionState GetConnectionState() {
         if (!this.IsEvaluated)
-            this.Evaluate();
+            this.EvaluateActual();
 
         //check all pipe neighbors
         Direction connectedDirection1 = null;
@@ -274,7 +290,7 @@ public class PipeContext {
 
         int sum = 0;
         for(Direction direction : Direction.values()) {
-            if (this.ConnectedToContext(direction)) {
+            if (this.IsConnectedToContext(direction)) {
                 sum++;
 
                 if (connectedDirection1 == null)
@@ -287,17 +303,17 @@ public class PipeContext {
         }
 
         if (sum == 0)
-            return ContextConnectionState.GetNot();
+            return PipeConnectionState.GetNot();
 
         if (sum == 1) {
-            return ContextConnectionState.GetOne(
+            return PipeConnectionState.GetOne(
                 this.GetContextBasedOnDirection(connectedDirection1),
                 connectedDirection1
             );
         }
 
         if (sum == 2) {
-            return ContextConnectionState.GetTwo(
+            return PipeConnectionState.GetTwo(
                 this.GetContextBasedOnDirection(connectedDirection1),
                 connectedDirection1,
                 this.GetContextBasedOnDirection(connectedDirection2),
@@ -306,22 +322,38 @@ public class PipeContext {
         }
 
         System.out.println("ERROR: connected to more than two pipes or power providers");
-        return ContextConnectionState.GetNot();
-    }
-    public BlockState GetActualBlockState() {
-        return this.World.getBlockState(this.Pos);
+        return PipeConnectionState.GetNot();
     }
     public Pair<Direction, Direction> GetOpenFaces() {
         if (this.PipeContextType == ContextType.Pipe)
-            return PipeContextExtensions.GetOpenFacesBasedOnPipeId(this.ActualBlockState.get(PipeProperties.PIPE_ID));
+            return switch (this.ActualBlockState.get(PipeProperties.PIPE_ID)) {
+                case F1 -> new Pair<>(Direction.NORTH, Direction.SOUTH);
+                case F2 -> new Pair<>(Direction.EAST, Direction.WEST);
+                case F3 -> new Pair<>(Direction.UP, Direction.DOWN);
+
+                case E1 -> new Pair<>(Direction.NORTH, Direction.EAST);
+                case E2 -> new Pair<>(Direction.EAST, Direction.SOUTH);
+                case E3 -> new Pair<>(Direction.SOUTH, Direction.WEST);
+                case E4 -> new Pair<>(Direction.WEST, Direction.NORTH);
+
+                case E5 -> new Pair<>(Direction.NORTH, Direction.UP);
+                case E6 -> new Pair<>(Direction.NORTH, Direction.DOWN);
+                case E7 -> new Pair<>(Direction.EAST, Direction.UP);
+                case E8 -> new Pair<>(Direction.EAST, Direction.DOWN);
+
+                case E9 -> new Pair<>(Direction.SOUTH, Direction.UP);
+                case E10 -> new Pair<>(Direction.SOUTH, Direction.DOWN);
+                case E11 -> new Pair<>(Direction.WEST, Direction.UP);
+                case E12 -> new Pair<>(Direction.WEST, Direction.DOWN);
+            };
 
         System.out.println("ERROR: GetOpenFaces called on non Pipe");
         return new Pair<>(null, null);
     }
-    public Pair<CustomDirection, CustomDirection> GetFlowDirection() {
+    public Pair<PowerFlowDirection, PowerFlowDirection> GetFlowDirection() {
         if (this.PipeContextType == ContextType.Pipe) {
-            CustomDirection dir1 = this.ActualBlockState.get(PipeProperties.RecieverFace);
-            CustomDirection dir2 = this.ActualBlockState.get(PipeProperties.ProviderFace);
+            PowerFlowDirection dir1 = this.ActualBlockState.get(PipeProperties.RecieverFace);
+            PowerFlowDirection dir2 = this.ActualBlockState.get(PipeProperties.ProviderFace);
             return new Pair<>(dir1, dir2);
         }
 
@@ -329,14 +361,14 @@ public class PipeContext {
         return new Pair<>(null, null);
     }
     public PowerLevelInfo GetCurrentPowerLevelInfo() {
-        if (this.PipeContextType != PipeContextType.Pipe) {
+        if (this.PipeContextType != ContextType.Pipe) {
             System.out.println("ERROR: GetCurrentPowerLevelInfo called on non Pipe");
             return PowerLevelInfo.Error;
         }
 
         if (this.ActualBlockState.get(PipeProperties.PowerLevel) == 30 &&
-            this.ActualBlockState.get(PipeProperties.RecieverFace) == CustomDirection.NONE &&
-            this.ActualBlockState.get(PipeProperties.ProviderFace) == CustomDirection.NONE)
+            this.ActualBlockState.get(PipeProperties.RecieverFace) == PowerFlowDirection.NONE &&
+            this.ActualBlockState.get(PipeProperties.ProviderFace) == PowerFlowDirection.NONE)
             return PowerLevelInfo.Error;
 
         return new PowerLevelInfo(
@@ -371,9 +403,30 @@ public class PipeContext {
         }
         return sum;
     }
+    public PipeContext GetContextBasedOnDirection(Direction direction) {
+        return switch (direction) {
+            case NORTH -> this.North;
+            case SOUTH -> this.South;
+            case EAST -> this.East;
+            case WEST -> this.West;
+            case UP -> this.Up;
+            case DOWN -> this.Down;
+        };
+    }
+
+    public void SetContextBasedOnDirection(Direction direction, PipeContext context) {
+        switch (direction) {
+            case NORTH -> this.North = context;
+            case SOUTH -> this.South = context;
+            case EAST -> this.East = context;
+            case WEST -> this.West = context;
+            case UP -> this.Up = context;
+            case DOWN -> this.Down = context;
+        };
+    }
     public void SetFakeDirection(Direction direction) {
         if (!this.IsEvaluated)
-            this.Evaluate();
+            this.EvaluateActual();
 
         if (this.GetAmoutOfWillingNeighbors() >= 2)
             return;
@@ -391,9 +444,10 @@ public class PipeContext {
         //note that this function has lower priority than if an actual neighbor is detected so its only taken into account if there is not already a neighbor there
         //and if there are less than two neighbors
     }
-    public boolean ConnectedToContext(Direction direction) {
+
+    public boolean IsConnectedToContext(Direction direction) {
         if (!this.IsEvaluated)
-            this.Evaluate();
+            this.EvaluateActual();
 
         if (this.PipeContextType == ContextType.Pipe) {
             Pair<Direction, Direction> openFaces = this.GetOpenFaces();
@@ -409,7 +463,7 @@ public class PipeContext {
         PipeContext neighborInfo = this.GetContextBasedOnDirection(direction);
         if (neighborInfo != null) { //cannot be connected to FakeConnectie -> would have needed to check if context Type could still be fake connectie
             if (!neighborInfo.IsEvaluated)
-                neighborInfo.Evaluate(); //does eveluate by the actual block type which is why i then can request properties on demand
+                neighborInfo.EvaluateActual(); //does eveluate by the actual block type which is why i then can request properties on demand
 
             if (neighborInfo.PipeContextType == ContextType.Pipe) {
                 Pair<Direction, Direction> neighborOpenFaces = neighborInfo.GetOpenFaces();
@@ -426,26 +480,5 @@ public class PipeContext {
         }
 
         return false;
-    }
-
-    public PipeContext GetContextBasedOnDirection(Direction direction) {
-        return switch (direction) {
-            case NORTH -> this.North;
-            case SOUTH -> this.South;
-            case EAST -> this.East;
-            case WEST -> this.West;
-            case UP -> this.Up;
-            case DOWN -> this.Down;
-        };
-    }
-    public void SetContextBasedOnDirection(Direction direction, PipeContext context) {
-        switch (direction) {
-            case NORTH -> this.North = context;
-            case SOUTH -> this.South = context;
-            case EAST -> this.East = context;
-            case WEST -> this.West = context;
-            case UP -> this.Up = context;
-            case DOWN -> this.Down = context;
-        };
     }
 }

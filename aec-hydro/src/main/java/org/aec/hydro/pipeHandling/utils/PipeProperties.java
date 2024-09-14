@@ -2,6 +2,7 @@ package org.aec.hydro.utils.PipeHandling;
 
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
+import org.aec.hydro.utils.PipeHandling.Utils.CustomDirection;
 
 public class PipeProperties {
     public static final EnumProperty<PipeID> PIPE_ID = EnumProperty.of("pipe_id", PipeID.class);
