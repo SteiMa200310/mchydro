@@ -8,7 +8,7 @@ import org.aec.hydro.block._HydroBlocks;
 
 import org.aec.hydro.block.entity._HydroBlockEntities;
 
-import org.aec.hydro.commands.CommandSetup;
+import org.aec.hydro.commands.base.CommandSetup;
 import org.aec.hydro.item.ModItemGroups;
 import org.aec.hydro.utils.Config;
 import org.aec.hydro.utils.Pi4JHelper;

@@ -70,18 +70,18 @@ public class Pipe extends HorizontalFacingBlock {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        EnergyContext info = new EnergyContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), _HydroBlocks.PIPE);
+        EnergyContext info = new EnergyContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), _HydroBlocks.PIPE_MERGER, _HydroBlocks.PIPE);
         info.EvaluateBase(); //is air at start
 
         Direction dir = ctx.getPlayerLookDirection().getOpposite();
-        info.SetFakeDirection(dir);
+        info.SetFakeDirection(dir); //needs to be evaluated previously
 
         return info.GetCorrectedState();
     }
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        EnergyContext info = new EnergyContext(world, pos, ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), _HydroBlocks.PIPE);
+        EnergyContext info = new EnergyContext(world, pos, ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), _HydroBlocks.PIPE_MERGER, _HydroBlocks.PIPE);
         info.EvaluateActual();
 
         world.setBlockState(pos, info.GetCorrectedState());

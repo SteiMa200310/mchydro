@@ -7,3 +7,5 @@ no partial Classes
 base types cannot be used as generic arguments "WRAPPER" are required
 fucked up nested classes
 no operator overloading not even thinking of initializer / indexer / implicit operator overloads for class construction like new() evaluating which constructor based on type
+everything in seperate file
+no expressions -> predicate name missused

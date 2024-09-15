@@ -7,6 +7,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.aec.hydro.AECHydro;
 import org.aec.hydro.pipeHandling.delegates.GetContextInDirDelegate;
 import org.aec.hydro.pipeHandling.utils.PipeID;
 import org.aec.hydro.pipeHandling.utils.PipeProperties;
@@ -16,8 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EnergyContext {
-    public final List<Block> PowerProviders;
-    public final Block BasePipeBlock;
+    public final List<Block> PowerProviders; //facing
+    public final Block BaseMergerBlock; //facing
+    public final Block BasePipeBlock; //all pipe properties
 
     public final World World;
     public final BlockPos Pos;
@@ -36,12 +38,13 @@ public class EnergyContext {
     public EnergyContext Up = null;
     public EnergyContext Down = null;
 
-    //statics
+    //statics -> does not have state and is gone uppon restart
     public static boolean CareAboutLookingDirectionWhenRealNeighborIsPresent = false;
 
     //maybe use builder
-    public EnergyContext(World world, BlockPos pos, ContextType contextType, List<Block> powerProviders, Block basePipeBlock) {
+    public EnergyContext(World world, BlockPos pos, ContextType contextType, List<Block> powerProviders, Block baseMergerBlock, Block basePipeBlock) {
         PowerProviders = powerProviders;
+        BaseMergerBlock = baseMergerBlock;
         BasePipeBlock = basePipeBlock;
 
         World = world;
@@ -60,11 +63,11 @@ public class EnergyContext {
             this.EvaluateActual();
 
         if (this.PipeContextType != ContextType.Pipe) {
-            System.out.println("ERROR: GetCorrectedState called on non pipe");
+            AECHydro.LOGGER.error("GetCorrectedState called on non pipe");
             return this.BlockState;
         }
 
-        System.out.println("TRACE: " + this.Pos);
+        AECHydro.LOGGER.trace(this.Pos.toString());
 
         //prevents pipes that are already connected to still seek for new connections
         PipeConnectionState state = this.GetConnectionState();
@@ -130,7 +133,11 @@ public class EnergyContext {
         }
 
         //backup
-        System.out.println("TRACE: Default PipeState Returned");
+        AECHydro.LOGGER.trace("Default PipeState Returned");
+
+        //can only work with self values from here on no other case hit
+        if (this.GetCurrentPowerLevelInfo().IsError())
+            return this.BlockState;
 
         return PowerLevelInfo //keep Pipe ID on example edge or different direction than North South (East West / Up Down)
             .Default().ApplyOn(this.BlockState);
@@ -152,17 +159,16 @@ public class EnergyContext {
         this.IsEvaluated = true;
     }
     private void EvaluateNeighboirs() {
-        GetContextInDirDelegate getContextInDir = (World world, BlockPos pos, List<Block> powerProviders, Block block, Direction direction) -> {
+        GetContextInDirDelegate getContextInDir = (World world, BlockPos pos, List<Block> powerProviders, Block basePipeMerger, Block basePipeBlock, Direction direction) -> {
             BlockPos neighborBlockPos = pos.offset(direction);
             BlockState neighborBlockState = world.getBlockState(neighborBlockPos);
             Block neighborBlock = neighborBlockState.getBlock();
 
-            if (neighborBlock.equals(block))
-                return new EnergyContext(world, neighborBlockPos, ContextType.Pipe, powerProviders, block);
+            if (neighborBlock.equals(basePipeBlock))
+                return new EnergyContext(world, neighborBlockPos, ContextType.Pipe, powerProviders, basePipeMerger, basePipeBlock);
 
             if (powerProviders.stream().anyMatch(b -> b.equals(neighborBlock)))
-                return new EnergyContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders, block);
-
+                return new EnergyContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders, basePipeMerger, basePipeBlock);
             return null;
         };
 
@@ -172,6 +178,7 @@ public class EnergyContext {
                     this.World,
                     this.Pos,
                     this.PowerProviders,
+                    this.BaseMergerBlock,
                     this.BasePipeBlock,
                     direction
                 )
@@ -198,7 +205,7 @@ public class EnergyContext {
                 else if (connectedDirection2 == null)
                     connectedDirection2 = direction;
                 else
-                    System.out.println("ERROR: both connected directions already set");
+                    AECHydro.LOGGER.error("both connected directions already set");
             }
         }
 
@@ -221,7 +228,7 @@ public class EnergyContext {
             );
         }
 
-        System.out.println("ERROR: connected to more than two pipes or power providers");
+        AECHydro.LOGGER.error("connected to more than two pipes or power providers");
         return PipeConnectionState.GetNot();
     }
     public Pair<Direction, Direction> GetOpenFaces() {
@@ -230,12 +237,12 @@ public class EnergyContext {
                 .get(PipeProperties.PIPE_ID)
                 .GetOpenFacesBasedOnPipeId();
 
-        System.out.println("ERROR: GetOpenFaces called on non Pipe");
+        AECHydro.LOGGER.error("GetOpenFaces called on non Pipe");
         return new Pair<>(null, null);
     }
     public PowerLevelInfo GetCurrentPowerLevelInfo() {
         if (this.PipeContextType != ContextType.Pipe) {
-            System.out.println("ERROR: GetCurrentPowerLevelInfo called on non Pipe");
+            AECHydro.LOGGER.error("GetCurrentPowerLevelInfo called on non Pipe");
             return PowerLevelInfo.Error();
         }
 
@@ -250,7 +257,7 @@ public class EnergyContext {
             return this.BlockState.get(PipeProperties.PowerLevel);
         }
 
-        System.out.println("ERROR: GetPowerLevel called on non Pipe");
+        AECHydro.LOGGER.error("GetPowerLevel called on non Pipe");
         return -1;
     }
     public int GetAmoutOfContextNeighbors() {

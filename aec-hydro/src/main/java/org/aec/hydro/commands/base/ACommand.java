@@ -1,4 +1,4 @@
-package org.aec.hydro.commands;
+package org.aec.hydro.commands.base;
 
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.command.ServerCommandSource;

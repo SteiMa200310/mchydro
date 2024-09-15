@@ -2,6 +2,7 @@ package org.aec.hydro.pipeHandling.core;
 
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Direction;
+import org.aec.hydro.AECHydro;
 import org.aec.hydro.pipeHandling.utils.*;
 
 //Nested Function problem -> java does not support implicit predefined delegates nor extension methods nor nested functions nor partial classes ->
@@ -81,7 +82,7 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
         }
 
         if (neighbor.PipeContextType != ContextType.Pipe) {
-            System.out.println("Neighbor was not PowerProvider nor Pipe");
+            AECHydro.LOGGER.error("Neighbor was not PowerProvider nor Pipe");
             return PowerLevelInfo.Error();
         }
         PowerLevelInfo neighborPowerLevelInfo = neighbor.GetCurrentPowerLevelInfo();
