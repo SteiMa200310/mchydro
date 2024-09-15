@@ -1,15 +1,8 @@
 package org.aec.hydro.pipeHandling.core;
 
-import com.eliotlash.mclib.math.functions.classic.Abs;
-import com.mojang.datafixers.util.Function6;
-import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.Direction;
 import org.aec.hydro.pipeHandling.utils.*;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 //Nested Function problem -> java does not support implicit predefined delegates nor extension methods nor nested functions nor partial classes ->
 //so bysides from always moving to a new file im pretty much stuck with defining them hiracical
@@ -25,7 +18,7 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
         EnergyContext ctx = self.GetContextBasedOnDirection(dir1);
 
         if (ctx == null) {
-            if (self.FakeConnectie != null && self.FakeConnectie == dir1)
+            if (EnergyContext.CareAboutLookingDirectionWhenRealNeighborIsPresent && self.FakeConnectie != null && self.FakeConnectie == dir1)
                 return true;
             return false;
         }
@@ -39,7 +32,7 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
         }
         //on power provider one face is enough for fully connected state
         if (ctx.PipeContextType == ContextType.PowerProvider) {
-            return ctx.ActualBlockState.get(Properties.FACING).getOpposite() == dir1 && !ctx.GetConnectionState().IsOne() || self.IsConnectedToContext(dir1);
+            return ctx.BlockState.get(Properties.FACING).getOpposite() == dir1 && !ctx.GetConnectionState().IsOne() || self.IsConnectedToContext(dir1);
         }
 
         return false;
@@ -80,7 +73,7 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
     }
     private static PowerLevelInfo EvaluateOneNotNull(EnergyContext neighbor, Direction openFace, PowerFlowDirection cOpenFace1, PowerFlowDirection cOpenFace2) {
         if (neighbor.PipeContextType == ContextType.PowerProvider) {
-            if (neighbor.ActualBlockState.get(Properties.FACING) == openFace.getOpposite()) {
+            if (neighbor.BlockState.get(Properties.FACING) == openFace.getOpposite()) {
                 return new PowerLevelInfo(1, cOpenFace1, cOpenFace2);
             } else {
                 return PowerLevelInfo.Default();
@@ -104,8 +97,8 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
     //---
     private static PowerLevelInfo EvaluateBothNotNull(EnergyContext self, Direction openFace1, Direction openFace2, EnergyContext neighbor1, EnergyContext neighbor2, PowerFlowDirection cOpenFace1, PowerFlowDirection cOpenFace2) {
         if (neighbor1.PipeContextType == ContextType.PowerProvider && neighbor2.PipeContextType == ContextType.PowerProvider) {
-            if (neighbor1.ActualBlockState.get(Properties.FACING) == openFace1.getOpposite() &&
-                    neighbor2.ActualBlockState.get(Properties.FACING) == openFace2.getOpposite())
+            if (neighbor1.BlockState.get(Properties.FACING) == openFace1.getOpposite() &&
+                    neighbor2.BlockState.get(Properties.FACING) == openFace2.getOpposite())
                 return PowerLevelInfo.Error();
 
             return new PowerLevelInfo(1, cOpenFace1, cOpenFace2);
@@ -156,11 +149,11 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
             }
         }
 
-        if (neighbor1.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == openFace2) {
+        if (EnergyContext.CareAboutLookingDirectionWhenRealNeighborIsPresent && neighbor1.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == openFace2) {
             return new PowerLevelInfo(neighbor1.GetPowerLevel(), cOpenFace1, cOpenFace2);
         }
 
-        if (neighbor2.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == openFace1) {
+        if (EnergyContext.CareAboutLookingDirectionWhenRealNeighborIsPresent && neighbor2.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == openFace1) {
             return new PowerLevelInfo(neighbor2.GetPowerLevel(), cOpenFace2, cOpenFace1);
         }
 
@@ -171,18 +164,18 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
 
         if (neighborPowerLevelInfo.IsDefault()) {
             //just check power provider -> away 0 to me 1
-            if (neighbor1.ActualBlockState.get(Properties.FACING) == openFace.getOpposite()) {
+            if (neighbor1.BlockState.get(Properties.FACING) == openFace.getOpposite()) {
                 return new PowerLevelInfo(1, cOpenFace1, cOpenFace2);
             } else {
                 return PowerLevelInfo.Default();
             }
         } else {
             //check both -> if both look to me ERROR -> since pipe is not none
-            if (neighbor1.ActualBlockState.get(Properties.FACING) == openFace.getOpposite() && neighborPowerLevelInfo.flowTo() == cOpenFace2.getOpposite()) {
+            if (neighbor1.BlockState.get(Properties.FACING) == openFace.getOpposite() && neighborPowerLevelInfo.flowTo() == cOpenFace2.getOpposite()) {
                 return PowerLevelInfo.Error();
             } else {
                 //just powerprovider looking to me
-                if (neighbor1.ActualBlockState.get(Properties.FACING) == openFace.getOpposite()) {
+                if (neighbor1.BlockState.get(Properties.FACING) == openFace.getOpposite()) {
                     return new PowerLevelInfo(1, cOpenFace1, cOpenFace2);
                 }
                 //just pipe looking to me

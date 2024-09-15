@@ -26,8 +26,8 @@ public class EnergyContext {
     public Direction FakeConnectie = null;
     public boolean IsEvaluated = false;
 
-    //not too beautifully since "ActualBlockState" is actually when a new block is placed still the pipe -> even to the actual block would be air
-    public BlockState ActualBlockState = null;
+    //not too beautifully since "BlockState" is actually when a new block is placed still the pipe -> even to the actual block would be air
+    public BlockState BlockState = null;
 
     public EnergyContext North = null;
     public EnergyContext South = null;
@@ -35,6 +35,9 @@ public class EnergyContext {
     public EnergyContext West = null;
     public EnergyContext Up = null;
     public EnergyContext Down = null;
+
+    //statics
+    public static boolean CareAboutLookingDirectionWhenRealNeighborIsPresent = false;
 
     //maybe use builder
     public EnergyContext(World world, BlockPos pos, ContextType contextType, List<Block> powerProviders, Block basePipeBlock) {
@@ -58,7 +61,7 @@ public class EnergyContext {
 
         if (this.PipeContextType != ContextType.Pipe) {
             System.out.println("ERROR: GetCorrectedState called on non pipe");
-            return this.ActualBlockState;
+            return this.BlockState;
         }
 
         System.out.println("TRACE: " + this.Pos);
@@ -68,10 +71,10 @@ public class EnergyContext {
         if (state.IsTwo()) {
             //can also be just a triggered neighbor update where im prefectly fine
             PowerLevelInfo info = PipeStateEvaluator.PowerLevelOfConnectionWilling(this, state.contextDirection1, state.contextDirection2);
-            return info.ApplyOn(this.ActualBlockState);
+            return info.ApplyOn(this.BlockState);
         }
 
-        //priority ifs - (for two neighbors)
+        //priority ifs - (for two neighbors - doesnt matter if already connected or not)
         for(PipeID pipeID : PipeID.AllSerialPipePriority) {
             Pair<Direction, Direction> soonToComeOpenFaces = pipeID.GetOpenFacesBasedOnPipeId();
 
@@ -81,14 +84,14 @@ public class EnergyContext {
             if (isNeighborConnectionWilling)
                 return PipeStateEvaluator
                     .PowerLevelOfConnectionWilling(this, soonToComeOpenFaces.getLeft(), soonToComeOpenFaces.getRight()) //Power Info
-                    .ApplyOn(this.ActualBlockState)
+                    .ApplyOn(this.BlockState)
                     .with(PipeProperties.PIPE_ID, pipeID);
         }
 
-        //just one neighbor - (no priority needed)
+        //just one neighbor but connection to him is already here - (no priority needed)
         for(Direction direction : Direction.values()) {
             EnergyContext dirCtx = this.GetContextBasedOnDirection(direction);
-            if (dirCtx != null && this.IsConnectedToContext(direction)) { //only take when already connected -> otherwise beneath base case hit to not flatten out when e.x. corner is made
+            if (dirCtx != null && this.IsConnectedToContext(direction)) {
                 Pair<Direction, Direction> openFaces = this.GetOpenFaces();
                 Direction oppositeOpenFace =
                     openFaces.getLeft() == direction ?
@@ -97,19 +100,11 @@ public class EnergyContext {
 
                 return PipeStateEvaluator
                     .PowerLevelOfConnectionWilling(this, direction, oppositeOpenFace)
-                    .ApplyOn(this.ActualBlockState);
+                    .ApplyOn(this.BlockState);
             }
         }
 
-        //if no actuals hit then look for looking direction
-        for(PipeID pipeID : PipeID.FullSerialPipePriority) {
-            Pair<Direction, Direction> openFaces = pipeID.GetOpenFacesBasedOnPipeId();
-
-            if (this.FakeConnectie == openFaces.getLeft() || this.FakeConnectie == openFaces.getRight())
-                return this.ActualBlockState.with(PipeProperties.PIPE_ID, pipeID);
-        }
-
-        //here would be the logic with that one error to preserve one edge of the previously existing connection not sure if that would fit into the context logic tho
+        //check for dual neighbors -> no connection required
         for(PipeID pipeID : PipeID.FullSerialPipePriority) {
             Pair<Direction, Direction> soonToComeOpenFaces = pipeID.GetOpenFacesBasedOnPipeId();
             EnergyContext dirCtx1 = this.GetContextBasedOnDirection(soonToComeOpenFaces.getLeft());
@@ -117,35 +112,47 @@ public class EnergyContext {
 
             //&& dirCtx1.PipeContextType == ContextType.Pipe
             if (dirCtx1 != null && PipeStateEvaluator.IsNeighbourConnectionWilling(this, soonToComeOpenFaces.getLeft()) ||
-                dirCtx2 != null && PipeStateEvaluator.IsNeighbourConnectionWilling(this, soonToComeOpenFaces.getRight()))
+                    dirCtx2 != null && PipeStateEvaluator.IsNeighbourConnectionWilling(this, soonToComeOpenFaces.getRight()))
                 return PipeStateEvaluator
-                    .PowerLevelOfConnectionWilling(this, soonToComeOpenFaces.getLeft(), soonToComeOpenFaces.getRight())
-                    .ApplyOn(this.ActualBlockState)
-                    .with(PipeProperties.PIPE_ID, pipeID);
+                        .PowerLevelOfConnectionWilling(this, soonToComeOpenFaces.getLeft(), soonToComeOpenFaces.getRight())
+                        .ApplyOn(this.BlockState)
+                        .with(PipeProperties.PIPE_ID, pipeID);
+        }
+
+        //if no actuals hit then look for looking direction -> no neighbors are arround so no PowerLevelOfConnectionWilling is required
+        //this function is called CareAboutLookingDirectionWhenRealNeighborIsPresent even when this is false -> as the name states
+        //it does care about looking direction since no real neighbor is present
+        for(PipeID pipeID : PipeID.FullSerialPipePriority) {
+            Pair<Direction, Direction> openFaces = pipeID.GetOpenFacesBasedOnPipeId();
+
+            if (this.FakeConnectie == openFaces.getLeft() || this.FakeConnectie == openFaces.getRight())
+                return this.BlockState.with(PipeProperties.PIPE_ID, pipeID);
         }
 
         //backup
         System.out.println("TRACE: Default PipeState Returned");
 
         return PowerLevelInfo //keep Pipe ID on example edge or different direction than North South (East West / Up Down)
-            .Default().ApplyOn(this.ActualBlockState);
+            .Default().ApplyOn(this.BlockState);
     }
 
     //Evaluators
     public void EvaluateActual() {
-        this.ActualBlockState = this.World.getBlockState(this.Pos);
+        this.BlockState = this.World.getBlockState(this.Pos);
+        //use what is actually there -> will be used most of the time
 
         this.EvaluateNeighboirs();
         this.IsEvaluated = true;
     }
     public void EvaluateBase() {
-        this.ActualBlockState = this.BasePipeBlock.getDefaultState();
+        this.BlockState = this.BasePipeBlock.getDefaultState();
+        //use base in case of pipe will only come in the future - on placement state
 
         this.EvaluateNeighboirs();
         this.IsEvaluated = true;
     }
     private void EvaluateNeighboirs() {
-        GetContextInDirDelegate getContextInDirDelegate = (World world, BlockPos pos, List<Block> powerProviders, Block block, Direction direction) -> {
+        GetContextInDirDelegate getContextInDir = (World world, BlockPos pos, List<Block> powerProviders, Block block, Direction direction) -> {
             BlockPos neighborBlockPos = pos.offset(direction);
             BlockState neighborBlockState = world.getBlockState(neighborBlockPos);
             Block neighborBlock = neighborBlockState.getBlock();
@@ -161,7 +168,7 @@ public class EnergyContext {
 
         Arrays.stream(Direction.values()).forEach((direction) -> {
             this.SetContextBasedOnDirection(direction,
-                getContextInDirDelegate.GetContextInDir(
+                getContextInDir.GetContextInDir(
                     this.World,
                     this.Pos,
                     this.PowerProviders,
@@ -219,7 +226,7 @@ public class EnergyContext {
     }
     public Pair<Direction, Direction> GetOpenFaces() {
         if (this.PipeContextType == ContextType.Pipe)
-            return this.ActualBlockState
+            return this.BlockState
                 .get(PipeProperties.PIPE_ID)
                 .GetOpenFacesBasedOnPipeId();
 
@@ -233,14 +240,14 @@ public class EnergyContext {
         }
 
         return new PowerLevelInfo(
-            this.ActualBlockState.get(PipeProperties.PowerLevel),
-            this.ActualBlockState.get(PipeProperties.RecieverFace),
-            this.ActualBlockState.get(PipeProperties.ProviderFace)
+            this.BlockState.get(PipeProperties.PowerLevel),
+            this.BlockState.get(PipeProperties.RecieverFace),
+            this.BlockState.get(PipeProperties.ProviderFace)
         );
     }
     public int GetPowerLevel() {
         if (this.PipeContextType == ContextType.Pipe) {
-            return this.ActualBlockState.get(PipeProperties.PowerLevel);
+            return this.BlockState.get(PipeProperties.PowerLevel);
         }
 
         System.out.println("ERROR: GetPowerLevel called on non Pipe");
@@ -316,7 +323,7 @@ public class EnergyContext {
                 return false;
         }
         if (this.PipeContextType == ContextType.PowerProvider) {
-            Direction openFace = this.ActualBlockState.get(Properties.FACING);
+            Direction openFace = this.BlockState.get(Properties.FACING);
             if (openFace != direction)
                 return false;
         }
@@ -334,7 +341,7 @@ public class EnergyContext {
             }
 
             if (neighborInfo.PipeContextType == ContextType.PowerProvider) {
-                Direction neighborOpenFace = neighborInfo.ActualBlockState.get(Properties.FACING);
+                Direction neighborOpenFace = neighborInfo.BlockState.get(Properties.FACING);
 
                 return direction == neighborOpenFace.getOpposite();
             }

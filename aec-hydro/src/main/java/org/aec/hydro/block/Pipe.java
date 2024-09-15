@@ -82,6 +82,8 @@ public class Pipe extends HorizontalFacingBlock {
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         EnergyContext info = new EnergyContext(world, pos, ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), _HydroBlocks.PIPE);
+        info.EvaluateActual();
+
         world.setBlockState(pos, info.GetCorrectedState());
     }
 }
