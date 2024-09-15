@@ -1,4 +1,4 @@
-package org.aec.hydro.utils.PipeHandling;
+package org.aec.hydro.pipeHandling.utils;
 
 public enum ContextType {
     Pipe,

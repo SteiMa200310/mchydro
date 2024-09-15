@@ -1,17 +1,17 @@
-package org.aec.hydro.utils.PipeHandling;
+package org.aec.hydro.pipeHandling.core;
 
 import net.minecraft.util.math.Direction;
 
-public class ContextConnectionState {
+public class PipeConnectionState {
     public final Direction contextDirection1;
-    public final PipeContext context1;
+    public final EnergyContext context1;
 
     public final Direction contextDirection2;
-    public final PipeContext context2;
+    public final EnergyContext context2;
 
     private final String State;
 
-    public ContextConnectionState() {
+    public PipeConnectionState() {
         this.context1 = null;
         this.contextDirection1 = null;
 
@@ -21,7 +21,7 @@ public class ContextConnectionState {
         this.State = "not";
     }
 
-    public ContextConnectionState(PipeContext context, Direction direction) {
+    public PipeConnectionState(EnergyContext context, Direction direction) {
         this.context1 = context;
         this.contextDirection1 = direction;
 
@@ -31,7 +31,7 @@ public class ContextConnectionState {
         this.State = "one";
     }
 
-    public ContextConnectionState(PipeContext context1, Direction contextDirection1, PipeContext context2, Direction contextDirection2) {
+    public PipeConnectionState(EnergyContext context1, Direction contextDirection1, EnergyContext context2, Direction contextDirection2) {
         this.context1 = context1;
         this.contextDirection1 = contextDirection1;
 
@@ -51,13 +51,13 @@ public class ContextConnectionState {
         return this.State.equals("two");
     }
 
-    public static ContextConnectionState GetNot() {
-        return new ContextConnectionState();
+    public static PipeConnectionState GetNot() {
+        return new PipeConnectionState();
     }
-    public static ContextConnectionState GetOne(PipeContext context, Direction direction) {
-        return new ContextConnectionState(context, direction);
+    public static PipeConnectionState GetOne(EnergyContext context, Direction direction) {
+        return new PipeConnectionState(context, direction);
     }
-    public static ContextConnectionState GetTwo(PipeContext context1, Direction contextDirection1, PipeContext context2, Direction contextDirection2) {
-        return new ContextConnectionState(context1, contextDirection1, context2, contextDirection2);
+    public static PipeConnectionState GetTwo(EnergyContext context1, Direction contextDirection1, EnergyContext context2, Direction contextDirection2) {
+        return new PipeConnectionState(context1, contextDirection1, context2, contextDirection2);
     }
 }
