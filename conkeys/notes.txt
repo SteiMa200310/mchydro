@@ -1,0 +1,17 @@
+193.170.228.235 / minos.litec.ac.at
+22021
+key bei auth eintragen
+MINOS session name
+
+PORTS (FREE extern):
+22 ssh
+80 http
+443 https
+FREE(intern): 22000
+FREE(intern): 22021 (ssh)
+22022
+
+login
+matthias
+root (sudo -i)
+minecraft-project
