@@ -16,6 +16,8 @@
   "item.hydro.anode": "Anode",
   "item.hydro.kathode": "Cathode",
   "item.hydro.membran": "Membrane",
+  "item.hydro.wrench": "Wrench",
+  "block.hydro.pump": "Pump",
 
 
   "generic.hydro.initialize": "Initializing Hydro...",

@@ -29,11 +29,14 @@ public class ModItemGroups {
     public static final Item ELEKTROLYSEUR_ITEM = registerItem("elektrolyseur", new ElektrolyseurItem(_HydroBlocks.ELEKTROLYSEUR, new FabricItemSettings()));
     public static final Item BRENSTOFFZELLE_ITEM = registerItem("brenstoffzelle", new BrennstoffzelleItem(_HydroBlocks.BRENSTOFFZELLE, new FabricItemSettings()));
 
+    public static final Item PUMP_ITEM = registerItem("pump", new PumpItem(_HydroBlocks.PUMP, new FabricItemSettings()));
+
     //Custom Items
     public static final Item VOLTMETER = registerItem("voltmeter", new Item(new FabricItemSettings()));
     public static final Item ANODE = registerItem("anode", new Item(new FabricItemSettings()));
     public static final Item KATHODE = registerItem("kathode", new Item(new FabricItemSettings()));
     public static final Item MEMBRAN = registerItem("membran", new Item(new FabricItemSettings()));
+    public static final Item WRENCH = registerItem("wrench", new Item(new FabricItemSettings()));
 
     public static final ItemGroup Hydro = Registry.register(Registries.ITEM_GROUP,
             new Identifier(AECHydro.MOD_ID, "hydro"),
@@ -47,6 +50,7 @@ public class ModItemGroups {
                         entries.add(CABLE_ITEM);
                         entries.add(CABLE_MERGER_ITEM);
                         entries.add(CABLE_SPLITTER_ITEM);
+                        entries.add(PUMP_ITEM);
                         entries.add(PIPE_MERGER_ITEM);
                         entries.add(PIPE_SPLITTER_ITEM);
                         entries.add(ELEKTROLYSEUR_ITEM);
@@ -55,6 +59,7 @@ public class ModItemGroups {
                         entries.add(ANODE);
                         entries.add(KATHODE);
                         entries.add(MEMBRAN);
+                        entries.add(WRENCH);
                     }).build());
 
     private static Item registerItem(String name, Item item){

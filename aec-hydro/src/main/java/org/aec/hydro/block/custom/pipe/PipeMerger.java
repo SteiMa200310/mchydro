@@ -21,6 +21,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 public class PipeMerger extends BlockWithEntity {
+    private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.makePipeCombinerShape();
+    private static final VoxelShape WEST_SHAPE = VoxelGenerator.rotateShape(0,1,0, SOUTH_SHAPE);
+    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.rotateShape(0,2,0, SOUTH_SHAPE);
+    private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(0,3,0, SOUTH_SHAPE);
      //public static final EnumProperty<PipeType> PIPETYPE = EnumProperty.of("type", PipeType.class);
     public PipeMerger(Settings settings) {
         super(settings);
@@ -45,13 +49,18 @@ public class PipeMerger extends BlockWithEntity {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return VoxelGenerator.makeCableShape();
+        return switch (state.get(Properties.FACING)) {
+            case DOWN, NORTH, UP -> NORTH_SHAPE;
+            case EAST -> EAST_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+        };
     }
 
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return getDefaultState().with(Properties.FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        return getDefaultState().with(Properties.FACING, ctx.getHorizontalPlayerFacing());
     }
 
     @Override

@@ -4,32 +4,44 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
-import org.aec.hydro.block.entity.WaterwheelBlockEntity;
+import org.aec.hydro.block.entity.PumpBlockEntity;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
-public class Waterwheel extends BlockWithEntity {
-    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makeWaterwheelShape();
+public class Pump extends BlockWithEntity {
+    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makePumpShape();
     private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(0,1,0, NORTH_SHAPE);
     private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.rotateShape(0,2,0, NORTH_SHAPE);
     private static final VoxelShape WEST_SHAPE = VoxelGenerator.rotateShape(0,3,0, NORTH_SHAPE);
-    public Waterwheel(Settings settings) { super(settings); }
+    public Pump(Settings settings) {
+        super(settings);
+    }
 
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new WaterwheelBlockEntity(pos, state);
+        return new PumpBlockEntity(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return this.getDefaultState().with(Properties.FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) { return BlockRenderType.MODEL; }
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(Properties.FACING);
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -39,16 +51,5 @@ public class Waterwheel extends BlockWithEntity {
             case SOUTH -> SOUTH_SHAPE;
             case WEST -> WEST_SHAPE;
         };
-    }
-
-    //Properties
-    @Nullable
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.FACING, ctx.getHorizontalPlayerFacing());
-    }
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING);
     }
 }

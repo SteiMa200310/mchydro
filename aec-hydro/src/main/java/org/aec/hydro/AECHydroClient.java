@@ -31,5 +31,7 @@ public class AECHydroClient implements ClientModInitializer {
 
         BlockEntityRendererFactories.register(_HydroBlockEntities.ELEKTROLYSEUR_BLOCK_ENTITY, ElektrolyseurRenderer::new);
         BlockEntityRendererFactories.register(_HydroBlockEntities.BRENSTOFFZELLE_BLOCK_ENTITY, BrennstoffzelleRenderer::new);
+
+        BlockEntityRendererFactories.register(_HydroBlockEntities.PUMP_BLOCK_ENTITY, PumpRenderer::new);
     }
 }

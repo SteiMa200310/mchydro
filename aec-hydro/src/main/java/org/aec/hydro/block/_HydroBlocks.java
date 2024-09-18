@@ -36,6 +36,8 @@ public class _HydroBlocks {
     public static final Block ELEKTROLYSEUR = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "elektrolyseur"), new Elektrolyseur(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block BRENSTOFFZELLE = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "brenstoffzelle"), new Brennstoffzelle(FabricBlockSettings.copyOf(Blocks.STONE)));
 
+    public static final Block PUMP = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "pump"), new Pump(FabricBlockSettings.copyOf(Blocks.STONE)));
+
     private static Block registerBlock(String name, Block block){
         registerBlockItem(name, block);
         return Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, name), block);
