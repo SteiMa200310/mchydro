@@ -6,7 +6,7 @@
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.util.math.Direction;
 //import net.minecraft.world.World;
-//import org.aec.hydro.block.custom.WindMill;
+//import org.aec.hydro.block.custom.geo.WindMill;
 //
 //import java.util.List;
 //

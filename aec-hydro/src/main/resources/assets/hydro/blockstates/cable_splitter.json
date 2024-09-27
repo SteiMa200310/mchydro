@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=north": {"model": "hydro:block/cable_splitter"},
-    "facing=east": {"model": "hydro:block/cable_splitter", "y":  90},
-    "facing=south": {"model": "hydro:block/cable_splitter", "y":  180},
-    "facing=west": {"model": "hydro:block/cable_splitter", "y":  270}
-  }
-}

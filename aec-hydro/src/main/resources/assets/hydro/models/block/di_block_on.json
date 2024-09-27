@@ -1,7 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "hydro:block/di_block_on"
-  }
-}
-

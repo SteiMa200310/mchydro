@@ -1,7 +1,6 @@
 package org.aec.hydro.commands.base;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import org.aec.hydro.commands.ReConfigureCommand;
 import org.aec.hydro.commands.TogglePipeLookingDirectionCommand;
 
 import java.util.List;
@@ -10,7 +9,6 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 public class CommandSetup { private  CommandSetup() {}
     public static List<ACommand> commandList = List.of(
-        new ReConfigureCommand("reconfigure"),
         new TogglePipeLookingDirectionCommand("togglePipeLookingDirection")
     );
 

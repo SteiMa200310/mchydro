@@ -10,33 +10,19 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
-import org.aec.hydro.block.custom.*;
-import org.aec.hydro.block.custom.cable.Cable;
-import org.aec.hydro.block.custom.cable.CableMerger;
-import org.aec.hydro.block.custom.cable.CableSplitter;
-import org.aec.hydro.block.custom.pipe.PipeMerger;
-import org.aec.hydro.block.custom.pipe.PipeSplitter;
+import org.aec.hydro.block.custom.geo.SolarPanel;
+import org.aec.hydro.block.custom.geo.Waterwheel;
+import org.aec.hydro.block.custom.geo.WindMill;
+import org.aec.hydro.block.custom.pipe.Pipe;
 
 public class _HydroBlocks {
-    public static final Block DI_BLOCK = registerBlock("di_block", new DIBlock(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block PIPE = registerBlock("pipe", new Pipe(FabricBlockSettings.copyOf(Blocks.STONE)));
+    //TODO: alle als Block hinzufügen so wie die pipe
 
     //Blocks With Blockentity
     public static final Block WIND_MILL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "windmill"), new WindMill(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block SOLAR_PANEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "solar_panel"), new SolarPanel(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block WATERWHEEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "waterwheel"), new Waterwheel(FabricBlockSettings.copyOf(Blocks.STONE)));
-
-    public static final Block CABLE = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "cable"), new Cable(FabricBlockSettings.copyOf(Blocks.STONE)));
-    public static final Block CABLE_MERGER = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "cable_merger"), new CableMerger(FabricBlockSettings.copyOf(Blocks.STONE)));
-    public static final Block CABLE_SPLITTER = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "cable_splitter"), new CableSplitter(FabricBlockSettings.copyOf(Blocks.STONE)));
-
-    public static final Block PIPE_MERGER = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "pipe_merger"), new PipeMerger(FabricBlockSettings.copyOf(Blocks.STONE)));
-    public static final Block PIPE_SPLITTER = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "pipe_splitter"), new PipeSplitter(FabricBlockSettings.copyOf(Blocks.STONE)));
-
-    public static final Block ELEKTROLYSEUR = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "elektrolyseur"), new Elektrolyseur(FabricBlockSettings.copyOf(Blocks.STONE)));
-    public static final Block BRENSTOFFZELLE = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "brenstoffzelle"), new Brennstoffzelle(FabricBlockSettings.copyOf(Blocks.STONE)));
-
-    public static final Block PUMP = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "pump"), new Pump(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     private static Block registerBlock(String name, Block block){
         registerBlockItem(name, block);

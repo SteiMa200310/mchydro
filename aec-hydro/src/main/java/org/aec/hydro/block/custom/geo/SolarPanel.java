@@ -1,4 +1,4 @@
-package org.aec.hydro.block.custom;
+package org.aec.hydro.block.custom.geo;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -8,24 +8,21 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
-import org.aec.hydro.block.entity.WindMillBlockEntity;
+import org.aec.hydro.block.entity.SolarPanelBlockEntity;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
-public class WindMill extends BlockWithEntity {
-    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makeWindmillShape();
+public class SolarPanel extends BlockWithEntity {
+    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makeSolarPanelShape();
     private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(0,1,0, NORTH_SHAPE);
     private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.rotateShape(0,2,0, NORTH_SHAPE);
     private static final VoxelShape WEST_SHAPE = VoxelGenerator.rotateShape(0,3,0, NORTH_SHAPE);
-    public WindMill(Settings settings) {
-        super(settings);
-    }
+    public SolarPanel(Settings settings) { super(settings); }
 
-    // Block Entity
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new WindMillBlockEntity(pos,state);
+        return new SolarPanelBlockEntity(pos, state);
     }
 
     @Override
@@ -48,8 +45,7 @@ public class WindMill extends BlockWithEntity {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState()
-                .with(Properties.FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        return this.getDefaultState().with(Properties.FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
     @Override

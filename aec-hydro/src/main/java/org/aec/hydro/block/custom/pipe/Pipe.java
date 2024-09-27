@@ -1,17 +1,14 @@
-package org.aec.hydro.block;
+package org.aec.hydro.block.custom.pipe;
 
 import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.aec.hydro.block._HydroBlocks;
 import org.aec.hydro.pipeHandling.core.PipeShapeWrapper;
 import org.aec.hydro.pipeHandling.utils.PipeID;
 import org.aec.hydro.pipeHandling.utils.PipeProperties;
@@ -70,7 +67,7 @@ public class Pipe extends HorizontalFacingBlock {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        EnergyContext info = new EnergyContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), _HydroBlocks.PIPE_MERGER, _HydroBlocks.PIPE);
+        EnergyContext info = new EnergyContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), null, _HydroBlocks.PIPE);
         info.EvaluateBase(); //is air at start
 
         Direction dir = ctx.getPlayerLookDirection().getOpposite();
@@ -81,7 +78,7 @@ public class Pipe extends HorizontalFacingBlock {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        EnergyContext info = new EnergyContext(world, pos, ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), _HydroBlocks.PIPE_MERGER, _HydroBlocks.PIPE);
+        EnergyContext info = new EnergyContext(world, pos, ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), null, _HydroBlocks.PIPE);
         info.EvaluateActual();
 
         world.setBlockState(pos, info.GetCorrectedState());
