@@ -1,0 +1,34 @@
+Level 1
+You given a load of items with which you should transform enough electric energy to power a certain reciever.
+Those items contain 3 Power Providers (Windmill, Solarpannel, Waterwheel), which you can connect with a cable.
+Furthermore you get a cablemerger which can be used to connect up to 5 input cables to one output cable.
+Also you are provided with a voltmeater to check the current power level on each cable, and a wrench to destroy already placed components.
+
+Goal:
+	Produce 20 power units (power level) and direct the energy into the electric core
+	
+Level 2
+Now its time to craft the electrolyzer.
+Beneath your feet you can see the required recipe to solve the task.
+You are currently in the bosch ressource storage.
+Fun fact
+	one rod is considerd the annode (red) and the other the catode (blue)
+	together with the membrane those components build the base for the actual electrolyzer in real life
+
+Goal:
+	Collect all the necessary items and craft the electrolyzer
+	
+Level 3
+Finally its time to complete the mission.
+Connect the electrolyzer with the power, but wait something is missing.
+In order to create hydrogen - water is also a required component.
+You need to setup a water pump and connect it together with the electric energy to the electrolyzer.
+Finally you need to connect the produced hydrogen and oxygen to the network.
+
+Fun fact
+	Water is H2O - in the electrolyzer H2O is splited into H2 and O which results in an hydrogen molicule and an oxagen atom
+	Now we repeat this process, and the two oxigen atoms merge to an oxigen molecule - which is the air you breath day and night :).
+
+Goal:
+	Setup a water infrastructure and connect it and the electric energy to the electrolyzer.
+	Connecting the two outputs from the electrolyzer to the specifc transpoters completes the game.
