@@ -1,6 +1,0 @@
-{
-  "variants": {
-    "powered=true": { "model": "hydro:block/di_block_on" },
-	"powered=false": { "model": "hydro:block/di_block_off"}
-  }
-}

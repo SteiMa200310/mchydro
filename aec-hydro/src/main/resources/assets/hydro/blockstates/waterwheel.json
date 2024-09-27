@@ -1,8 +1,5 @@
 {
   "variants": {
-    "facing=north": {"model": "hydro:block/waterwheel"},
-    "facing=south": {"model": "hydro:block/waterwheel", "y":  180},
-    "facing=east": {"model": "hydro:block/waterwheel", "y":  90},
-    "facing=west": {"model": "hydro:block/waterwheel", "y":  270}
+    "": { "model": "hydro:block/waterwheel" }
   }
 }

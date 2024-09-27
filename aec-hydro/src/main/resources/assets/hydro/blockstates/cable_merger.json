@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=north": {"model": "hydro:block/cable_merger"},
-    "facing=east": {"model": "hydro:block/cable_merger", "y":  90},
-    "facing=south": {"model": "hydro:block/cable_merger", "y":  180},
-    "facing=west": {"model": "hydro:block/cable_merger", "y":  270}
-  }
-}
