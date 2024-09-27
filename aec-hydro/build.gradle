@@ -91,6 +91,7 @@ jar {
 	from { configurations.runtimeClasspath.collect { libsToInclude.contains(it.name) ? zipTree(it) : it; }}
 }
 
+
 // configure the maven publication
 publishing {
 	publications {
