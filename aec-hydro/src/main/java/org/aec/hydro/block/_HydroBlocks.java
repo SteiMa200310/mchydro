@@ -14,9 +14,21 @@ import org.aec.hydro.block.custom.geo.SolarPanel;
 import org.aec.hydro.block.custom.geo.Waterwheel;
 import org.aec.hydro.block.custom.geo.WindMill;
 import org.aec.hydro.block.custom.pipe.Pipe;
+import org.aec.hydro.block.custom.pipe.PipeCorner;
 
 public class _HydroBlocks {
     public static final Block PIPE = registerBlock("pipe", new Pipe(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block PIPECORNER = registerBlock("pipecorner", new PipeCorner(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block PIPECOMBINER = registerBlock("pipecombiner", new PipeCorner(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block PIPEPUMP = registerBlock("pipepump", new PipeCorner(FabricBlockSettings.copyOf(Blocks.STONE)));
+
+    public static final Block ELEKTROLYZEUR = registerBlock("elektrolyseur", new PipeCorner(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block BRENNSTOFFZELLE = registerBlock("brennstoffzelle", new PipeCorner(FabricBlockSettings.copyOf(Blocks.STONE)));
+
+    public static final Block CABLE = registerBlock("cable", new Pipe(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block CABLECORNER = registerBlock("cablecorner", new PipeCorner(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block CABLECOMBINER = registerBlock("cablecombiner", new PipeCorner(FabricBlockSettings.copyOf(Blocks.STONE)));
+
     //TODO: alle als Block hinzufügen so wie die pipe
 
     //Blocks With Blockentity

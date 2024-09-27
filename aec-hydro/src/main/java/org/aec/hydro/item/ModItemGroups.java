@@ -31,6 +31,16 @@ public class ModItemGroups {
             FabricItemGroup.builder().displayName(Text.translatable("itemGroup.hydro"))
                     .icon(() -> new ItemStack(WIND_MILL_ITEM)).entries((displayContext, entries) -> {
                         entries.add(_HydroBlocks.PIPE);
+                        entries.add(_HydroBlocks.PIPECORNER);
+                        entries.add(_HydroBlocks.PIPECOMBINER);
+                        entries.add(_HydroBlocks.PIPEPUMP);
+
+                        entries.add(_HydroBlocks.ELEKTROLYZEUR);
+                        entries.add(_HydroBlocks.BRENNSTOFFZELLE);
+
+                        entries.add(_HydroBlocks.CABLE);
+                        entries.add(_HydroBlocks.CABLECORNER);
+                        entries.add(_HydroBlocks.CABLECOMBINER);
 
                         entries.add(WIND_MILL_ITEM);
                         entries.add(SOLAR_PANEL_ITEM);
