@@ -22,11 +22,11 @@ import org.aec.hydro.block.custom.pipe.PipeCombiner;
 import org.aec.hydro.block.custom.pipe.Pump;
 
 public class _HydroBlocks {
-    public static final Block PIPE = registerBlock("pipe", new Pipe(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block PIPE = registerBlock("pipe", new Pipe(FabricBlockSettings.copyOf(Blocks.STONE).breakInstantly()));
     public static final Block PIPECOMBINER = registerBlock("pipecombiner", new PipeCombiner(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block PUMP = registerBlock("pump", new Pump(FabricBlockSettings.copyOf(Blocks.STONE)));
 
-    public static final Block CABLE = registerBlock("cable", new Cable(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block CABLE = registerBlock("cable", new Cable(FabricBlockSettings.copyOf(Blocks.STONE).breakInstantly()));
     public static final Block CABLECOMBINER = registerBlock("cablecombiner", new CableCombiner(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     public static final Block ELEKTROLYZEUR = registerBlock("elektrolyseur", new Elektrolyseur(FabricBlockSettings.copyOf(Blocks.STONE)));
