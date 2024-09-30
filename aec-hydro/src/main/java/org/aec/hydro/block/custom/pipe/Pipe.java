@@ -33,10 +33,10 @@ import java.util.Arrays;
 //In onUse override
 //        player.sendMessage(Text.of("Power Level: " + world.getBlockState(pos).get(PipeProperties.PowerLevel) + " || " + world.getBlockState(pos).get(PipeProperties.PIPE_ID)), true);
 
-public class Pipe extends HorizontalFacingBlock {
-    static final org.aec.hydro.pipeHandling.core.PipeShapeWrapper PipeShapeWrapper = new PipeShapeWrapper(
-        VoxelGenerator.makePipeV2LongShape_NORTH_SOUTH(),
-        VoxelGenerator.makePipeV2EdgeShape_NORTH_EAST()
+public class Pipe extends Block {
+    private static final org.aec.hydro.pipeHandling.core.PipeShapeWrapper PipeShapeWrapper = new PipeShapeWrapper(
+        VoxelGenerator.makePipeLongShape_NORTH_SOUTH(),
+        VoxelGenerator.makePipeEdgeShape_NORTH_EAST()
     );
 
     public Pipe(Settings settings) {

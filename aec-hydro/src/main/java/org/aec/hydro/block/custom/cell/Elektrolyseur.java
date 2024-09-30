@@ -20,13 +20,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class Elektrolyseur extends HorizontalFacingBlock {
+public class Elektrolyseur extends Block {
     public Elektrolyseur(Settings settings) {
         super(settings);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {}
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) { builder.add(Properties.HORIZONTAL_FACING); }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
@@ -36,6 +36,6 @@ public class Elektrolyseur extends HorizontalFacingBlock {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 }

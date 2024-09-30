@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class PipeCombiner extends HorizontalFacingBlock {
+public class PipeCombiner extends Block {
 
     public PipeCombiner(Settings settings) {
         super(settings);
@@ -29,7 +29,7 @@ public class PipeCombiner extends HorizontalFacingBlock {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING);
+        builder.add(Properties.HORIZONTAL_FACING);
     }
 
     @Override
@@ -40,6 +40,6 @@ public class PipeCombiner extends HorizontalFacingBlock {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 }

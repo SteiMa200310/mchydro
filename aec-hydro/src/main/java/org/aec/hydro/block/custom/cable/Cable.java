@@ -2,7 +2,6 @@ package org.aec.hydro.block.custom.cable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -13,6 +12,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.aec.hydro.block._HydroBlocks;
+import org.aec.hydro.block.custom.pipe.Pipe;
 import org.aec.hydro.pipeHandling.core.EnergyContext;
 import org.aec.hydro.pipeHandling.core.PipeShapeWrapper;
 import org.aec.hydro.pipeHandling.utils.ContextType;
@@ -24,24 +24,54 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class Cable extends HorizontalFacingBlock {
+public class Cable extends Block {
+    private static final org.aec.hydro.pipeHandling.core.PipeShapeWrapper PipeShapeWrapper = new PipeShapeWrapper(
+            VoxelGenerator.makeCableLongShape_NORTH_SOUTH(),
+            VoxelGenerator.makeCableEdgeShape_NORTH_EAST()
+    );
+
     public Cable(Settings settings) {
         super(settings);
+
+        this.setDefaultState(
+            this.stateManager.getDefaultState()
+                .with(PipeProperties.PIPE_ID, PipeID.F1)
+                .with(PipeProperties.PowerLevel, 0)
+                .with(PipeProperties.RecieverFace, PowerFlowDirection.NONE)
+                .with(PipeProperties.ProviderFace, PowerFlowDirection.NONE)
+        );
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING);
+        builder.add(PipeProperties.PIPE_ID);
+        builder.add(PipeProperties.PowerLevel);
+        builder.add(PipeProperties.RecieverFace);
+        builder.add(PipeProperties.ProviderFace);
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        return VoxelGenerator.makeCableShape();
+        return Cable.PipeShapeWrapper.GetShape(state.get(PipeProperties.PIPE_ID));
     }
 
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
+        EnergyContext info = new EnergyContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), null, _HydroBlocks.CABLE);
+        info.EvaluateBase(); //is air at start
+
+        Direction dir = ctx.getPlayerLookDirection().getOpposite();
+        info.SetFakeDirection(dir); //needs to be evaluated previously
+
+        return info.GetCorrectedState();
+    }
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        EnergyContext info = new EnergyContext(world, pos, ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), null, _HydroBlocks.CABLE);
+        info.EvaluateActual();
+
+        world.setBlockState(pos, info.GetCorrectedState());
     }
 }
