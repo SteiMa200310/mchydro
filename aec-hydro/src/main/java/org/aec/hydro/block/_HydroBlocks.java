@@ -22,22 +22,23 @@ import org.aec.hydro.block.custom.pipe.PipeCombiner;
 import org.aec.hydro.block.custom.pipe.Pump;
 
 public class _HydroBlocks {
+    //Power Providers
+    public static final Block PUMP = registerBlock("pump", new Pump(FabricBlockSettings.copyOf(Blocks.STONE)));
+
+    //Blocks With Blockentity
+    public static final Block WIND_MILL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "windmill"), new WindMill(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block SOLAR_PANEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "solarpanel"), new SolarPanel(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block WATERWHEEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "waterwheel"), new Waterwheel(FabricBlockSettings.copyOf(Blocks.STONE)));
+
+    //Power Providers NEED TO BE BEFORE PIPE to not again and again create a list of proverproviders
     public static final Block PIPE = registerBlock("pipe", new Pipe(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block PIPECOMBINER = registerBlock("pipecombiner", new PipeCombiner(FabricBlockSettings.copyOf(Blocks.STONE)));
-    public static final Block PUMP = registerBlock("pump", new Pump(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     public static final Block CABLE = registerBlock("cable", new Cable(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block CABLECOMBINER = registerBlock("cablecombiner", new CableCombiner(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     public static final Block ELEKTROLYZEUR = registerBlock("elektrolyseur", new Elektrolyseur(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block BRENNSTOFFZELLE = registerBlock("brennstoffzelle", new Brennstoffzelle(FabricBlockSettings.copyOf(Blocks.STONE)));
-
-    //TODO: alle als Block hinzufügen so wie die pipe
-
-    //Blocks With Blockentity
-    public static final Block WIND_MILL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "windmill"), new WindMill(FabricBlockSettings.copyOf(Blocks.STONE)));
-    public static final Block SOLAR_PANEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "solarpanel"), new SolarPanel(FabricBlockSettings.copyOf(Blocks.STONE)));
-    public static final Block WATERWHEEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "waterwheel"), new Waterwheel(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     private static Block registerBlock(String name, Block block){
         registerBlockItem(name, block);

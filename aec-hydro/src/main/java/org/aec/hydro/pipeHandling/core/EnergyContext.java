@@ -15,8 +15,10 @@ import org.aec.hydro.pipeHandling.utils.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class EnergyContext {
+    //comments describe the required properties:
     public final List<Block> PowerProviders; //facing
     public final Block BaseMergerBlock; //facing
     public final Block BasePipeBlock; //all pipe properties
@@ -167,9 +169,13 @@ public class EnergyContext {
             if (neighborBlock.equals(basePipeBlock))
                 return new EnergyContext(world, neighborBlockPos, ContextType.Pipe, powerProviders, basePipeMerger, basePipeBlock);
 
-            if (powerProviders.stream().anyMatch(b -> b.equals(neighborBlock)))
-                return new EnergyContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders, basePipeMerger, basePipeBlock);
-            return null;
+            try {
+                if (powerProviders.stream().anyMatch(b -> b.equals(neighborBlock)))
+                    return new EnergyContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders, basePipeMerger, basePipeBlock);
+                return null;
+            } catch (Exception ex) {
+                throw  ex;
+            }
         };
 
         Arrays.stream(Direction.values()).forEach((direction) -> {

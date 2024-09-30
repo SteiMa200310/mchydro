@@ -173,6 +173,8 @@ public class VoxelGenerator {
     }
 
     public static VoxelShape rotateShape(int aoX, int aoY, int aoZ, VoxelShape shape) {
+        //viewing an axis from a lesser value to a bigger value the rotation happens from right to left
+
         //consider the following in real life x y are the 2d axis and z is the up/down axis
         //where as in minecraft x and z are the 2d axis and y is the up/down axis
 

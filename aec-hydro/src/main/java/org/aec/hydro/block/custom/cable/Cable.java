@@ -23,12 +23,15 @@ import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class Cable extends Block {
     private static final org.aec.hydro.pipeHandling.core.PipeShapeWrapper PipeShapeWrapper = new PipeShapeWrapper(
             VoxelGenerator.makeCableLongShape_NORTH_SOUTH(),
             VoxelGenerator.makeCableEdgeShape_NORTH_EAST()
     );
+
+    private static List<Block> PowerProviders = null;
 
     public Cable(Settings settings) {
         super(settings);
@@ -40,6 +43,8 @@ public class Cable extends Block {
                 .with(PipeProperties.RecieverFace, PowerFlowDirection.NONE)
                 .with(PipeProperties.ProviderFace, PowerFlowDirection.NONE)
         );
+
+        PowerProviders = Arrays.asList(_HydroBlocks.WIND_MILL, _HydroBlocks.SOLAR_PANEL, _HydroBlocks.WATERWHEEL);
     }
 
     @Override
@@ -58,7 +63,14 @@ public class Cable extends Block {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        EnergyContext info = new EnergyContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), null, _HydroBlocks.CABLE);
+        EnergyContext info = new EnergyContext(
+            ctx.getWorld(),
+            ctx.getBlockPos(),
+            ContextType.Pipe,
+            Cable.PowerProviders,
+            null,
+            _HydroBlocks.CABLE
+        );
         info.EvaluateBase(); //is air at start
 
         Direction dir = ctx.getPlayerLookDirection().getOpposite();
@@ -69,7 +81,14 @@ public class Cable extends Block {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        EnergyContext info = new EnergyContext(world, pos, ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), null, _HydroBlocks.CABLE);
+        EnergyContext info = new EnergyContext(
+            world,
+            pos,
+            ContextType.Pipe,
+            Cable.PowerProviders,
+            null,
+            _HydroBlocks.CABLE
+        );
         info.EvaluateActual();
 
         world.setBlockState(pos, info.GetCorrectedState());
