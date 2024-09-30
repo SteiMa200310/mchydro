@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "hydro:block/elektrolyseur", "y": 0 },
+    "facing=east": { "model": "hydro:block/elektrolyseur", "y": 90 },
+    "facing=south": { "model": "hydro:block/elektrolyseur", "y": 180 },
+    "facing=west": { "model": "hydro:block/elektrolyseur", "y": 270 }
+  }
+}

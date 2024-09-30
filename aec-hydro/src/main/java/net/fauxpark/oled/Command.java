@@ -83,7 +83,7 @@ public class Command {
 	public static final int SET_CONTRAST                         = 0x81;
 
 	/**
-	 * Sets the charge pump regulator state.
+	 * Sets the charge pump.json regulator state.
 	 *
 	 * @see Constant#CHARGE_PUMP_DISABLE
 	 * @see Constant#CHARGE_PUMP_ENABLE

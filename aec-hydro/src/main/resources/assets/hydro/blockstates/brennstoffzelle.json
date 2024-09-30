@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "hydro:block/brennstoffzelle", "y": 0 },
+    "facing=east": { "model": "hydro:block/brennstoffzelle", "y": 90 },
+    "facing=south": { "model": "hydro:block/brennstoffzelle", "y": 180 },
+    "facing=west": { "model": "hydro:block/brennstoffzelle", "y": 270 }
+  }
+}

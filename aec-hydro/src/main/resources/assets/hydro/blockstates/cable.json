@@ -1,0 +1,154 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "pipe_id": "f1"
+      },
+      "apply": {
+        "model": "hydro:block/cable",
+        "y": 0,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "f2"
+      },
+      "apply": {
+        "model": "hydro:block/cable",
+        "y": 90,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "f3"
+      },
+      "apply": {
+        "model": "hydro:block/cable",
+        "y": 0,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e1"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 90,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e2"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 180,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e3"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 270,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e4"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 0,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e5"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 90,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e6"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 90,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e7"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 180,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e8"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 180,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e9"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 270,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e10"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 270,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e11"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 0,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e12"
+      },
+      "apply": {
+        "model": "hydro:block/cable_edge",
+        "y": 0,
+        "x": 90
+      }
+    }
+  ]
+}

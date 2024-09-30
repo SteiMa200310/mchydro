@@ -16,7 +16,7 @@ import org.aec.hydro.item.custom.*;
 
 public class ModItemGroups {
     public static final Item WIND_MILL_ITEM = registerItem("windmill", new WindMillItem(_HydroBlocks.WIND_MILL, new FabricItemSettings()));
-    public static final Item SOLAR_PANEL_ITEM = registerItem("solar_panel", new SolarPanelItem(_HydroBlocks.SOLAR_PANEL, new FabricItemSettings()));
+    public static final Item SOLAR_PANEL_ITEM = registerItem("solarpanel", new SolarPanelItem(_HydroBlocks.SOLAR_PANEL, new FabricItemSettings()));
     public static final Item WATERWHEEL_ITEM = registerItem("waterwheel", new WaterwheelItem(_HydroBlocks.WATERWHEEL, new FabricItemSettings()));
 
     //Custom Items
@@ -31,6 +31,14 @@ public class ModItemGroups {
             FabricItemGroup.builder().displayName(Text.translatable("itemGroup.hydro"))
                     .icon(() -> new ItemStack(WIND_MILL_ITEM)).entries((displayContext, entries) -> {
                         entries.add(_HydroBlocks.PIPE);
+                        entries.add(_HydroBlocks.PIPECOMBINER);
+                        entries.add(_HydroBlocks.PUMP);
+
+                        entries.add(_HydroBlocks.CABLE);
+                        entries.add(_HydroBlocks.CABLECOMBINER);
+
+                        entries.add(_HydroBlocks.ELEKTROLYZEUR);
+                        entries.add(_HydroBlocks.BRENNSTOFFZELLE);
 
                         entries.add(WIND_MILL_ITEM);
                         entries.add(SOLAR_PANEL_ITEM);

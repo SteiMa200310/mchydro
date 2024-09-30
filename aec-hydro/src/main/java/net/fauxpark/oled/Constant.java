@@ -38,12 +38,12 @@ public class Constant {
 	public static final int MEMORY_MODE_PAGE        = 0x02;
 
 	/**
-	 * Disable the charge pump regulator.
+	 * Disable the charge pump.json regulator.
 	 */
 	public static final int CHARGE_PUMP_DISABLE     = 0x10;
 
 	/**
-	 * Enable the charge pump regulator.
+	 * Enable the charge pump.json regulator.
 	 */
 	public static final int CHARGE_PUMP_ENABLE      = 0x14;
 

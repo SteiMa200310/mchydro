@@ -1,10 +1,5 @@
 package org.aec.hydro.utils;
 
-import net.minecraft.util.function.BooleanBiFunction;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -44,6 +39,7 @@ public class VoxelGenerator {
         );
     }
 
+    //---Updated--
     public static VoxelShape makeElectrolyzerShape() {
         return VoxelShapes.union(
                 VoxelShapes.cuboid(0.1875000000000004, 0, 0.06250000000000044, 0.8125000000000004, 0.875, 0.18750000000000044),
@@ -61,6 +57,7 @@ public class VoxelGenerator {
         );
     }
 
+    //---Updated--
     public static VoxelShape makeBrennstoffzelleShape() {
         return VoxelShapes.union(
                 VoxelShapes.cuboid(0.1875000000000004, 0, 0.06250000000000044, 0.8125000000000004, 0.875, 0.18750000000000044),
@@ -76,19 +73,7 @@ public class VoxelGenerator {
         );
     }
 
-    public static VoxelShape makeCableShape(){
-        return VoxelShapes.union(
-                VoxelShapes.cuboid(0.3125, 0.3125, 0, 0.6875, 0.6875, 1)
-        );
-    }
-
-    public static VoxelShape makeCableCornerShape() {
-        return VoxelShapes.union(
-                VoxelShapes.cuboid(0.3125, 0.3125, 0, 0.6875, 0.6875, 0.6875),
-                VoxelShapes.cuboid(0, 0.3125, 0.375, 0.375, 0.6875, 0.6875)
-        );
-    }
-
+    //---Updated--
     public static VoxelShape makeCableCombinerShape() {
         return VoxelShapes.union(
                 VoxelShapes.cuboid(0, 0.3125, 0.3125, 0.25, 0.6875, 0.6875),
@@ -115,40 +100,55 @@ public class VoxelGenerator {
         );
     }
 
+    //---Updated--
     public static VoxelShape makePipeCombinerShape(){
         return VoxelShapes.union(
                 VoxelShapes.cuboid(0.25, 0.25, 0.0625, 0.75, 0.75, 0.75),
-                VoxelShapes.cuboid(0.0625, 0.25, 0.25, 0.25, 0.75, 0.75),
                 VoxelShapes.cuboid(0.125, 0.125, 0, 0.875, 0.875, 0.0625),
-                VoxelShapes.cuboid(0, 0.1875, 0.1875, 0.0625, 0.8125, 0.8125),
-                VoxelShapes.cuboid(0, 0.1875, 0.1875000000000001, 0.0625, 0.8125, 0.8125000000000001),
-                VoxelShapes.cuboid(0, 0.1875, 0.18749999999999994, 0.0625, 0.8125, 0.8125),
-                VoxelShapes.cuboid(0.0625, 0.25, 0.25, 0.25, 0.75, 0.75),
-                VoxelShapes.cuboid(0.0625, 0.25, 0.25, 0.25, 0.75, 0.75),
+                VoxelShapes.cuboid(0.1875, 0.9375, 0.1875, 0.8125, 1, 0.8125),
+                VoxelShapes.cuboid(0.1875, 0.1875, 0.9375, 0.8125, 0.8125, 1),
+                VoxelShapes.cuboid(0.1875, 0, 0.1875, 0.8125, 0.0625, 0.8125),
+                VoxelShapes.cuboid(0.25, 0.25, 0.75, 0.75, 0.75, 0.9375),
+                VoxelShapes.cuboid(0.25, 0.75, 0.25, 0.75, 0.9375, 0.75),
                 VoxelShapes.cuboid(0.06249999999999989, 0.2499999999999998, 0.2499999999999999, 0.2499999999999999, 0.7499999999999998, 0.7499999999999999),
                 VoxelShapes.cuboid(0, 0.18749999999999975, 0.1874999999999999, 0.0625, 0.8124999999999998, 0.8124999999999999),
                 VoxelShapes.cuboid(0.9374999999999999, 0.18750000000000108, 0.1875000000000001, 0.9999999999999999, 0.8125000000000011, 0.8125000000000001),
                 VoxelShapes.cuboid(0.7499999999999998, 0.25000000000000067, 0.2500000000000001, 0.9374999999999998, 0.7500000000000007, 0.7500000000000001),
-                VoxelShapes.cuboid(0.125, 0.125, 0.125, 0.875, 0.875, 0.875)
-        );
-    }
-    public static VoxelShape makePumpShape() {
-        return VoxelShapes.union(
-                VoxelShapes.cuboid(0.25, 0.25, 0.0625, 0.75, 0.75, 0.9375),
-                VoxelShapes.cuboid(0.125, 0.125, 0.8125, 0.875, 0.875, 1),
-                VoxelShapes.cuboid(0.1875, 0.1875, 0, 0.8125, 0.8125, 0.0625),
-                VoxelShapes.cuboid(0.4375, 0.3125, 0.6875, 0.5625, 0.4375, 1.4375),
-                VoxelShapes.cuboid(0.4375, 0.3125, -0.1875, 0.5625, 0.4375, 0.5625),
-                VoxelShapes.cuboid(0, 0.3125, 0.25, 0.125, 0.4375, 1),
-                VoxelShapes.cuboid(0.875, 0.3125, 0.25, 1, 0.4375, 1),
-                VoxelShapes.cuboid(0.75, 0.3125, 0.3125, 0.875, 0.4375, 0.4375),
-                VoxelShapes.cuboid(0.125, 0.3125, 0.3125, 0.25, 0.4375, 0.4375),
-                VoxelShapes.cuboid(0.375, 0.3125, -0.0625, 0.5, 0.4375, 0.0625),
-                VoxelShapes.cuboid(0.375, 0.3125, 0.5625, 0.5, 0.4375, 0.6875)
+                VoxelShapes.cuboid(0.25, 0.0625, 0.25, 0.75, 0.25, 0.75)
         );
     }
 
-    public static VoxelShape makePipeV2LongShape_NORTH_SOUTH() {
+    //---Updated--
+    public static VoxelShape makePumpShape() {
+        return VoxelShapes.union(
+                VoxelShapes.cuboid(0.25, 0.0625, 0.25, 0.75, 0.9375, 0.75),
+                VoxelShapes.cuboid(0.125, 0, 0.125, 0.875, 0.1875, 0.875),
+                VoxelShapes.cuboid(0.1875, 0.9375, 0.1875, 0.8125, 1, 0.8125),
+                VoxelShapes.cuboid(0.4375, 0, 0.875, 0.5625, 0.75, 1),
+                VoxelShapes.cuboid(0.4375, 0, 0, 0.5625, 0.75, 0.125),
+                VoxelShapes.cuboid(0, 0, 0.4375, 0.125, 0.75, 0.5625),
+                VoxelShapes.cuboid(0.875, 0, 0.4375, 1, 0.75, 0.5625),
+                VoxelShapes.cuboid(0.75, 0.5625, 0.4375, 0.875, 0.6875, 0.5625),
+                VoxelShapes.cuboid(0.125, 0.5625, 0.4375, 0.25, 0.6875, 0.5625),
+                VoxelShapes.cuboid(0.4375, 0.5625, 0.125, 0.5625, 0.6875, 0.25),
+                VoxelShapes.cuboid(0.4375, 0.5625, 0.75, 0.5625, 0.6875, 0.875)
+        );
+    }
+
+    public static VoxelShape makeCableLongShape_NORTH_SOUTH(){
+        return VoxelShapes.union(
+                VoxelShapes.cuboid(0.3125, 0.3125, 0, 0.6875, 0.6875, 1)
+        );
+    }
+
+    public static VoxelShape makeCableEdgeShape_NORTH_EAST() {
+        return VoxelShapes.union(
+                VoxelShapes.cuboid(0.3125, 0.3125, 0.3125, 1, 0.6875, 0.6875),
+                VoxelShapes.cuboid(0.3125, 0.3125, 0, 0.6875, 0.6875, 0.3125)
+        );
+    }
+
+    public static VoxelShape makePipeLongShape_NORTH_SOUTH() {
         return VoxelShapes.union(
                 VoxelShapes.cuboid(0.25, 0.25, 0.0625, 0.75, 0.75, 0.9375),
                 VoxelShapes.cuboid(0.1875, 0.1875, 0, 0.8125, 0.8125, 0.0625),
@@ -156,14 +156,20 @@ public class VoxelGenerator {
         );
     }
 
-    public static VoxelShape makePipeV2EdgeShape_NORTH_EAST() {
-        VoxelShape shape = VoxelShapes.empty();
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0.25, 0.25, 0.25, 0.9375, 0.75, 0.75), BooleanBiFunction.OR);
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0.9375, 0.1875, 0.1875, 1, 0.8125, 0.8125), BooleanBiFunction.OR);
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0.1875, 0.1875, 0, 0.8125, 0.8125, 0.0625), BooleanBiFunction.OR);
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0.25, 0.25, 0.0625, 0.75, 0.75, 0.25), BooleanBiFunction.OR);
+    public static VoxelShape makePipeEdgeShape_NORTH_EAST() {
+//        VoxelShape shape = VoxelShapes.empty();
+//        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0.25, 0.25, 0.25, 0.9375, 0.75, 0.75), BooleanBiFunction.OR);
+//        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0.9375, 0.1875, 0.1875, 1, 0.8125, 0.8125), BooleanBiFunction.OR);
+//        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0.1875, 0.1875, 0, 0.8125, 0.8125, 0.0625), BooleanBiFunction.OR);
+//        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0.25, 0.25, 0.0625, 0.75, 0.75, 0.25), BooleanBiFunction.OR);
+//
+//        return shape;
 
-        return shape;
+        return VoxelShapes.union(VoxelShapes.cuboid(0.25, 0.25, 0.25, 0.9375, 0.75, 0.75),
+                VoxelShapes.cuboid(0.9375, 0.1875, 0.1875, 1, 0.8125, 0.8125),
+                VoxelShapes.cuboid(0.1875, 0.1875, 0, 0.8125, 0.8125, 0.0625),
+                VoxelShapes.cuboid(0.25, 0.25, 0.0625, 0.75, 0.75, 0.25)
+        );
     }
 
     public static VoxelShape rotateShape(int aoX, int aoY, int aoZ, VoxelShape shape) {
