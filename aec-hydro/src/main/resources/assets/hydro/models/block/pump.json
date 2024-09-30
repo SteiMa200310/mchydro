@@ -3,8 +3,8 @@
 	"parent": "builtin/entity",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "pump",
-		"particle": "pump"
+		"0": "hydro:block/pump",
+		"particle": "hydro:block/pump"
 	},
 	"elements": [
 		{

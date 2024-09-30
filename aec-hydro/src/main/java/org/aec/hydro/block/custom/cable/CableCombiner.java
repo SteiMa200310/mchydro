@@ -21,14 +21,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class CableCombiner extends HorizontalFacingBlock {
+public class CableCombiner extends Block {
     public CableCombiner(Settings settings) {
         super(settings);
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING);
+        builder.add(Properties.HORIZONTAL_FACING);
     }
 
     @Override
@@ -39,6 +39,6 @@ public class CableCombiner extends HorizontalFacingBlock {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 }

@@ -1,10 +1,9 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "builtin/entity",
 	"texture_size": [128, 128],
 	"textures": {
-		"1": "brennstoffzelle",
-		"particle": "brennstoffzelle"
+		"1": "hydro:block/brennstoffzelle",
+		"particle": "hydro:block/brennstoffzelle"
 	},
 	"elements": [
 		{

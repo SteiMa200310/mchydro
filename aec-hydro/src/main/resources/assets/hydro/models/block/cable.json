@@ -3,8 +3,8 @@
 	"parent": "builtin/entity",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "cable",
-		"particle": "cable"
+		"1": "hydro:block/cable",
+		"particle": "hydro:block/cable"
 	},
 	"elements": [
 		{

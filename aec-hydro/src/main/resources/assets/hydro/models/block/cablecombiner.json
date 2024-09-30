@@ -1,10 +1,9 @@
 {
   "credit": "Made with Blockbench",
-  "parent": "builtin/entity",
   "texture_size": [64, 64],
   "textures": {
-    "2": "cablecombiner",
-    "particle": "cablecombiner"
+    "2": "hydro:block/cablecombiner",
+    "particle": "hydro:block/cablecombiner"
   },
   "elements": [
     {
