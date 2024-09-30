@@ -29,7 +29,7 @@ public class PipeCombiner extends Block {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.HORIZONTAL_FACING);
+        builder.add(Properties.FACING);
     }
 
     @Override
@@ -40,6 +40,6 @@ public class PipeCombiner extends Block {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerLookDirection().getOpposite());
+        return this.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 }

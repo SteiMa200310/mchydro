@@ -78,7 +78,7 @@ public class Pipe extends Block {
             ctx.getBlockPos(),
             ContextType.Pipe,
             Pipe.PowerProviders,
-            null,
+            _HydroBlocks.PIPECOMBINER,
             _HydroBlocks.PIPE
         );
         info.EvaluateBase(); //is air at start
@@ -96,7 +96,7 @@ public class Pipe extends Block {
             pos,
             ContextType.Pipe,
             Pipe.PowerProviders,
-            null,
+            _HydroBlocks.PIPECOMBINER,
             _HydroBlocks.PIPE
         );
         info.EvaluateActual();

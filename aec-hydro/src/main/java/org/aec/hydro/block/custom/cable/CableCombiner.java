@@ -28,7 +28,7 @@ public class CableCombiner extends Block {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.HORIZONTAL_FACING);
+        builder.add(Properties.FACING);
     }
 
     @Override
@@ -39,6 +39,6 @@ public class CableCombiner extends Block {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        return this.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 }
