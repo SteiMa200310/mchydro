@@ -1,4 +1,4 @@
-package org.aec.hydro.block.custom.cable;
+package org.aec.hydro.block.custom.pipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -8,24 +8,16 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import org.aec.hydro.block._HydroBlocks;
-import org.aec.hydro.pipeHandling.core.EnergyContext;
-import org.aec.hydro.pipeHandling.core.PipeShapeWrapper;
-import org.aec.hydro.pipeHandling.utils.ContextType;
 import org.aec.hydro.pipeHandling.utils.PipeID;
 import org.aec.hydro.pipeHandling.utils.PipeProperties;
-import org.aec.hydro.pipeHandling.utils.PowerFlowDirection;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
+public class Pump extends HorizontalFacingBlock {
 
-public class Cable extends HorizontalFacingBlock {
-    public Cable(Settings settings) {
+    public Pump(Settings settings) {
         super(settings);
     }
 
@@ -36,7 +28,7 @@ public class Cable extends HorizontalFacingBlock {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        return VoxelGenerator.makeCableShape();
+        return VoxelGenerator.makePumpShape();
     }
 
     @Nullable

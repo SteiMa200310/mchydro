@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "hydro:block/solarpanel" }
+  }
+}

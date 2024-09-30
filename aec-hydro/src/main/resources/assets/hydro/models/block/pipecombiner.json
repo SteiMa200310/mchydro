@@ -3,8 +3,8 @@
 	"parent": "builtin/entity",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "pipeCombiner",
-		"particle": "pipeCombiner"
+		"0": "pipecombiner",
+		"particle": "pipecombiner"
 	},
 	"elements": [
 		{

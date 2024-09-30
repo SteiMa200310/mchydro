@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "hydro:block/cable", "y": 0 },
+    "facing=east": { "model": "hydro:block/cable", "y": 90 },
+    "facing=south": { "model": "hydro:block/cable", "y": 180 },
+    "facing=west": { "model": "hydro:block/cable", "y": 270 }
+  }
+}
