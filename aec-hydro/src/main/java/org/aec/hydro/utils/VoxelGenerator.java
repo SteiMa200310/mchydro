@@ -73,18 +73,6 @@ public class VoxelGenerator {
         );
     }
 
-    //---Updated--
-    public static VoxelShape makeCableCombinerShape() {
-        return VoxelShapes.union(
-                VoxelShapes.cuboid(0, 0.3125, 0.3125, 0.25, 0.6875, 0.6875),
-                VoxelShapes.cuboid(0.6875, 0.25, 0.25, 1, 0.75, 0.75),
-                VoxelShapes.cuboid(0.3125, 0.3125, 0, 0.6875, 0.6875, 1),
-                VoxelShapes.cuboid(0.3125, 0, 0.3125, 0.6875, 0.375, 0.6875),
-                VoxelShapes.cuboid(0.1875, 0.1875, 0.1875, 0.8125, 0.8125, 0.8125),
-                VoxelShapes.cuboid(0.3125, 0.625, 0.3125, 0.6875, 1, 0.6875)
-        );
-    }
-
     public static VoxelShape makeCableSplitterShape() {
         return VoxelShapes.union(
                 VoxelShapes.cuboid(0.1379441738241592, 0.375, 0.0625, 0.4504441738241592, 0.625, 0.5),
@@ -115,6 +103,18 @@ public class VoxelGenerator {
                 VoxelShapes.cuboid(0.9374999999999999, 0.18750000000000108, 0.1875000000000001, 0.9999999999999999, 0.8125000000000011, 0.8125000000000001),
                 VoxelShapes.cuboid(0.7499999999999998, 0.25000000000000067, 0.2500000000000001, 0.9374999999999998, 0.7500000000000007, 0.7500000000000001),
                 VoxelShapes.cuboid(0.25, 0.0625, 0.25, 0.75, 0.25, 0.75)
+        );
+    }
+
+    //---Updated--
+    public static VoxelShape makeCableCombinerShape() {
+        return VoxelShapes.union(
+                VoxelShapes.cuboid(0.3125, 0.3125, 0.75, 0.6875, 0.6875, 1),
+                VoxelShapes.cuboid(0.25, 0.25, 0, 0.75, 0.75, 0.3125),
+                VoxelShapes.cuboid(0, 0.3125, 0.3125, 1, 0.6875, 0.6875),
+                VoxelShapes.cuboid(0.3125, 0, 0.3125, 0.6875, 0.375, 0.6875),
+                VoxelShapes.cuboid(0.1875, 0.1875, 0.1875, 0.8125, 0.8125, 0.8125),
+                VoxelShapes.cuboid(0.3125, 0.625, 0.3125, 0.6875, 1, 0.6875)
         );
     }
 
@@ -172,8 +172,40 @@ public class VoxelGenerator {
         );
     }
 
+    public static VoxelShape makeColorBlockShape() {
+        return VoxelShapes.union(
+                VoxelShapes.cuboid(0.1875, 0.1875, 0.1875, 0.8125, 0.8125, 0.8125),
+                VoxelShapes.cuboid(0.125, 0.4375, 0.4375, 0.25, 0.5625, 0.5625),
+                VoxelShapes.cuboid(0.625, 0.75, 0.625, 0.75, 0.875, 0.75),
+                VoxelShapes.cuboid(0.625, 0.75, 0.25, 0.75, 0.875, 0.375),
+                VoxelShapes.cuboid(0.25, 0.75, 0.25, 0.375, 0.875, 0.375),
+                VoxelShapes.cuboid(0.25, 0.75, 0.625, 0.375, 0.875, 0.75),
+                VoxelShapes.cuboid(0.75, 0.625, 0.625, 0.875, 0.75, 0.75),
+                VoxelShapes.cuboid(0.75, 0.25, 0.25, 0.875, 0.375, 0.375),
+                VoxelShapes.cuboid(0.75, 0.4375, 0.25, 0.875, 0.5625, 0.375),
+                VoxelShapes.cuboid(0.75, 0.625, 0.25, 0.875, 0.75, 0.375),
+                VoxelShapes.cuboid(0.75, 0.4375, 0.625, 0.875, 0.5625, 0.75),
+                VoxelShapes.cuboid(0.75, 0.25, 0.625, 0.875, 0.375, 0.75),
+                VoxelShapes.cuboid(0.4375, 0.125, 0.4375, 0.5625, 0.25, 0.5625),
+                VoxelShapes.cuboid(0.625, 0.125, 0.625, 0.75, 0.25, 0.75),
+                VoxelShapes.cuboid(0.25, 0.125, 0.25, 0.375, 0.25, 0.375),
+                VoxelShapes.cuboid(0.25, 0.25, 0.125, 0.375, 0.375, 0.25),
+                VoxelShapes.cuboid(0.625, 0.625, 0.125, 0.75, 0.75, 0.25),
+                VoxelShapes.cuboid(0.625, 0.625, 0.75, 0.75, 0.75, 0.875),
+                VoxelShapes.cuboid(0.25, 0.625, 0.75, 0.375, 0.75, 0.875),
+                VoxelShapes.cuboid(0.25, 0.25, 0.75, 0.375, 0.375, 0.875),
+                VoxelShapes.cuboid(0.625, 0.25, 0.75, 0.75, 0.375, 0.875),
+                VoxelShapes.cuboid(0.4375, 0.4375, 0.75, 0.5625, 0.5625, 0.875)
+        );
+    }
+
     public static VoxelShape rotateShape(int aoX, int aoY, int aoZ, VoxelShape shape) {
-        //viewing an axis from a lesser value to a bigger value the rotation happens from right to left
+        //x rotates view from - to + || to RIGHT
+        //y rotates view from - to + || to LEFT
+        //z rotates view from - to + || to RIGHT
+
+        //in comparison rotating in a blockstate file -> ALWAYS SPINNS to the LEFT !!!
+        //needs to be fixed soon but leaving it for now since pipe shapes need to be redone
 
         //consider the following in real life x y are the 2d axis and z is the up/down axis
         //where as in minecraft x and z are the 2d axis and y is the up/down axis

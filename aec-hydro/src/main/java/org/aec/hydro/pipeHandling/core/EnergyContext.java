@@ -15,12 +15,11 @@ import org.aec.hydro.pipeHandling.utils.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class EnergyContext {
     //comments describe the required properties:
     public final List<Block> PowerProviders; //facing
-    public final Block BaseMergerBlock; //facing
+    public final Block BaseCombinerBlock; //facing
     public final Block BasePipeBlock; //all pipe properties
 
     public final World World;
@@ -44,9 +43,9 @@ public class EnergyContext {
     public static boolean CareAboutLookingDirectionWhenRealNeighborIsPresent = false;
 
     //maybe use builder
-    public EnergyContext(World world, BlockPos pos, ContextType contextType, List<Block> powerProviders, Block baseMergerBlock, Block basePipeBlock) {
+    public EnergyContext(World world, BlockPos pos, ContextType contextType, List<Block> powerProviders, Block baseCombinerBlock, Block basePipeBlock) {
         PowerProviders = powerProviders;
-        BaseMergerBlock = baseMergerBlock;
+        BaseCombinerBlock = baseCombinerBlock;
         BasePipeBlock = basePipeBlock;
 
         World = world;
@@ -117,7 +116,7 @@ public class EnergyContext {
 
             //&& dirCtx1.PipeContextType == ContextType.Pipe
             if (dirCtx1 != null && PipeStateEvaluator.IsNeighbourConnectionWilling(this, soonToComeOpenFaces.getLeft()) ||
-                    dirCtx2 != null && PipeStateEvaluator.IsNeighbourConnectionWilling(this, soonToComeOpenFaces.getRight()))
+                dirCtx2 != null && PipeStateEvaluator.IsNeighbourConnectionWilling(this, soonToComeOpenFaces.getRight()))
                 return PipeStateEvaluator
                         .PowerLevelOfConnectionWilling(this, soonToComeOpenFaces.getLeft(), soonToComeOpenFaces.getRight())
                         .ApplyOn(this.BlockState)
@@ -169,13 +168,12 @@ public class EnergyContext {
             if (neighborBlock.equals(basePipeBlock))
                 return new EnergyContext(world, neighborBlockPos, ContextType.Pipe, powerProviders, basePipeMerger, basePipeBlock);
 
-            try {
-                if (powerProviders.stream().anyMatch(b -> b.equals(neighborBlock)))
-                    return new EnergyContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders, basePipeMerger, basePipeBlock);
-                return null;
-            } catch (Exception ex) {
-                throw  ex;
-            }
+            if (neighborBlock.equals(basePipeMerger))
+                return new EnergyContext(world, neighborBlockPos, ContextType.PipeCombiner, powerProviders, basePipeMerger, basePipeBlock);
+
+            if (powerProviders.stream().anyMatch(b -> b.equals(neighborBlock)))
+                return new EnergyContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders, basePipeMerger, basePipeBlock);
+            return null;
         };
 
         Arrays.stream(Direction.values()).forEach((direction) -> {
@@ -184,7 +182,7 @@ public class EnergyContext {
                     this.World,
                     this.Pos,
                     this.PowerProviders,
-                    this.BaseMergerBlock,
+                    this.BaseCombinerBlock,
                     this.BasePipeBlock,
                     direction
                 )

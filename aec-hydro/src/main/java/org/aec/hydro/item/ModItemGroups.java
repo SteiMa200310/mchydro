@@ -40,6 +40,8 @@ public class ModItemGroups {
                         entries.add(_HydroBlocks.ELEKTROLYZEUR);
                         entries.add(_HydroBlocks.BRENNSTOFFZELLE);
 
+                        entries.add(_HydroBlocks.COLORBLOCK);
+
                         entries.add(WIND_MILL_ITEM);
                         entries.add(SOLAR_PANEL_ITEM);
                         entries.add(WATERWHEEL_ITEM);

@@ -22,6 +22,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 public class PipeCombiner extends Block {
+    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makePipeCombinerShape();
+    private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.rotateShape(0,2,0,NORTH_SHAPE);
+    private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(0,1,0,NORTH_SHAPE);
+    private static final VoxelShape WEST_SHAPE = VoxelGenerator.rotateShape(0,3,0,NORTH_SHAPE);
+    private static final VoxelShape UP_SHAPE = VoxelGenerator.rotateShape(1,0,0,NORTH_SHAPE);
+    private static final VoxelShape DOWN_SHAPE = VoxelGenerator.rotateShape(3,0,0,NORTH_SHAPE);
 
     public PipeCombiner(Settings settings) {
         super(settings);
@@ -29,17 +35,24 @@ public class PipeCombiner extends Block {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.HORIZONTAL_FACING);
+        builder.add(Properties.FACING);
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        return VoxelGenerator.makePipeCombinerShape();
+        return switch (state.get(Properties.FACING)) {
+            case NORTH -> NORTH_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case EAST -> EAST_SHAPE;
+            case WEST -> WEST_SHAPE;
+            case UP -> UP_SHAPE;
+            case DOWN -> DOWN_SHAPE;
+        };
     }
 
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerLookDirection().getOpposite());
+        return this.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 }

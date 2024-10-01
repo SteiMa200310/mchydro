@@ -1,8 +1,10 @@
 {
   "variants": {
-    "facing=north": { "model": "hydro:block/pipecombiner", "y": 0 },
-    "facing=east": { "model": "hydro:block/pipecombiner", "y": 90 },
-    "facing=south": { "model": "hydro:block/pipecombiner", "y": 180 },
-    "facing=west": { "model": "hydro:block/pipecombiner", "y": 270 }
+    "facing=north": { "model": "hydro:block/pipecombiner", "x": 0, "y": 0 },
+    "facing=south": { "model": "hydro:block/pipecombiner", "x": 0, "y": 180 },
+    "facing=east": { "model": "hydro:block/pipecombiner", "x": 0, "y": 90 },
+    "facing=west": { "model": "hydro:block/pipecombiner", "x": 0, "y": 270 },
+    "facing=up": { "model": "hydro:block/pipecombiner", "x": 270, "y": 0 },
+    "facing=down": { "model": "hydro:block/pipecombiner", "x": 90, "y": 0 }
   }
 }
