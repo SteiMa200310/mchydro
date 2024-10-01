@@ -9,6 +9,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.aec.hydro.block._HydroBlocks;
+import org.aec.hydro.block.custom.cable.Cable;
 import org.aec.hydro.pipeHandling.core.PipeShapeWrapper;
 import org.aec.hydro.pipeHandling.utils.PipeID;
 import org.aec.hydro.pipeHandling.utils.PipeProperties;
@@ -19,6 +20,7 @@ import org.aec.hydro.pipeHandling.utils.PowerFlowDirection;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
 
 //cannot do that since static init can happen here prior to in HydroBlocks
 //        private static final List<Block> PowerProvider = Arrays.asList(
@@ -39,6 +41,8 @@ public class Pipe extends Block {
         VoxelGenerator.makePipeEdgeShape_NORTH_EAST()
     );
 
+    private static List<Block> PowerProviders = null;
+
     public Pipe(Settings settings) {
         super(settings);
 
@@ -49,6 +53,8 @@ public class Pipe extends Block {
                 .with(PipeProperties.RecieverFace, PowerFlowDirection.NONE)
                 .with(PipeProperties.ProviderFace, PowerFlowDirection.NONE)
         );
+
+        PowerProviders = Arrays.asList(_HydroBlocks.PUMP);
     }
 
     @Override
@@ -67,7 +73,14 @@ public class Pipe extends Block {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        EnergyContext info = new EnergyContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), null, _HydroBlocks.PIPE);
+        EnergyContext info = new EnergyContext(
+            ctx.getWorld(),
+            ctx.getBlockPos(),
+            ContextType.Pipe,
+            Pipe.PowerProviders,
+            null,
+            _HydroBlocks.PIPE
+        );
         info.EvaluateBase(); //is air at start
 
         Direction dir = ctx.getPlayerLookDirection().getOpposite();
@@ -78,7 +91,14 @@ public class Pipe extends Block {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        EnergyContext info = new EnergyContext(world, pos, ContextType.Pipe, Arrays.asList(_HydroBlocks.WIND_MILL), null, _HydroBlocks.PIPE);
+        EnergyContext info = new EnergyContext(
+            world,
+            pos,
+            ContextType.Pipe,
+            Pipe.PowerProviders,
+            null,
+            _HydroBlocks.PIPE
+        );
         info.EvaluateActual();
 
         world.setBlockState(pos, info.GetCorrectedState());
