@@ -42,7 +42,7 @@ public class Waterwheel extends BlockWithEntity {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.FACING, ctx.getHorizontalPlayerFacing());
+        return this.getDefaultState().with(Properties.FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
