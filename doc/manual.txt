@@ -1,5 +1,5 @@
 Level 1
-You given a load of items with which you should transform enough electric energy to power a certain reciever.
+You are given a load of items with which you should transform enough electric energy to power a certain reciever.
 Those items contain 3 Power Providers (Windmill, Solarpannel, Waterwheel), which you can connect with a cable.
 Furthermore you get a cablemerger which can be used to connect up to 5 input cables to one output cable.
 Also you are provided with a voltmeater to check the current power level on each cable, and a wrench to destroy already placed components.
