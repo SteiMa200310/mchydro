@@ -10,6 +10,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.aec.hydro.AECHydro;
+import org.aec.hydro.block.custom.ColorBlock;
 import org.aec.hydro.block.custom.cable.Cable;
 import org.aec.hydro.block.custom.cable.CableCombiner;
 import org.aec.hydro.block.custom.cell.Brennstoffzelle;
@@ -25,7 +26,6 @@ public class _HydroBlocks {
     //Power Providers
     public static final Block PUMP = registerBlock("pump", new Pump(FabricBlockSettings.copyOf(Blocks.STONE)));
 
-    //Blocks With Blockentity
     public static final Block WIND_MILL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "windmill"), new WindMill(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block SOLAR_PANEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "solarpanel"), new SolarPanel(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block WATERWHEEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "waterwheel"), new Waterwheel(FabricBlockSettings.copyOf(Blocks.STONE)));
@@ -39,6 +39,8 @@ public class _HydroBlocks {
 
     public static final Block ELEKTROLYZEUR = registerBlock("elektrolyseur", new Elektrolyseur(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block BRENNSTOFFZELLE = registerBlock("brennstoffzelle", new Brennstoffzelle(FabricBlockSettings.copyOf(Blocks.STONE)));
+
+    public static final Block COLORBLOCK = registerBlock("colorblock", new ColorBlock(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     private static Block registerBlock(String name, Block block){
         registerBlockItem(name, block);

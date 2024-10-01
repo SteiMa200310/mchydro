@@ -1,10 +1,10 @@
 {
   "variants": {
-    "facing=north": { "model": "hydro:block/cablecombiner", "x": 0, "y": 270 },
-    "facing=east": { "model": "hydro:block/cablecombiner", "x": 0, "y": 0 },
-    "facing=south": { "model": "hydro:block/cablecombiner", "x": 0, "y": 90 },
-    "facing=west": { "model": "hydro:block/cablecombiner", "x": 0, "y": 180 },
-    "facing=up": { "model": "hydro:block/cablecombiner", "x": 0, "y": 90 },
-    "facing=down": { "model": "hydro:block/cablecombiner", "x": 90, "y": 90 }
+    "facing=north": { "model": "hydro:block/cablecombiner", "x": 0, "y": 0 },
+    "facing=south": { "model": "hydro:block/cablecombiner", "x": 0, "y": 180 },
+    "facing=east": { "model": "hydro:block/cablecombiner", "x": 0, "y": 90 },
+    "facing=west": { "model": "hydro:block/cablecombiner", "x": 0, "y": 270 },
+    "facing=up": { "model": "hydro:block/cablecombiner", "x": 270, "y": 0 },
+    "facing=down": { "model": "hydro:block/cablecombiner", "x": 90, "y": 0 }
   }
 }
