@@ -204,6 +204,8 @@ public class VoxelGenerator {
         //y rotates view from - to + || to LEFT
         //z rotates view from - to + || to RIGHT
 
+        //would have to add 2 to x and z WHEN the entered value is odd if its even it obvisouly doesnt matter 2 would not change anything other than rotating for 360 or 180 when non is entered
+
         //in comparison rotating in a blockstate file -> ALWAYS SPINNS to the LEFT !!!
         //needs to be fixed soon but leaving it for now since pipe shapes need to be redone
 

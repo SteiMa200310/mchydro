@@ -24,7 +24,7 @@ import org.aec.hydro.block.custom.pipe.Pump;
 
 public class _HydroBlocks {
     //Power Providers
-    public static final Block PUMP = registerBlock("pump", new Pump(FabricBlockSettings.create().breakInstantly().nonOpaque().noCollision()));
+    public static final Block PUMP = registerBlock("pump", new Pump(FabricBlockSettings.create().breakInstantly().nonOpaque()));
 
     //Blocks With Blockentity
     public static final Block WIND_MILL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "windmill"), new WindMill(FabricBlockSettings.create().breakInstantly()));

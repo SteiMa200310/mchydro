@@ -1,8 +1,11 @@
 package org.aec.hydro.block.custom.pipe;
 
 import net.minecraft.block.*;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -52,6 +55,7 @@ public class Pipe extends Block {
                 .with(PipeProperties.PowerLevel, 0)
                 .with(PipeProperties.RecieverFace, PowerFlowDirection.NONE)
                 .with(PipeProperties.ProviderFace, PowerFlowDirection.NONE)
+                .with(Properties.WATERLOGGED, false)
         );
 
         PowerProviders = Arrays.asList(_HydroBlocks.PUMP);
@@ -63,6 +67,7 @@ public class Pipe extends Block {
         builder.add(PipeProperties.PowerLevel);
         builder.add(PipeProperties.RecieverFace);
         builder.add(PipeProperties.ProviderFace);
+        builder.add(Properties.WATERLOGGED);
     }
 
     @Override
@@ -73,6 +78,8 @@ public class Pipe extends Block {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
+        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+
         EnergyContext info = new EnergyContext(
             ctx.getWorld(),
             ctx.getBlockPos(),
@@ -86,7 +93,8 @@ public class Pipe extends Block {
         Direction dir = ctx.getPlayerLookDirection().getOpposite();
         info.SetFakeDirection(dir); //needs to be evaluated previously
 
-        return info.GetCorrectedState();
+        return info.GetCorrectedState()
+            .with(Properties.WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
     }
 
     @Override
@@ -102,5 +110,18 @@ public class Pipe extends Block {
         info.EvaluateActual();
 
         world.setBlockState(pos, info.GetCorrectedState());
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.get(Properties.WATERLOGGED) && !state.isOf(newState.getBlock())) {
+            world.setBlockState(pos, Blocks.WATER.getDefaultState(), 3);
+        }
+        super.onStateReplaced(state, world, pos, newState, moved);
     }
 }

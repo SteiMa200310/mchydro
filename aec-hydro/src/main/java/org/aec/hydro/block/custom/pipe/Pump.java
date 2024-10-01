@@ -18,7 +18,6 @@ import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
 public class Pump extends Block implements Waterloggable {
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     private static final VoxelShape UP_SHAPE = VoxelGenerator.makePumpShape(); //roberto exported as up thats why i use as default
 
     private static final VoxelShape NORTH_SHAPE = VoxelGenerator.rotateShape(3,0,0, UP_SHAPE);
@@ -30,12 +29,12 @@ public class Pump extends Block implements Waterloggable {
 
     public Pump(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(WATERLOGGED, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(Properties.WATERLOGGED, false));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING, WATERLOGGED);
+        builder.add(Properties.FACING, Properties.WATERLOGGED);
     }
 
     @Override
@@ -54,20 +53,19 @@ public class Pump extends Block implements Waterloggable {
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        return this.getDefaultState().with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER).with(Properties.FACING, ctx.getSide());
+        return this.getDefaultState().with(Properties.WATERLOGGED, fluidState.getFluid() == Fluids.WATER).with(Properties.FACING, ctx.getSide());
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.get(WATERLOGGED) && !state.isOf(newState.getBlock())) {
+        if (state.get(Properties.WATERLOGGED) && !state.isOf(newState.getBlock())) {
             world.setBlockState(pos, Blocks.WATER.getDefaultState(), 3);
         }
         super.onStateReplaced(state, world, pos, newState, moved);
     }
-
 }

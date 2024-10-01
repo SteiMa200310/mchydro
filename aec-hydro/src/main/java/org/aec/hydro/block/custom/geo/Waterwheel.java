@@ -13,10 +13,11 @@ import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
 public class Waterwheel extends BlockWithEntity {
-    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makeWaterwheelShape();
-    private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(0,1,0, NORTH_SHAPE);
-    private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.rotateShape(0,2,0, NORTH_SHAPE);
-    private static final VoxelShape WEST_SHAPE = VoxelGenerator.rotateShape(0,3,0, NORTH_SHAPE);
+    private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.makeWaterwheelShape(); //base is south wrong export just like pump
+
+    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.rotateShape(0,2,0, SOUTH_SHAPE);
+    private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(0,3,0, SOUTH_SHAPE);
+    private static final VoxelShape WEST_SHAPE = VoxelGenerator.rotateShape(0,1,0, SOUTH_SHAPE);
     public Waterwheel(Settings settings) { super(settings); }
 
     @Nullable
