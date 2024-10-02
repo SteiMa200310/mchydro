@@ -4,7 +4,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.argument.BlockPosArgumentType;
+import net.minecraft.command.argument.*;
+import net.minecraft.scoreboard.ScoreboardCriterion;
+import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
@@ -25,17 +27,22 @@ public class ComparePowerlevelCommand extends ACommand {
         dispatcher.register(literal(Name)
                 .requires(source -> source.hasPermissionLevel(2))
                 .then(argument("target", BlockPosArgumentType.blockPos())
-                        .then(argument("compare level", IntegerArgumentType.integer(0))
-                        .executes(this::Execute))));
+                .then(argument("compare level", IntegerArgumentType.integer(0))
+                .then(argument("score", )
+                .executes(this::Execute)))));
     }
 
     @Override
     public int Execute(CommandContext<ServerCommandSource> ctx) {
+        ScoreboardCriterion score = ;
         int compareLevel = IntegerArgumentType.getInteger(ctx, "compare level");
         BlockPos pos = BlockPosArgumentType.getBlockPos(ctx, "target");
         ServerWorld world = ctx.getSource().getWorld();
         int powerlevel = world.getBlockState(pos).get(PipeProperties.PowerLevel);
 
-        return powerlevel == compareLevel ? 1 : -1;
+        score
+        // powerlevel == compareLevel ?  : -1;
+
+        return 1;
     }
 }
