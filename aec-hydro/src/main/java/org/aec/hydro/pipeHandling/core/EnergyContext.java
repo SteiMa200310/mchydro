@@ -78,6 +78,7 @@ public class EnergyContext {
             return info.ApplyOn(this.BlockState);
         }
 
+        //this.IsAnyNeighborPipeCombiner() //only take then one if i where to prio them OR power providers which would be the same thing
         //priority ifs - (for two neighbors - doesnt matter if already connected or not)
         for(PipeID pipeID : PipeID.AllSerialPipePriority) {
             Pair<Direction, Direction> soonToComeOpenFaces = pipeID.GetOpenFacesBasedOnPipeId();
