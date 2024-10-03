@@ -63,11 +63,11 @@ public class Pipe extends Block {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(Properties.WATERLOGGED);
         builder.add(PipeProperties.PIPE_ID);
         builder.add(PipeProperties.PowerLevel);
         builder.add(PipeProperties.RecieverFace);
         builder.add(PipeProperties.ProviderFace);
-        builder.add(Properties.WATERLOGGED);
     }
 
     @Override

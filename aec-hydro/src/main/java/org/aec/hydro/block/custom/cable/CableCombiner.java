@@ -55,4 +55,16 @@ public class CableCombiner extends Block {
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
     }
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        //trigger neighbor update on all neighbor blocks even if self did not change
+        Arrays.stream(Direction.values()).forEach((dir) -> {
+            BlockPos neighborPos = pos.offset(dir);
+            BlockState neighborState = world.getBlockState(neighborPos);
+            if (neighborState.getBlock().equals(_HydroBlocks.CABLE)) {
+                neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
+            }
+        });
+    }
 }

@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import org.aec.hydro.block.entity.SolarPanelBlockEntity;
+import org.aec.hydro.pipeHandling.utils.PipeProperties;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +18,14 @@ public class SolarPanel extends BlockWithEntity {
     private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(0,1,0, NORTH_SHAPE);
     private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.rotateShape(0,2,0, NORTH_SHAPE);
     private static final VoxelShape WEST_SHAPE = VoxelGenerator.rotateShape(0,3,0, NORTH_SHAPE);
-    public SolarPanel(Settings settings) { super(settings); }
+
+    public SolarPanel(Settings settings) {
+        super(settings);
+        this.setDefaultState(
+            this.stateManager.getDefaultState()
+                .with(PipeProperties.PowerLevel, 1)
+        );
+    }
 
     @Nullable
     @Override
@@ -51,5 +59,6 @@ public class SolarPanel extends BlockWithEntity {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(Properties.FACING);
+        builder.add(PipeProperties.PowerLevel);
     }
 }

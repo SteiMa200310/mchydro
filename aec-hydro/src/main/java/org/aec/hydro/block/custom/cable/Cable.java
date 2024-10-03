@@ -81,6 +81,8 @@ public class Cable extends Block {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        System.out.println(pos);
+
         EnergyContext info = new EnergyContext(
             world,
             pos,
