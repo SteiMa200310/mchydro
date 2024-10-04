@@ -278,14 +278,20 @@ public class EnergyContext {
                     if (dirCtx.PipeContextType == ContextType.Pipe) { //when connected flowdirection needs to fit
                         PowerLevelInfo pipePowerLevelInfo = dirCtx.GetPipePowerLevelInfo();
                         if (pipePowerLevelInfo.IsError() ||
-                            !pipePowerLevelInfo.IsDefault() && pipePowerLevelInfo.flowTo().toDirection() != direction.getOpposite())
+                            this.BlockState.get(Properties.FACING) != direction && //if is recieving face on pipe combiner
+                            !pipePowerLevelInfo.IsDefault() && pipePowerLevelInfo.flowTo().toDirection() != direction.getOpposite()) //and pipe is not provicing
                             return -1;
 
-                        if (pipePowerLevelInfo.IsDefault())
-                            continue; //no add - even tho properties should be (0 NONE NONE)
+                        if (pipePowerLevelInfo.IsDefault() || //no add - even tho properties should be (0 NONE NONE)
+                            this.BlockState.get(Properties.FACING) == direction)
+                            continue;
                     }
 
-                    sum += dirCtx.GetPowerLevel();
+                    int neighborlevel = dirCtx.GetPowerLevel();
+                    if (neighborlevel == 0 || neighborlevel < 0)
+                        return neighborlevel; //special state
+
+                    sum += neighborlevel;
                 }
             }
 
