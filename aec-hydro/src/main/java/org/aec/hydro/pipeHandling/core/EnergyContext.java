@@ -282,14 +282,16 @@ public class EnergyContext {
                             !pipePowerLevelInfo.IsDefault() && pipePowerLevelInfo.flowTo().toDirection() != direction.getOpposite()) //and pipe is not provicing
                             return -1;
 
-                        if (pipePowerLevelInfo.IsDefault() || //no add - even tho properties should be (0 NONE NONE)
-                            this.BlockState.get(Properties.FACING) == direction)
+                        if (pipePowerLevelInfo.IsDefault()) //no add - even tho properties should be (0 NONE NONE)
                             continue;
                     }
 
                     int neighborlevel = dirCtx.GetPowerLevel();
                     if (neighborlevel == 0 || neighborlevel < 0)
                         return neighborlevel; //special state
+
+                    if (this.BlockState.get(Properties.FACING) == direction)
+                        continue;
 
                     sum += neighborlevel;
                 }

@@ -82,9 +82,12 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
             neighbor.PipeContextType == ContextType.PipeCombiner) {
             if (neighbor.BlockState.get(Properties.FACING) == openFace.getOpposite()) {
                 return PowerLevelInfo.Construct(neighbor.GetPowerLevel(), cOpenFace1, cOpenFace2);
-            } else {
-                return PowerLevelInfo.Default();
             }
+
+            if (neighbor.PipeContextType == ContextType.PipeCombiner && neighbor.GetPowerLevel() < 0)
+                return PowerLevelInfo.Error();
+
+            return PowerLevelInfo.Default();
         }
 
         if (neighbor.PipeContextType == ContextType.Pipe) {
@@ -188,38 +191,48 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
 
         return PowerLevelInfo.Error();
     }
-    private static PowerLevelInfo EvaluateOnePipeAndOnePowerProviderOrPipeCombiner(Direction powerProviderFace1, EnergyContext powerProviderNeighbor1, EnergyContext pipeNeighbor2, PowerFlowDirection cPowerProviderFace1, PowerFlowDirection cPipeFace2) {
+    private static PowerLevelInfo EvaluateOnePipeAndOnePowerProviderOrPipeCombiner(Direction powerProviderFace1, EnergyContext powerProviderOrPipeCombinerNeighbor1, EnergyContext pipeNeighbor2, PowerFlowDirection cPowerProviderFace1, PowerFlowDirection cPipeFace2) {
         PowerLevelInfo neighborPowerLevelInfo = pipeNeighbor2.GetPipePowerLevelInfo();
+
+        if (neighborPowerLevelInfo.IsError())
+            return PowerLevelInfo.Error();
 
         if (neighborPowerLevelInfo.IsDefault()) {
             //just check power provider -> away 0 to me 1
-            if (powerProviderNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace1.getOpposite()) {
-                return PowerLevelInfo.Construct(powerProviderNeighbor1.GetPowerLevel(), cPowerProviderFace1, cPipeFace2);
-            } else {
-                return PowerLevelInfo.Default();
+            if (powerProviderOrPipeCombinerNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace1.getOpposite()) {
+                return PowerLevelInfo.Construct(powerProviderOrPipeCombinerNeighbor1.GetPowerLevel(), cPowerProviderFace1, cPipeFace2);
             }
-        } else {
-            //check both -> if both look to me ERROR -> since pipe is not none
-            if (powerProviderNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace1.getOpposite() &&
-                neighborPowerLevelInfo.flowTo() == cPipeFace2.getOpposite()) {
-                return PowerLevelInfo.Error();
-            }
-            //just powerprovider looking to me
-            if (powerProviderNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace1.getOpposite()) {
-                return PowerLevelInfo.Construct(powerProviderNeighbor1.GetPowerLevel(), cPowerProviderFace1, cPipeFace2);
-            }
-            //just pipe looking to me
-            if (neighborPowerLevelInfo.flowTo() == cPipeFace2.getOpposite()) {
-                return PowerLevelInfo.Construct(pipeNeighbor2.GetPowerLevel(), cPipeFace2, cPowerProviderFace1);
-            }
-            //TODO: BIG PROBLEM - i always knew that my PowerLevelInfo is not updated based on soon to come faces now i am getting fucked in case of pipe provider next to pipe that is not already properly facing
+
+            return PowerLevelInfo.Default();
         }
 
-        return null;
+        //check both -> if both look to me ERROR -> since pipe is not none
+        if (/*powerProviderOrPipeCombinerNeighbor1.PipeContextType == ContextType.PipeCombiner &&*/
+            powerProviderOrPipeCombinerNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace1.getOpposite() &&
+            neighborPowerLevelInfo.flowTo() == cPipeFace2.getOpposite()) {
+            return PowerLevelInfo.Error();
+        }
+        //just powerprovider looking to me
+        if (powerProviderOrPipeCombinerNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace1.getOpposite()) {
+            return PowerLevelInfo.Construct(powerProviderOrPipeCombinerNeighbor1.GetPowerLevel(), cPowerProviderFace1, cPipeFace2);
+        }
+
+        if (powerProviderOrPipeCombinerNeighbor1.GetPowerLevel() < 0)
+            return PowerLevelInfo.Error();
+
+        //just pipe looking to me
+//        if (neighborPowerLevelInfo.flowTo() == cPipeFace2.getOpposite()) {
+//            return PowerLevelInfo.Construct(pipeNeighbor2.GetPowerLevel(), cPipeFace2, cPowerProviderFace1);
+//        }
+        return PowerLevelInfo.Construct(pipeNeighbor2.GetPowerLevel(), cPipeFace2, cPowerProviderFace1);
+        //TODO: BIG PROBLEM - i always knew that my PowerLevelInfo is not updated based on soon to come faces now i am getting fucked in case of pipe provider next to pipe that is not already properly facing
+
+//        return null;
     }
     private static PowerLevelInfo EvaluateOnePipeCombinerAndOnePowerProvider(Direction powerProviderFace, Direction pipeCombinerFace, EnergyContext powerProviderNeighbor1, EnergyContext pipeCombinerNeighbor2, PowerFlowDirection cPowerProviderFace1, PowerFlowDirection cPipeCombinerFace2) {
         if (powerProviderNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace.getOpposite() &&
-            pipeCombinerNeighbor2.BlockState.get(Properties.FACING) == pipeCombinerFace.getOpposite()) {
+            pipeCombinerNeighbor2.BlockState.get(Properties.FACING) == pipeCombinerFace.getOpposite() ||
+            powerProviderNeighbor1.GetPowerLevel() < 0 || pipeCombinerNeighbor2.GetPowerLevel() < 0) {
             return PowerLevelInfo.Error();
         }
 
