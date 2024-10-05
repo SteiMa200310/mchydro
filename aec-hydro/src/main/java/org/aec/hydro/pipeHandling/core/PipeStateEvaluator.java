@@ -236,6 +236,13 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
         //TODO: BIG PROBLEM - i always knew that my PowerLevelInfo is not updated based on soon to come faces now i am getting fucked in case of pipe provider next to pipe that is not already properly facing
         //TODO: I got it working like this since the promise of this becoming a power provider is enough for me currenlty but sooner or later i will run into some major iussed with this implementation
 
+        //TODO: The thing i kinda forgot when i wrote the above - what still is valid is the IsDefault check - and by doing it i can evaluate which one had already energy on and which one not and let it flow accordingly
+        //TODO: And if both were not default then i could set it to error
+
+        //TODO: Keep a pretty stupid bug in mind -> by setting to "Current" when the blockstate changes its pipe id but not the power info so it can happen that the power info stays on a wrong value until the pipe is fixed
+        //TODO: But honestly that doesnt really matter since i only use those directions when i need clarification on energy flow which i do not need in case of error state pipe
+        //TODO: Could even be fixed by making an overload of the Current function and providing it with the updated faces just like i would do it when using Construct
+
 //        return null;
     }
     private static PowerLevelInfo EvaluateOnePipeCombinerAndOnePowerProvider(Direction powerProviderFace, Direction pipeCombinerFace, EnergyContext powerProviderNeighbor1, EnergyContext pipeCombinerNeighbor2, PowerFlowDirection cPowerProviderFace1, PowerFlowDirection cPipeCombinerFace2) {
