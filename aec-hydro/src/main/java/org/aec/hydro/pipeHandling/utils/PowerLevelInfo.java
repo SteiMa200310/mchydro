@@ -4,6 +4,8 @@ import net.minecraft.block.BlockState;
 
 public class PowerLevelInfo
 {
+    private static PowerLevelInfo changeLess = new PowerLevelInfo(-2, PowerFlowDirection.NONE, PowerFlowDirection.NONE);
+
     private int powerLevel;
     private PowerFlowDirection flowFrom;
     private PowerFlowDirection flowTo;
@@ -44,6 +46,10 @@ public class PowerLevelInfo
         return new PowerLevelInfo(0, PowerFlowDirection.NONE, PowerFlowDirection.NONE);
     }
 
+    public static PowerLevelInfo Current() {
+        return PowerLevelInfo.changeLess;
+    }
+
     public boolean IsError() {
         return this.powerLevel == 30 && this.flowFrom == PowerFlowDirection.NONE && this.flowTo == PowerFlowDirection.NONE;
     }
@@ -53,6 +59,9 @@ public class PowerLevelInfo
     }
 
     public BlockState ApplyOn(BlockState state) {
+        if (this == PowerLevelInfo.changeLess)
+            return state;
+
         return state
             .with(PipeProperties.PowerLevel, this.powerLevel)
             .with(PipeProperties.ProviderFace, this.flowTo)

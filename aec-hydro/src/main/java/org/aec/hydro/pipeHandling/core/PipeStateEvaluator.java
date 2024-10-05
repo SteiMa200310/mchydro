@@ -64,15 +64,23 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
         if( neighbor1 != null && neighbor1.PipeContextType == ContextType.Pipe && neighbor1.GetPipePowerLevelInfo().IsError() ||
             neighbor2 != null && neighbor2.PipeContextType == ContextType.Pipe && neighbor2.GetPipePowerLevelInfo().IsError() ||
             self.GetPipePowerLevelInfo().IsError())
-            return PowerLevelInfo.Error(); //HERE ERROR GETS RETURNED
+            return PowerLevelInfo.Current();
 
         if (neighbor1 == null && neighbor2 == null)
             return PowerLevelInfo.Default();
 
-        if (neighbor1 != null && neighbor2 == null)
+        //now a super disgusting thing can happen here
+        //if i a pipe is next to two pipes one is connection willing and one is not
+        //and they are on opposite sides then the logic will say okay well the not connection willing pipe well is not connection willing
+        //but then the care for the fake looking direction or opposite clicked side comes in - and unfortinatly still uses this side as a soon to come face
+        //this than makes the PowerLevelOfConnectionWilling logic think okay well there is a neighbor in this direction he must be a calculaty for the power level - which he is not
+        //then i get an error state on the pipe even tho it should be the power level of the willing to connect pipe
+        //so i again have to check here if the neighbors are connection willing
+
+        if (neighbor1 != null && (neighbor2 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace2)))
             return PipeStateEvaluator.EvaluateOneNotNull(neighbor1, openFace1, cOpenFace1, cOpenFace2);
 
-        if (neighbor1 == null && neighbor2 != null)
+        if ((neighbor1 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace1)) && neighbor2 != null)
             return PipeStateEvaluator.EvaluateOneNotNull(neighbor2, openFace2, cOpenFace2, cOpenFace1);
 
         return EvaluateBothNotNull(self, openFace1, openFace2, neighbor1, neighbor2, cOpenFace1, cOpenFace2);
@@ -195,7 +203,7 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
         PowerLevelInfo neighborPowerLevelInfo = pipeNeighbor2.GetPipePowerLevelInfo();
 
         if (neighborPowerLevelInfo.IsError())
-            return PowerLevelInfo.Error();
+            return PowerLevelInfo.Current();
 
         if (neighborPowerLevelInfo.IsDefault()) {
             //just check power provider -> away 0 to me 1
@@ -218,7 +226,7 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
         }
 
         if (powerProviderOrPipeCombinerNeighbor1.GetPowerLevel() < 0)
-            return PowerLevelInfo.Error();
+            return PowerLevelInfo.Current();
 
         //just pipe looking to me
 //        if (neighborPowerLevelInfo.flowTo() == cPipeFace2.getOpposite()) {
@@ -226,15 +234,18 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
 //        }
         return PowerLevelInfo.Construct(pipeNeighbor2.GetPowerLevel(), cPipeFace2, cPowerProviderFace1);
         //TODO: BIG PROBLEM - i always knew that my PowerLevelInfo is not updated based on soon to come faces now i am getting fucked in case of pipe provider next to pipe that is not already properly facing
+        //TODO: I got it working like this since the promise of this becoming a power provider is enough for me currenlty but sooner or later i will run into some major iussed with this implementation
 
 //        return null;
     }
     private static PowerLevelInfo EvaluateOnePipeCombinerAndOnePowerProvider(Direction powerProviderFace, Direction pipeCombinerFace, EnergyContext powerProviderNeighbor1, EnergyContext pipeCombinerNeighbor2, PowerFlowDirection cPowerProviderFace1, PowerFlowDirection cPipeCombinerFace2) {
         if (powerProviderNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace.getOpposite() &&
-            pipeCombinerNeighbor2.BlockState.get(Properties.FACING) == pipeCombinerFace.getOpposite() ||
-            powerProviderNeighbor1.GetPowerLevel() < 0 || pipeCombinerNeighbor2.GetPowerLevel() < 0) {
+            pipeCombinerNeighbor2.BlockState.get(Properties.FACING) == pipeCombinerFace.getOpposite()) {
             return PowerLevelInfo.Error();
         }
+
+        if (powerProviderNeighbor1.GetPowerLevel() < 0 || pipeCombinerNeighbor2.GetPowerLevel() < 0)
+            return PowerLevelInfo.Current();
 
         if (powerProviderNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace.getOpposite()) {
             return PowerLevelInfo.Construct(powerProviderNeighbor1.GetPowerLevel(), cPowerProviderFace1, cPipeCombinerFace2);
