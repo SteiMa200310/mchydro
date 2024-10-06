@@ -36,14 +36,19 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
             return ctx.BlockState.get(Properties.FACING).getOpposite() == dir1 && !ctx.GetConnectionState().IsOne() || self.IsConnectedToContext(dir1);
         }
 
+        if (ctx.PipeContextType == ContextType.PipeCombiner) {
+            return true;
+        }
+
         return false;
     }
 
     //-----
+    //is only to be used on pipes ofc the neighbors can be non pipes but the self has to be a pipe since this feature is only designed for evaluation on pipes
     public static PowerLevelInfo PowerLevelOfConnectionWilling(EnergyContext self, Direction openFace1, Direction openFace2) {
         //self soon to come open faces are openFace1 and openFace2 because those are the approximatly valid connection willings
         if (self.PipeContextType != ContextType.Pipe)
-            return new PowerLevelInfo(0, PowerFlowDirection.NONE, PowerFlowDirection.NONE);
+            return PowerLevelInfo.Construct(0, PowerFlowDirection.NONE, PowerFlowDirection.NONE);
 
         EnergyContext neighbor1 = openFace1 != null ? self.GetContextBasedOnDirection(openFace1) : null;
         EnergyContext neighbor2 = openFace2 != null ? self.GetContextBasedOnDirection(openFace2) : null;
@@ -56,75 +61,85 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
         if (neighbor2 != null && !neighbor2.IsEvaluated)
             neighbor2.EvaluateActual();
 
-        if( neighbor1 != null && neighbor1.PipeContextType == ContextType.Pipe && neighbor1.GetCurrentPowerLevelInfo().IsError() ||
-            neighbor2 != null && neighbor2.PipeContextType == ContextType.Pipe && neighbor2.GetCurrentPowerLevelInfo().IsError() ||
-            self.GetCurrentPowerLevelInfo().IsError())
-            return PowerLevelInfo.Error();
+        if( neighbor1 != null && neighbor1.PipeContextType == ContextType.Pipe && neighbor1.GetPipePowerLevelInfo().IsError() ||
+            neighbor2 != null && neighbor2.PipeContextType == ContextType.Pipe && neighbor2.GetPipePowerLevelInfo().IsError() ||
+            self.GetPipePowerLevelInfo().IsError())
+            return PowerLevelInfo.Current();
 
         if (neighbor1 == null && neighbor2 == null)
             return PowerLevelInfo.Default();
 
-        if (neighbor1 != null && neighbor2 == null)
+        //now a super disgusting thing can happen here
+        //if i a pipe is next to two pipes one is connection willing and one is not
+        //and they are on opposite sides then the logic will say okay well the not connection willing pipe well is not connection willing
+        //but then the care for the fake looking direction or opposite clicked side comes in - and unfortinatly still uses this side as a soon to come face
+        //this than makes the PowerLevelOfConnectionWilling logic think okay well there is a neighbor in this direction he must be a calculaty for the power level - which he is not
+        //then i get an error state on the pipe even tho it should be the power level of the willing to connect pipe
+        //so i again have to check here if the neighbors are connection willing
+
+        if (neighbor1 != null && (neighbor2 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace2)))
             return PipeStateEvaluator.EvaluateOneNotNull(neighbor1, openFace1, cOpenFace1, cOpenFace2);
 
-        if (neighbor1 == null && neighbor2 != null)
+        if ((neighbor1 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace1)) && neighbor2 != null)
             return PipeStateEvaluator.EvaluateOneNotNull(neighbor2, openFace2, cOpenFace2, cOpenFace1);
 
         return EvaluateBothNotNull(self, openFace1, openFace2, neighbor1, neighbor2, cOpenFace1, cOpenFace2);
     }
     private static PowerLevelInfo EvaluateOneNotNull(EnergyContext neighbor, Direction openFace, PowerFlowDirection cOpenFace1, PowerFlowDirection cOpenFace2) {
-        if (neighbor.PipeContextType == ContextType.PowerProvider) {
+        if (neighbor.PipeContextType == ContextType.PowerProvider ||
+            neighbor.PipeContextType == ContextType.PipeCombiner) {
             if (neighbor.BlockState.get(Properties.FACING) == openFace.getOpposite()) {
-                return new PowerLevelInfo(1, cOpenFace1, cOpenFace2);
-            } else {
+                return PowerLevelInfo.Construct(neighbor.GetPowerLevel(), cOpenFace1, cOpenFace2);
+            }
+
+            if (neighbor.PipeContextType == ContextType.PipeCombiner && neighbor.GetPowerLevel() < 0)
+                return PowerLevelInfo.Error();
+
+            return PowerLevelInfo.Default();
+        }
+
+        if (neighbor.PipeContextType == ContextType.Pipe) {
+            PowerLevelInfo neighborPowerLevelInfo = neighbor.GetPipePowerLevelInfo();
+
+            if (!neighborPowerLevelInfo.IsDefault() &&
+                    neighborPowerLevelInfo.flowTo() == cOpenFace1.getOpposite())
+                return PowerLevelInfo.Construct(neighbor.GetPowerLevel(), cOpenFace1, cOpenFace2); //i get power from neighbor
+            else {
                 return PowerLevelInfo.Default();
             }
         }
 
-        if (neighbor.PipeContextType != ContextType.Pipe) {
-            AECHydro.LOGGER.error("Neighbor was not PowerProvider nor Pipe");
-            return PowerLevelInfo.Error();
-        }
-        PowerLevelInfo neighborPowerLevelInfo = neighbor.GetCurrentPowerLevelInfo();
-
-        if (!neighborPowerLevelInfo.IsDefault() &&
-            neighborPowerLevelInfo.flowTo() == cOpenFace1.getOpposite())
-            return new PowerLevelInfo(neighbor.GetPowerLevel(), cOpenFace1, cOpenFace2); //i get power from neighbor
-        else {
-            return PowerLevelInfo.Default();
-        }
+        AECHydro.LOGGER.error("Neighbor was not implemented");
+        return PowerLevelInfo.Error();
     }
 
     //---
     private static PowerLevelInfo EvaluateBothNotNull(EnergyContext self, Direction openFace1, Direction openFace2, EnergyContext neighbor1, EnergyContext neighbor2, PowerFlowDirection cOpenFace1, PowerFlowDirection cOpenFace2) {
-        if (neighbor1.PipeContextType == ContextType.PowerProvider && neighbor2.PipeContextType == ContextType.PowerProvider) {
+        if (neighbor1.PipeContextType == ContextType.PowerProvider && neighbor2.PipeContextType == ContextType.PowerProvider ||
+            neighbor1.PipeContextType == ContextType.PipeCombiner && neighbor2.PipeContextType == ContextType.PipeCombiner) {
             if (neighbor1.BlockState.get(Properties.FACING) == openFace1.getOpposite() &&
-                    neighbor2.BlockState.get(Properties.FACING) == openFace2.getOpposite())
+                neighbor2.BlockState.get(Properties.FACING) == openFace2.getOpposite())
                 return PowerLevelInfo.Error();
 
-            return new PowerLevelInfo(1, cOpenFace1, cOpenFace2);
-        }
+            if (neighbor1.BlockState.get(Properties.FACING) == openFace1.getOpposite())
+                return PowerLevelInfo.Construct(neighbor1.GetPowerLevel(), cOpenFace1, cOpenFace2);
 
-        if (neighbor1.PipeContextType == ContextType.PowerProvider && neighbor2.PipeContextType == ContextType.Pipe) {
-            PowerLevelInfo onePipeOnePowerProviderResult = PipeStateEvaluator.EvaluateOnePipeAndOnePowerProvider(openFace1, neighbor1, neighbor2, cOpenFace1, cOpenFace2);
-            if (onePipeOnePowerProviderResult != null) return onePipeOnePowerProviderResult;
-        }
+            if (neighbor2.BlockState.get(Properties.FACING) == openFace2.getOpposite())
+                return PowerLevelInfo.Construct(neighbor2.GetPowerLevel(), cOpenFace2, cOpenFace1);
 
-        if (neighbor2.PipeContextType == ContextType.PowerProvider && neighbor1.PipeContextType == ContextType.Pipe) {
-            PowerLevelInfo onePipeOnePowerProviderResult = PipeStateEvaluator.EvaluateOnePipeAndOnePowerProvider(openFace2, neighbor2, neighbor1, cOpenFace2, cOpenFace1);
-            if (onePipeOnePowerProviderResult != null) return onePipeOnePowerProviderResult;
+            return PowerLevelInfo.Error();
         }
 
         if (neighbor1.PipeContextType == ContextType.Pipe && neighbor2.PipeContextType == ContextType.Pipe) {
-            PowerLevelInfo neighborPowerLevelInfo1 = neighbor1.GetCurrentPowerLevelInfo();
-            PowerLevelInfo neighborPowerLevelInfo2 = neighbor2.GetCurrentPowerLevelInfo();
+            PowerLevelInfo neighborPowerLevelInfo1 = neighbor1.GetPipePowerLevelInfo();
+            PowerLevelInfo neighborPowerLevelInfo2 = neighbor2.GetPipePowerLevelInfo();
 
             if (neighborPowerLevelInfo1.IsDefault() && neighborPowerLevelInfo2.IsDefault())
                 return PowerLevelInfo.Default();
 
             if (neighborPowerLevelInfo1.IsDefault()) {
                 if (neighborPowerLevelInfo2.flowTo() == cOpenFace2.getOpposite()) {
-                    return new PowerLevelInfo(neighbor2.GetPowerLevel(), cOpenFace2, cOpenFace1);
+                    return PowerLevelInfo.Construct(neighbor2.GetPowerLevel(), cOpenFace2, cOpenFace1);
                 } else {
                     return PowerLevelInfo.Default();
                 }
@@ -132,7 +147,7 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
 
             if (neighborPowerLevelInfo2.IsDefault()) {
                 if (neighborPowerLevelInfo1.flowTo() == cOpenFace1.getOpposite()) {
-                    return new PowerLevelInfo(neighbor1.GetPowerLevel(), cOpenFace1, cOpenFace2);
+                    return PowerLevelInfo.Construct(neighbor1.GetPowerLevel(), cOpenFace1, cOpenFace2);
                 } else {
                     return PowerLevelInfo.Default();
                 }
@@ -142,48 +157,109 @@ public class PipeStateEvaluator { private PipeStateEvaluator() {}
 
             //flow from neigh 1 to neigh 2
             if (neighborPowerLevelInfo1.flowTo() == cOpenFace1.getOpposite() && neighborPowerLevelInfo2.flowFrom() == cOpenFace2.getOpposite()) {
-                return new PowerLevelInfo(neighbor1.GetPowerLevel(), cOpenFace1, cOpenFace2);
+                return PowerLevelInfo.Construct(neighbor1.GetPowerLevel(), cOpenFace1, cOpenFace2);
             }
             //flow from neigh 2 to neigh 1
             if (neighborPowerLevelInfo2.flowTo() == cOpenFace2.getOpposite() && neighborPowerLevelInfo1.flowFrom() == cOpenFace1.getOpposite()) {
-                return new PowerLevelInfo(neighbor2.GetPowerLevel(), cOpenFace2, cOpenFace1);
+                return PowerLevelInfo.Construct(neighbor2.GetPowerLevel(), cOpenFace2, cOpenFace1);
             }
         }
 
+        if ((neighbor1.PipeContextType == ContextType.PowerProvider ||
+            neighbor1.PipeContextType == ContextType.PipeCombiner) &&
+            neighbor2.PipeContextType == ContextType.Pipe) {
+            PowerLevelInfo onePipeOnePowerProviderResult = PipeStateEvaluator.EvaluateOnePipeAndOnePowerProviderOrPipeCombiner(openFace1, neighbor1, neighbor2, cOpenFace1, cOpenFace2);
+            if (onePipeOnePowerProviderResult != null) return onePipeOnePowerProviderResult;
+        }
+
+        if ((neighbor2.PipeContextType == ContextType.PowerProvider ||
+            neighbor2.PipeContextType == ContextType.PipeCombiner) &&
+            neighbor1.PipeContextType == ContextType.Pipe) {
+            PowerLevelInfo onePipeOnePowerProviderResult = PipeStateEvaluator.EvaluateOnePipeAndOnePowerProviderOrPipeCombiner(openFace2, neighbor2, neighbor1, cOpenFace2, cOpenFace1);
+            if (onePipeOnePowerProviderResult != null) return onePipeOnePowerProviderResult;
+        }
+
+        if (neighbor1.PipeContextType == ContextType.PowerProvider && neighbor2.PipeContextType == ContextType.PipeCombiner) {
+            PowerLevelInfo onePowerProviderOnePipeCombinerResult = PipeStateEvaluator.EvaluateOnePipeCombinerAndOnePowerProvider(openFace1, openFace2, neighbor1, neighbor2, cOpenFace1, cOpenFace2);
+            if (onePowerProviderOnePipeCombinerResult != null) return onePowerProviderOnePipeCombinerResult;
+        }
+
+        if (neighbor2.PipeContextType == ContextType.PowerProvider && neighbor1.PipeContextType == ContextType.PipeCombiner) {
+            PowerLevelInfo onePowerProviderOnePipeCombinerResult = PipeStateEvaluator.EvaluateOnePipeCombinerAndOnePowerProvider(openFace2, openFace1, neighbor2, neighbor1, cOpenFace2, cOpenFace1);
+            if (onePowerProviderOnePipeCombinerResult != null) return onePowerProviderOnePipeCombinerResult;
+        }
+
         if (EnergyContext.CareAboutLookingDirectionWhenRealNeighborIsPresent && neighbor1.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == openFace2) {
-            return new PowerLevelInfo(neighbor1.GetPowerLevel(), cOpenFace1, cOpenFace2);
+            return PowerLevelInfo.Construct(neighbor1.GetPowerLevel(), cOpenFace1, cOpenFace2);
         }
 
         if (EnergyContext.CareAboutLookingDirectionWhenRealNeighborIsPresent && neighbor2.PipeContextType == ContextType.Pipe && self.FakeConnectie != null && self.FakeConnectie == openFace1) {
-            return new PowerLevelInfo(neighbor2.GetPowerLevel(), cOpenFace2, cOpenFace1);
+            return PowerLevelInfo.Construct(neighbor2.GetPowerLevel(), cOpenFace2, cOpenFace1);
         }
 
         return PowerLevelInfo.Error();
     }
-    private static PowerLevelInfo EvaluateOnePipeAndOnePowerProvider(Direction openFace, EnergyContext neighbor1, EnergyContext neighbor2, PowerFlowDirection cOpenFace1, PowerFlowDirection cOpenFace2) {
-        PowerLevelInfo neighborPowerLevelInfo = neighbor2.GetCurrentPowerLevelInfo();
+    private static PowerLevelInfo EvaluateOnePipeAndOnePowerProviderOrPipeCombiner(Direction powerProviderFace1, EnergyContext powerProviderOrPipeCombinerNeighbor1, EnergyContext pipeNeighbor2, PowerFlowDirection cPowerProviderFace1, PowerFlowDirection cPipeFace2) {
+        PowerLevelInfo neighborPowerLevelInfo = pipeNeighbor2.GetPipePowerLevelInfo();
+
+        if (neighborPowerLevelInfo.IsError())
+            return PowerLevelInfo.Current();
 
         if (neighborPowerLevelInfo.IsDefault()) {
             //just check power provider -> away 0 to me 1
-            if (neighbor1.BlockState.get(Properties.FACING) == openFace.getOpposite()) {
-                return new PowerLevelInfo(1, cOpenFace1, cOpenFace2);
-            } else {
-                return PowerLevelInfo.Default();
+            if (powerProviderOrPipeCombinerNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace1.getOpposite()) {
+                return PowerLevelInfo.Construct(powerProviderOrPipeCombinerNeighbor1.GetPowerLevel(), cPowerProviderFace1, cPipeFace2);
             }
-        } else {
-            //check both -> if both look to me ERROR -> since pipe is not none
-            if (neighbor1.BlockState.get(Properties.FACING) == openFace.getOpposite() && neighborPowerLevelInfo.flowTo() == cOpenFace2.getOpposite()) {
-                return PowerLevelInfo.Error();
-            } else {
-                //just powerprovider looking to me
-                if (neighbor1.BlockState.get(Properties.FACING) == openFace.getOpposite()) {
-                    return new PowerLevelInfo(1, cOpenFace1, cOpenFace2);
-                }
-                //just pipe looking to me
-                if (neighborPowerLevelInfo.flowTo() == cOpenFace2.getOpposite()) {
-                    return new PowerLevelInfo(neighbor2.GetPowerLevel(), cOpenFace2, cOpenFace1);
-                }
-            }
+
+            return PowerLevelInfo.Default();
+        }
+
+        //check both -> if both look to me ERROR -> since pipe is not none
+        if (/*powerProviderOrPipeCombinerNeighbor1.PipeContextType == ContextType.PipeCombiner &&*/
+            powerProviderOrPipeCombinerNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace1.getOpposite() &&
+            neighborPowerLevelInfo.flowTo() == cPipeFace2.getOpposite()) {
+            return PowerLevelInfo.Error();
+        }
+        //just powerprovider looking to me
+        if (powerProviderOrPipeCombinerNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace1.getOpposite()) {
+            return PowerLevelInfo.Construct(powerProviderOrPipeCombinerNeighbor1.GetPowerLevel(), cPowerProviderFace1, cPipeFace2);
+        }
+
+        if (powerProviderOrPipeCombinerNeighbor1.GetPowerLevel() < 0)
+            return PowerLevelInfo.Current();
+
+        //just pipe looking to me
+//        if (neighborPowerLevelInfo.flowTo() == cPipeFace2.getOpposite()) {
+//            return PowerLevelInfo.Construct(pipeNeighbor2.GetPowerLevel(), cPipeFace2, cPowerProviderFace1);
+//        }
+        return PowerLevelInfo.Construct(pipeNeighbor2.GetPowerLevel(), cPipeFace2, cPowerProviderFace1);
+        //TODO: BIG PROBLEM - i always knew that my PowerLevelInfo is not updated based on soon to come faces now i am getting fucked in case of pipe provider next to pipe that is not already properly facing
+        //TODO: I got it working like this since the promise of this becoming a power provider is enough for me currenlty but sooner or later i will run into some major iussed with this implementation
+
+        //TODO: The thing i kinda forgot when i wrote the above - what still is valid is the IsDefault check - and by doing it i can evaluate which one had already energy on and which one not and let it flow accordingly
+        //TODO: And if both were not default then i could set it to error
+
+        //TODO: Keep a pretty stupid bug in mind -> by setting to "Current" when the blockstate changes its pipe id but not the power info so it can happen that the power info stays on a wrong value until the pipe is fixed
+        //TODO: But honestly that doesnt really matter since i only use those directions when i need clarification on energy flow which i do not need in case of error state pipe
+        //TODO: Could even be fixed by making an overload of the Current function and providing it with the updated faces just like i would do it when using Construct
+
+//        return null;
+    }
+    private static PowerLevelInfo EvaluateOnePipeCombinerAndOnePowerProvider(Direction powerProviderFace, Direction pipeCombinerFace, EnergyContext powerProviderNeighbor1, EnergyContext pipeCombinerNeighbor2, PowerFlowDirection cPowerProviderFace1, PowerFlowDirection cPipeCombinerFace2) {
+        if (powerProviderNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace.getOpposite() &&
+            pipeCombinerNeighbor2.BlockState.get(Properties.FACING) == pipeCombinerFace.getOpposite()) {
+            return PowerLevelInfo.Error();
+        }
+
+        if (powerProviderNeighbor1.GetPowerLevel() < 0 || pipeCombinerNeighbor2.GetPowerLevel() < 0)
+            return PowerLevelInfo.Current();
+
+        if (powerProviderNeighbor1.BlockState.get(Properties.FACING) == powerProviderFace.getOpposite()) {
+            return PowerLevelInfo.Construct(powerProviderNeighbor1.GetPowerLevel(), cPowerProviderFace1, cPipeCombinerFace2);
+        }
+
+        if (pipeCombinerNeighbor2.BlockState.get(Properties.FACING) == pipeCombinerFace.getOpposite()) {
+            return PowerLevelInfo.Construct(pipeCombinerNeighbor2.GetPowerLevel(), cPipeCombinerFace2, cPowerProviderFace1);
         }
 
         return null;

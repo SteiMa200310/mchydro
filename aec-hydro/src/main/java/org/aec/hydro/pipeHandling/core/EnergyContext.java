@@ -12,6 +12,7 @@ import org.aec.hydro.pipeHandling.delegates.GetContextInDirDelegate;
 import org.aec.hydro.pipeHandling.utils.PipeID;
 import org.aec.hydro.pipeHandling.utils.PipeProperties;
 import org.aec.hydro.pipeHandling.utils.*;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -78,6 +79,7 @@ public class EnergyContext {
             return info.ApplyOn(this.BlockState);
         }
 
+        //this.IsAnyNeighborPipeCombiner() //only take then one if i where to prio them OR power providers which would be the same thing
         //priority ifs - (for two neighbors - doesnt matter if already connected or not)
         for(PipeID pipeID : PipeID.AllSerialPipePriority) {
             Pair<Direction, Direction> soonToComeOpenFaces = pipeID.GetOpenFacesBasedOnPipeId();
@@ -137,7 +139,7 @@ public class EnergyContext {
         AECHydro.LOGGER.trace("Default PipeState Returned");
 
         //can only work with self values from here on no other case hit
-        if (this.GetCurrentPowerLevelInfo().IsError())
+        if (this.GetPipePowerLevelInfo().IsError())
             return this.BlockState;
 
         return PowerLevelInfo //keep Pipe ID on example edge or different direction than North South (East West / Up Down)
@@ -232,7 +234,7 @@ public class EnergyContext {
             );
         }
 
-        AECHydro.LOGGER.error("connected to more than two pipes or power providers");
+        AECHydro.LOGGER.error("connected to more than two pipes or power providers or combiners");
         return PipeConnectionState.GetNot();
     }
     public Pair<Direction, Direction> GetOpenFaces() {
@@ -244,26 +246,63 @@ public class EnergyContext {
         AECHydro.LOGGER.error("GetOpenFaces called on non Pipe");
         return new Pair<>(null, null);
     }
-    public PowerLevelInfo GetCurrentPowerLevelInfo() {
+    public PowerLevelInfo GetPipePowerLevelInfo() {
         if (this.PipeContextType != ContextType.Pipe) {
-            AECHydro.LOGGER.error("GetCurrentPowerLevelInfo called on non Pipe");
+            AECHydro.LOGGER.error("GetPipePowerLevelInfo called on non Pipe");
             return PowerLevelInfo.Error();
         }
 
-        return new PowerLevelInfo(
+        return PowerLevelInfo.Construct(
             this.BlockState.get(PipeProperties.PowerLevel),
             this.BlockState.get(PipeProperties.RecieverFace),
             this.BlockState.get(PipeProperties.ProviderFace)
         );
     }
     public int GetPowerLevel() {
-        if (this.PipeContextType == ContextType.Pipe) {
+        if (this.PipeContextType == ContextType.Pipe || this.PipeContextType == ContextType.PowerProvider) {
             return this.BlockState.get(PipeProperties.PowerLevel);
         }
 
-        AECHydro.LOGGER.error("GetPowerLevel called on non Pipe");
+        if (this.PipeContextType == ContextType.PipeCombiner) {
+            int sum = 0;
+            for(Direction direction : Direction.values()) {
+                EnergyContext dirCtx = this.GetContextBasedOnDirection(direction);
+                if (dirCtx == null)
+                    continue;
+
+                if (this.IsConnectedToContext(direction)) {
+                    if (dirCtx.PipeContextType == ContextType.PipeCombiner && //since is always connected but only valid when provider face hence facing property to us
+                        dirCtx.BlockState.get(Properties.FACING) != direction.getOpposite())
+                        return -1;
+
+                    if (dirCtx.PipeContextType == ContextType.Pipe) { //when connected flowdirection needs to fit
+                        PowerLevelInfo pipePowerLevelInfo = dirCtx.GetPipePowerLevelInfo();
+                        if (pipePowerLevelInfo.IsError() ||
+                            this.BlockState.get(Properties.FACING) != direction && //if is recieving face on pipe combiner
+                            !pipePowerLevelInfo.IsDefault() && pipePowerLevelInfo.flowTo().toDirection() != direction.getOpposite()) //and pipe is not provicing
+                            return -1;
+
+                        if (pipePowerLevelInfo.IsDefault()) //no add - even tho properties should be (0 NONE NONE)
+                            continue;
+                    }
+
+                    int neighborlevel = dirCtx.GetPowerLevel();
+                    if (neighborlevel == 0 || neighborlevel < 0)
+                        return neighborlevel; //special state
+
+                    if (this.BlockState.get(Properties.FACING) == direction)
+                        continue;
+
+                    sum += neighborlevel;
+                }
+            }
+
+            return sum; //calculate sum of all
+        }
+
+        AECHydro.LOGGER.error("GetPowerLevel called on non supported ContextType");
         return -1;
-    }
+    } //REQUIRES IMPLEMENTATION
     public int GetAmoutOfContextNeighbors() {
         int sum = 0;
         sum += this.North != null ? 1 : 0;
@@ -328,6 +367,7 @@ public class EnergyContext {
         if (!this.IsEvaluated)
             this.EvaluateActual();
 
+        //early returns for finding out if i am even looking into the direction of the neighbor
         if (this.PipeContextType == ContextType.Pipe) {
             Pair<Direction, Direction> openFaces = this.GetOpenFaces();
             if (openFaces.getLeft() != direction && openFaces.getRight() != direction)
@@ -339,6 +379,9 @@ public class EnergyContext {
                 return false;
         }
 
+        //this.PipeContextType == ContextType.PipeCombiner //cannot early check anything for him since he will connect to anyone its just based on the neighbor
+
+        //if early returns succeed -> check for neigher and if he matches the requirements
         EnergyContext neighborInfo = this.GetContextBasedOnDirection(direction);
         if (neighborInfo != null) { //cannot be connected to FakeConnectie -> would have needed to check if context Type could still be fake connectie
             if (!neighborInfo.IsEvaluated)
@@ -355,6 +398,10 @@ public class EnergyContext {
                 Direction neighborOpenFace = neighborInfo.BlockState.get(Properties.FACING);
 
                 return direction == neighborOpenFace.getOpposite();
+            }
+
+            if (neighborInfo.PipeContextType == ContextType.PipeCombiner) {
+                return true; //always connected if neighbor is combiner since all faces of a combiner serve as connectors
             }
         }
 

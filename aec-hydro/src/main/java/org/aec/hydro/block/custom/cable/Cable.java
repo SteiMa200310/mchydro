@@ -3,9 +3,15 @@ package org.aec.hydro.block.custom.cable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -13,6 +19,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.aec.hydro.block._HydroBlocks;
 import org.aec.hydro.block.custom.pipe.Pipe;
+import org.aec.hydro.item.ModItemGroups;
 import org.aec.hydro.pipeHandling.core.EnergyContext;
 import org.aec.hydro.pipeHandling.core.PipeShapeWrapper;
 import org.aec.hydro.pipeHandling.utils.ContextType;
@@ -22,6 +29,7 @@ import org.aec.hydro.pipeHandling.utils.PowerFlowDirection;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -81,6 +89,8 @@ public class Cable extends Block {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        System.out.println(pos);
+
         EnergyContext info = new EnergyContext(
             world,
             pos,
@@ -92,5 +102,37 @@ public class Cable extends Block {
         info.EvaluateActual();
 
         world.setBlockState(pos, info.GetCorrectedState());
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        ItemStack itemStack = player.getStackInHand(hand);
+        if (itemStack.getItem().equals(ModItemGroups.VOLTMETER)) {
+            if (!state.getBlock().equals(_HydroBlocks.CABLE))
+                return ActionResult.PASS;
+
+            int powerLevel = state.get(PipeProperties.PowerLevel);
+            PowerFlowDirection providerFace = state.get(PipeProperties.ProviderFace);
+            PowerFlowDirection recieverFace = state.get(PipeProperties.RecieverFace);
+
+            if (providerFace == PowerFlowDirection.NONE && recieverFace == PowerFlowDirection.NONE) {
+                if (powerLevel == 0) {
+                    player.sendMessage(Text.of("No Energy Flow"), true);
+                }
+
+                if (powerLevel == 30) {
+                    player.sendMessage(Text.of("Cable Error"), true);
+                }
+                return ActionResult.SUCCESS;
+            }
+
+            if (!world.isClient) {
+                player.sendMessage(Text.of("Power Level: " + powerLevel), true);
+            }
+
+            return ActionResult.SUCCESS;
+        }
+
+        return ActionResult.PASS;
     }
 }

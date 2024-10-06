@@ -29,12 +29,18 @@ public class Pump extends Block implements Waterloggable {
 
     public Pump(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(Properties.WATERLOGGED, false));
+        this.setDefaultState(
+            this.stateManager.getDefaultState()
+                .with(Properties.WATERLOGGED, false)
+                .with(PipeProperties.PowerLevel, 1)
+        );
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING, Properties.WATERLOGGED);
+        builder.add(Properties.FACING);
+        builder.add(Properties.WATERLOGGED);
+        builder.add(PipeProperties.PowerLevel);
     }
 
     @Override
