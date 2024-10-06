@@ -9,6 +9,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.aec.hydro.pipeHandling.utils.PipeProperties;
 import org.aec.hydro.sound._HydroSounds;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -42,6 +43,9 @@ public class SolarPanelBlockEntity extends BlockEntity implements GeoBlockEntity
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, SolarPanelBlockEntity blockEntity) {
+//        if (world.isNight())
+//            state.with(PipeProperties.)
+
         if (!world.isClient) {
             blockEntity.startSolarSound((ServerWorld) world);
         }
