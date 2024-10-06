@@ -3,9 +3,14 @@ package org.aec.hydro.block.custom.cable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
@@ -134,5 +139,24 @@ public class Cable extends Block {
         }
 
         return ActionResult.PASS;
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (!world.isClient && !player.isCreative()) {
+            NbtList canPlaceOn = new NbtList();
+
+            canPlaceOn.add(NbtString.of("minecraft:grass_block"));
+            // Create an ItemStack of the block (the item form of the block)
+            ItemStack itemStack = new ItemStack(this);
+
+            itemStack.getOrCreateNbt().put("CanPlaceOn", canPlaceOn);
+
+            // Drop the item stack (with NBT data) when the block is broken
+            Block.dropStack(world, pos, itemStack);
+        }
+
+        // Call the super method to handle normal breaking logic
+        super.onBreak(world, pos, state, player);
     }
 }
