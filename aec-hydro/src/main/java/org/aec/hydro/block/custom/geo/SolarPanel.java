@@ -2,13 +2,18 @@ package org.aec.hydro.block.custom.geo;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import org.aec.hydro.block.entity.SolarPanelBlockEntity;
+import org.aec.hydro.block.entity.WindMillBlockEntity;
+import org.aec.hydro.block.entity._HydroBlockEntities;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,5 +56,11 @@ public class SolarPanel extends BlockWithEntity {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(Properties.FACING);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, _HydroBlockEntities.SOLARPANEL_BLOCK_ENTITY, SolarPanelBlockEntity::tick);
     }
 }

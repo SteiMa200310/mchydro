@@ -8,6 +8,7 @@ import org.aec.hydro.AECHydro;
 
 public class _HydroSounds {
     public static final SoundEvent WINDMILL_LOOP = registerSoundEvent("windmill_loop");
+    public static final SoundEvent SOLAR_LOOP = registerSoundEvent("solar_panel");
 
     private static SoundEvent registerSoundEvent(String name){
         Identifier id = new Identifier(AECHydro.MOD_ID, name);

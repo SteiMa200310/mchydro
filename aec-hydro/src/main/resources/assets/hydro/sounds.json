@@ -6,5 +6,13 @@
         "stream": true
       }
     ]
+  },
+  "solar_panel": {
+    "sounds": [
+      {
+        "name": "hydro:electric-energy-sound",
+        "stream": true
+      }
+    ]
   }
 }

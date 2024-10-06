@@ -59,7 +59,7 @@ public class WindMillBlockEntity extends BlockEntity implements GeoBlockEntity {
                 getPos(), // Position of the block entity
                 _HydroSounds.WINDMILL_LOOP, // Custom windmill sound event
                 SoundCategory.BLOCKS, // Sound category
-                0.2F, // Volume
+                0.05F, // Volume
                 1.0F  // Pitch
         );
     }
