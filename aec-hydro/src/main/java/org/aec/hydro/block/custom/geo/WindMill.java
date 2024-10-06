@@ -2,15 +2,32 @@ package org.aec.hydro.block.custom.geo;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.sound.Sound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import org.aec.hydro.block.entity.WindMillBlockEntity;
+import org.aec.hydro.block.entity._HydroBlockEntities;
+import org.aec.hydro.sound._HydroSounds;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
+
 
 public class WindMill extends BlockWithEntity {
     private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makeWindmillShape();
@@ -55,5 +72,11 @@ public class WindMill extends BlockWithEntity {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(Properties.FACING);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, _HydroBlockEntities.WINDMILL_BLOCK_ENTITY, WindMillBlockEntity::tick);
     }
 }

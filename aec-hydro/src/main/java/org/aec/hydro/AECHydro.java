@@ -10,6 +10,7 @@ import org.aec.hydro.block.entity._HydroBlockEntities;
 
 import org.aec.hydro.commands.base.CommandSetup;
 import org.aec.hydro.item.ModItemGroups;
+import org.aec.hydro.sound._HydroSounds;
 import org.aec.hydro.utils.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,8 @@ public class AECHydro implements ModInitializer {
 		ModItemGroups.registerHydroItemGroup();
 
 		_HydroBlockEntities.registerHydroBlockEntities();
+
+		_HydroSounds.registerSounds();
 
 		CommandSetup.RegisterCommands();
 

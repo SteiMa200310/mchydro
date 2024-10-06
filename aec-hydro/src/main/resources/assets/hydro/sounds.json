@@ -1,0 +1,10 @@
+{
+  "windmill_loop": {
+    "sounds": [
+      {
+        "name": "hydro:windmill_loop",
+        "stream": true
+      }
+    ]
+  }
+}
