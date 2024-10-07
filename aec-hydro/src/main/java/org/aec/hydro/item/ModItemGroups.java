@@ -30,6 +30,10 @@ public class ModItemGroups {
             new Identifier(AECHydro.MOD_ID, "hydro"),
             FabricItemGroup.builder().displayName(Text.translatable("itemGroup.hydro"))
                     .icon(() -> new ItemStack(WIND_MILL_ITEM)).entries((displayContext, entries) -> {
+                        entries.add(WIND_MILL_ITEM);
+                        entries.add(SOLAR_PANEL_ITEM);
+                        entries.add(WATERWHEEL_ITEM);
+
                         entries.add(_HydroBlocks.PIPE);
                         entries.add(_HydroBlocks.PIPECOMBINER);
                         entries.add(_HydroBlocks.PUMP);
@@ -38,13 +42,8 @@ public class ModItemGroups {
                         entries.add(_HydroBlocks.CABLECOMBINER);
 
                         entries.add(_HydroBlocks.ELEKTROLYZEUR);
-                        entries.add(_HydroBlocks.BRENNSTOFFZELLE);
 
                         entries.add(_HydroBlocks.COLORBLOCK);
-
-                        entries.add(WIND_MILL_ITEM);
-                        entries.add(SOLAR_PANEL_ITEM);
-                        entries.add(WATERWHEEL_ITEM);
 
                         entries.add(VOLTMETER);
                         entries.add(ANODE);
