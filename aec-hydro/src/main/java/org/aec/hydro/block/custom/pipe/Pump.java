@@ -1,9 +1,13 @@
 package org.aec.hydro.block.custom.pipe;
 
 import net.minecraft.block.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -73,5 +77,25 @@ public class Pump extends Block implements Waterloggable {
             world.setBlockState(pos, Blocks.WATER.getDefaultState(), 3);
         }
         super.onStateReplaced(state, world, pos, newState, moved);
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (!world.isClient && !player.isCreative()) {
+            NbtList canPlaceOn = new NbtList();
+
+            canPlaceOn.add(NbtString.of("minecraft:stone"));
+
+            // Create an ItemStack of the block (the item form of the block)
+            ItemStack itemStack = new ItemStack(this);
+
+            itemStack.getOrCreateNbt().put("CanPlaceOn", canPlaceOn);
+
+            // Drop the item stack (with NBT data) when the block is broken
+            Block.dropStack(world, pos, itemStack);
+        }
+
+        // Call the super method to handle normal breaking logic
+        super.onBreak(world, pos, state, player);
     }
 }

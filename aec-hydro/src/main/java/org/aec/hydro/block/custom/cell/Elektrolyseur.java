@@ -1,13 +1,18 @@
 package org.aec.hydro.block.custom.cell;
 
 import net.minecraft.block.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import org.aec.hydro.block._HydroBlocks;
 import org.aec.hydro.pipeHandling.core.EnergyContext;
 import org.aec.hydro.pipeHandling.core.PipeShapeWrapper;
@@ -37,5 +42,25 @@ public class Elektrolyseur extends Block {
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (!world.isClient && !player.isCreative()) {
+            NbtList canPlaceOn = new NbtList();
+
+            canPlaceOn.add(NbtString.of("minecraft:grass_block"));
+
+            // Create an ItemStack of the block (the item form of the block)
+            ItemStack itemStack = new ItemStack(this);
+
+            itemStack.getOrCreateNbt().put("CanPlaceOn", canPlaceOn);
+
+            // Drop the item stack (with NBT data) when the block is broken
+            Block.dropStack(world, pos, itemStack);
+        }
+
+        // Call the super method to handle normal breaking logic
+        super.onBreak(world, pos, state, player);
     }
 }
