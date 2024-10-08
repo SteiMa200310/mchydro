@@ -1,4 +1,4 @@
-package org.aec.hydro.block.custom.pipe;
+package org.aec.hydro.block.custom.water;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,18 +14,12 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.aec.hydro.block._HydroBlocks;
-import org.aec.hydro.pipeHandling.core.EnergyContext;
-import org.aec.hydro.pipeHandling.core.PipeShapeWrapper;
-import org.aec.hydro.pipeHandling.utils.ContextType;
-import org.aec.hydro.pipeHandling.utils.PipeID;
-import org.aec.hydro.pipeHandling.utils.PipeProperties;
-import org.aec.hydro.pipeHandling.utils.PowerFlowDirection;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class PipeCombiner extends Block {
+public class WaterPipeCombiner extends Block {
     private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makePipeCombinerShape();
     private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.rotateShape(0,2,0,NORTH_SHAPE);
     private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(0,1,0,NORTH_SHAPE);
@@ -33,7 +27,7 @@ public class PipeCombiner extends Block {
     private static final VoxelShape UP_SHAPE = VoxelGenerator.rotateShape(1,0,0,NORTH_SHAPE);
     private static final VoxelShape DOWN_SHAPE = VoxelGenerator.rotateShape(3,0,0,NORTH_SHAPE);
 
-    public PipeCombiner(Settings settings) {
+    public WaterPipeCombiner(Settings settings) {
         super(settings);
     }
 
@@ -66,7 +60,7 @@ public class PipeCombiner extends Block {
         Arrays.stream(Direction.values()).forEach((dir) -> {
             BlockPos neighborPos = pos.offset(dir);
             BlockState neighborState = world.getBlockState(neighborPos);
-            if (neighborState.getBlock().equals(_HydroBlocks.PIPE)) {
+            if (neighborState.getBlock().equals(_HydroBlocks.WATERPIPE)) {
                 neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
             }
         });

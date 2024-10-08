@@ -1,25 +1,25 @@
-package org.aec.hydro.block.custom.cable;
+package org.aec.hydro.block.custom.hydrogen;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.state.StateManager;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.aec.hydro.block._HydroBlocks;
-import org.aec.hydro.item.ModItemGroups;
+import org.aec.hydro.block.custom.water.WaterPipe;
 import org.aec.hydro.pipeHandling.core.EnergyContext;
 import org.aec.hydro.pipeHandling.core.PipeShapeWrapper;
 import org.aec.hydro.pipeHandling.utils.ContextType;
@@ -32,26 +32,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class Cable extends Block {
+public class HydrogenPipe extends Block {
     private static final org.aec.hydro.pipeHandling.core.PipeShapeWrapper PipeShapeWrapper = new PipeShapeWrapper(
-            VoxelGenerator.makeCableLongShape_NORTH_SOUTH(),
-            VoxelGenerator.makeCableEdgeShape_NORTH_EAST()
+            VoxelGenerator.makePipeLongShape_NORTH_SOUTH(),
+            VoxelGenerator.makePipeEdgeShape_NORTH_EAST()
     );
 
     private static List<Block> PowerProviders = null;
 
-    public Cable(Settings settings) {
+    public HydrogenPipe(Settings settings) {
         super(settings);
 
         this.setDefaultState(
-            this.stateManager.getDefaultState()
-                .with(PipeProperties.PIPE_ID, PipeID.F1)
-                .with(PipeProperties.PowerLevel, 0)
-                .with(PipeProperties.RecieverFace, PowerFlowDirection.NONE)
-                .with(PipeProperties.ProviderFace, PowerFlowDirection.NONE)
+                this.stateManager.getDefaultState()
+                        .with(PipeProperties.PIPE_ID, PipeID.F1)
+                        .with(PipeProperties.PowerLevel, 0)
+                        .with(PipeProperties.RecieverFace, PowerFlowDirection.NONE)
+                        .with(PipeProperties.ProviderFace, PowerFlowDirection.NONE)
         );
 
-        PowerProviders = Arrays.asList(_HydroBlocks.WIND_MILL, _HydroBlocks.WATERWHEEL, _HydroBlocks.SOLAR_PANEL);
+        PowerProviders = Arrays.asList();
     }
 
     @Override
@@ -64,20 +64,20 @@ public class Cable extends Block {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        return Cable.PipeShapeWrapper.GetShape(state.get(PipeProperties.PIPE_ID));
+        return HydrogenPipe.PipeShapeWrapper.GetShape(state.get(PipeProperties.PIPE_ID));
     }
 
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         EnergyContext info = new EnergyContext(
-            ctx.getWorld(),
-            ctx.getBlockPos(),
-            ContextType.Pipe,
-            Cable.PowerProviders,
-            _HydroBlocks.CABLECOMBINER,
-            _HydroBlocks.CABLE,
-            1
+                ctx.getWorld(),
+                ctx.getBlockPos(),
+                ContextType.Pipe,
+                HydrogenPipe.PowerProviders,
+                null,
+                _HydroBlocks.HYDROGENPIPE,
+                3
         );
         info.EvaluateBase(); //is air at start
 
@@ -89,52 +89,18 @@ public class Cable extends Block {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        System.out.println(pos);
-
         EnergyContext info = new EnergyContext(
-            world,
-            pos,
-            ContextType.Pipe,
-            Cable.PowerProviders,
-            _HydroBlocks.CABLECOMBINER,
-            _HydroBlocks.CABLE,
-            1
+                world,
+                pos,
+                ContextType.Pipe,
+                HydrogenPipe.PowerProviders,
+                null,
+                _HydroBlocks.HYDROGENPIPE,
+                3
         );
         info.EvaluateActual();
 
         world.setBlockState(pos, info.GetCorrectedState());
-    }
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player.getStackInHand(hand);
-        if (itemStack.getItem().equals(ModItemGroups.VOLTMETER)) {
-            if (!state.getBlock().equals(_HydroBlocks.CABLE))
-                return ActionResult.PASS;
-
-            int powerLevel = state.get(PipeProperties.PowerLevel);
-            PowerFlowDirection providerFace = state.get(PipeProperties.ProviderFace);
-            PowerFlowDirection recieverFace = state.get(PipeProperties.RecieverFace);
-
-            if (providerFace == PowerFlowDirection.NONE && recieverFace == PowerFlowDirection.NONE) {
-                if (powerLevel == 0) {
-                    player.sendMessage(Text.of("No Energy Flow"), true);
-                }
-
-                if (powerLevel == 30) {
-                    player.sendMessage(Text.of("Cable Error"), true);
-                }
-                return ActionResult.SUCCESS;
-            }
-
-            if (!world.isClient) {
-                player.sendMessage(Text.of("Power Level: " + powerLevel), true);
-            }
-
-            return ActionResult.SUCCESS;
-        }
-
-        return ActionResult.PASS;
     }
 
     @Override
@@ -143,8 +109,8 @@ public class Cable extends Block {
             NbtList canPlaceOn = new NbtList();
 
             canPlaceOn.add(NbtString.of("minecraft:grass_block"));
-            canPlaceOn.add(NbtString.of("hydro:cable"));
-            canPlaceOn.add(NbtString.of("hydro:cablecombiner"));
+            canPlaceOn.add(NbtString.of("hydro:pipe"));
+            canPlaceOn.add(NbtString.of("hydro:pipecombiner"));
 
             // Create an ItemStack of the block (the item form of the block)
             ItemStack itemStack = new ItemStack(this);

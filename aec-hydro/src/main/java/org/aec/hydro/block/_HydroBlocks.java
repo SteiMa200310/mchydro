@@ -13,14 +13,15 @@ import org.aec.hydro.AECHydro;
 import org.aec.hydro.block.custom.ColorBlock;
 import org.aec.hydro.block.custom.cable.Cable;
 import org.aec.hydro.block.custom.cable.CableCombiner;
-import org.aec.hydro.block.custom.cell.Brennstoffzelle;
 import org.aec.hydro.block.custom.cell.Elektrolyseur;
 import org.aec.hydro.block.custom.geo.SolarPanel;
 import org.aec.hydro.block.custom.geo.Waterwheel;
 import org.aec.hydro.block.custom.geo.WindMill;
-import org.aec.hydro.block.custom.pipe.Pipe;
-import org.aec.hydro.block.custom.pipe.PipeCombiner;
-import org.aec.hydro.block.custom.pipe.Pump;
+import org.aec.hydro.block.custom.hydrogen.HydrogenPipe;
+import org.aec.hydro.block.custom.oxygen.OxygenPipe;
+import org.aec.hydro.block.custom.water.WaterPipe;
+import org.aec.hydro.block.custom.water.WaterPipeCombiner;
+import org.aec.hydro.block.custom.water.Pump;
 
 public class _HydroBlocks {
     //Power Providers
@@ -32,14 +33,16 @@ public class _HydroBlocks {
     public static final Block WATERWHEEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "waterwheel"), new Waterwheel(FabricBlockSettings.create().breakInstantly()));
 
     //Power Providers NEED TO BE BEFORE PIPE to not again and again create a list of proverproviders
-    public static final Block PIPE = registerBlock("pipe", new Pipe(FabricBlockSettings.create().breakInstantly()));
-    public static final Block PIPECOMBINER = registerBlock("pipecombiner", new PipeCombiner(FabricBlockSettings.create().breakInstantly()));
+    public static final Block WATERPIPE = registerBlock("pipew", new WaterPipe(FabricBlockSettings.create().breakInstantly()));
+    public static final Block WATERPIPECOMBINER = registerBlock("pipewcombiner", new WaterPipeCombiner(FabricBlockSettings.create().breakInstantly()));
+
+    public static final Block HYDROGENPIPE = registerBlock("pipeh", new HydrogenPipe(FabricBlockSettings.create().breakInstantly()));
+    public static final Block OXYGENPIPE = registerBlock("pipeo", new OxygenPipe(FabricBlockSettings.create().breakInstantly()));
 
     public static final Block CABLE = registerBlock("cable", new Cable(FabricBlockSettings.create().breakInstantly()));
     public static final Block CABLECOMBINER = registerBlock("cablecombiner", new CableCombiner(FabricBlockSettings.create().breakInstantly()));
 
     public static final Block ELEKTROLYZEUR = registerBlock("elektrolyseur", new Elektrolyseur(FabricBlockSettings.create().breakInstantly()));
-    public static final Block BRENNSTOFFZELLE = registerBlock("brennstoffzelle", new Brennstoffzelle(FabricBlockSettings.create().breakInstantly()));
 
     public static final Block COLORBLOCK = registerBlock("colorblock", new ColorBlock(FabricBlockSettings.copyOf(Blocks.STONE)));
 

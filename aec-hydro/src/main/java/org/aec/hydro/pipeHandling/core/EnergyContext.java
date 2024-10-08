@@ -8,11 +8,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.aec.hydro.AECHydro;
+import org.aec.hydro.block._HydroBlocks;
 import org.aec.hydro.pipeHandling.delegates.GetContextInDirDelegate;
 import org.aec.hydro.pipeHandling.utils.PipeID;
 import org.aec.hydro.pipeHandling.utils.PipeProperties;
 import org.aec.hydro.pipeHandling.utils.*;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +22,7 @@ public class EnergyContext {
     public final List<Block> PowerProviders; //facing
     public final Block BaseCombinerBlock; //facing
     public final Block BasePipeBlock; //all pipe properties
+    public int ElectrolyticFaceOffset; //would be 0 for the waterpipe
 
     public final World World;
     public final BlockPos Pos;
@@ -44,10 +45,11 @@ public class EnergyContext {
     public static boolean CareAboutLookingDirectionWhenRealNeighborIsPresent = false;
 
     //maybe use builder
-    public EnergyContext(World world, BlockPos pos, ContextType contextType, List<Block> powerProviders, Block baseCombinerBlock, Block basePipeBlock) {
+    public EnergyContext(World world, BlockPos pos, ContextType contextType, List<Block> powerProviders, Block baseCombinerBlock, Block basePipeBlock, int electrolyticFaceOffset) {
         PowerProviders = powerProviders;
         BaseCombinerBlock = baseCombinerBlock;
         BasePipeBlock = basePipeBlock;
+        ElectrolyticFaceOffset = electrolyticFaceOffset;
 
         World = world;
         Pos = pos;
@@ -162,19 +164,23 @@ public class EnergyContext {
         this.IsEvaluated = true;
     }
     private void EvaluateNeighboirs() {
-        GetContextInDirDelegate getContextInDir = (World world, BlockPos pos, List<Block> powerProviders, Block basePipeMerger, Block basePipeBlock, Direction direction) -> {
+        GetContextInDirDelegate getContextInDir = (World world, BlockPos pos, List<Block> powerProviders, Block basePipeCombiner, Block basePipeBlock, int electrolyticFaceOffset, Direction direction) -> {
             BlockPos neighborBlockPos = pos.offset(direction);
             BlockState neighborBlockState = world.getBlockState(neighborBlockPos);
             Block neighborBlock = neighborBlockState.getBlock();
 
             if (neighborBlock.equals(basePipeBlock))
-                return new EnergyContext(world, neighborBlockPos, ContextType.Pipe, powerProviders, basePipeMerger, basePipeBlock);
+                return new EnergyContext(world, neighborBlockPos, ContextType.Pipe, powerProviders, basePipeCombiner, basePipeBlock, electrolyticFaceOffset);
 
-            if (neighborBlock.equals(basePipeMerger))
-                return new EnergyContext(world, neighborBlockPos, ContextType.PipeCombiner, powerProviders, basePipeMerger, basePipeBlock);
+            if (neighborBlock.equals(basePipeCombiner)) //if is null that wont even be true so should be fine
+                return new EnergyContext(world, neighborBlockPos, ContextType.PipeCombiner, powerProviders, basePipeCombiner, basePipeBlock, electrolyticFaceOffset);
 
             if (powerProviders.stream().anyMatch(b -> b.equals(neighborBlock)))
-                return new EnergyContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders, basePipeMerger, basePipeBlock);
+                return new EnergyContext(world, neighborBlockPos, ContextType.PowerProvider, powerProviders, basePipeCombiner, basePipeBlock, electrolyticFaceOffset);
+
+            if (neighborBlock.equals(_HydroBlocks.ELEKTROLYZEUR))
+                return new EnergyContext(world, neighborBlockPos, ContextType.Electrolytic, powerProviders, basePipeCombiner, basePipeBlock, electrolyticFaceOffset);
+
             return null;
         };
 
@@ -186,6 +192,7 @@ public class EnergyContext {
                     this.PowerProviders,
                     this.BaseCombinerBlock,
                     this.BasePipeBlock,
+                    this.ElectrolyticFaceOffset,
                     direction
                 )
             );
@@ -363,6 +370,10 @@ public class EnergyContext {
         //and if there are less than two neighbors
     }
 
+    public boolean IsActualLogicPipe() {
+        return this.ElectrolyticFaceOffset == 0 || this.ElectrolyticFaceOffset == 1;
+    }
+
     public boolean IsConnectedToContext(Direction direction) {
         if (!this.IsEvaluated)
             this.EvaluateActual();
@@ -380,6 +391,11 @@ public class EnergyContext {
         }
 
         //this.PipeContextType == ContextType.PipeCombiner //cannot early check anything for him since he will connect to anyone its just based on the neighbor
+
+        if (this.PipeContextType == ContextType.Electrolytic) {
+            if (direction == Direction.UP || direction == Direction.DOWN) //cannot be connected to up or down
+                return false;
+        }
 
         //if early returns succeed -> check for neigher and if he matches the requirements
         EnergyContext neighborInfo = this.GetContextBasedOnDirection(direction);
@@ -402,6 +418,12 @@ public class EnergyContext {
 
             if (neighborInfo.PipeContextType == ContextType.PipeCombiner) {
                 return true; //always connected if neighbor is combiner since all faces of a combiner serve as connectors
+            }
+
+            if (neighborInfo.PipeContextType == ContextType.Electrolytic) {
+                return PipeStateEvaluator
+                    .GetElectrolyticOffSet(neighborInfo.BlockState.get(Properties.HORIZONTAL_FACING), this.ElectrolyticFaceOffset)
+                    .getOpposite() == direction;
             }
         }
 
