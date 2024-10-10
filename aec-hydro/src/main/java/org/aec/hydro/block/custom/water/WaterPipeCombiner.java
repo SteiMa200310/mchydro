@@ -60,9 +60,14 @@ public class WaterPipeCombiner extends Block {
         Arrays.stream(Direction.values()).forEach((dir) -> {
             BlockPos neighborPos = pos.offset(dir);
             BlockState neighborState = world.getBlockState(neighborPos);
-            if (neighborState.getBlock().equals(_HydroBlocks.WATERPIPE)) {
-                neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
-            }
+//            if (neighborState.getBlock().equals(_HydroBlocks.WATERPIPE)) {
+//                neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
+//            }
+
+            if (neighborPos.getX() == fromPos.getX() && neighborPos.getZ() == fromPos.getZ() && neighborPos.getY() == fromPos.getY())
+                return;
+
+            neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
         });
     }
     @Override

@@ -271,16 +271,21 @@ public class EnergyContext {
         }
 
         if (this.PipeContextType == ContextType.PipeCombiner) {
+            if (!this.IsEvaluated)
+                this.EvaluateActual();
+
             int sum = 0;
             for(Direction direction : Direction.values()) {
                 EnergyContext dirCtx = this.GetContextBasedOnDirection(direction);
                 if (dirCtx == null)
                     continue;
+                if (!dirCtx.IsEvaluated)
+                    dirCtx.EvaluateActual();
 
                 if (this.IsConnectedToContext(direction)) {
                     if (dirCtx.PipeContextType == ContextType.PipeCombiner && //since is always connected but only valid when provider face hence facing property to us
                         dirCtx.BlockState.get(Properties.FACING) != direction.getOpposite())
-                        return -1;
+                        continue;
 
                     if (dirCtx.PipeContextType == ContextType.Pipe) { //when connected flowdirection needs to fit
                         PowerLevelInfo pipePowerLevelInfo = dirCtx.GetPipePowerLevelInfo();
@@ -294,7 +299,7 @@ public class EnergyContext {
                     }
 
                     int neighborlevel = dirCtx.GetPowerLevel();
-                    if (neighborlevel == 0 || neighborlevel < 0)
+                    if (neighborlevel < 0)
                         return neighborlevel; //special state
 
                     if (this.BlockState.get(Properties.FACING) == direction)
@@ -372,6 +377,17 @@ public class EnergyContext {
 
     public boolean IsActualLogicPipe() {
         return this.ElectrolyticFaceOffset == 0 || this.ElectrolyticFaceOffset == 1;
+    }
+    public boolean IsElectrolyticArround() {
+        return Arrays
+            .stream(Direction.values())
+            .anyMatch(direction -> {
+                EnergyContext ctx = this.GetContextBasedOnDirection(direction);
+                if (ctx == null)
+                    return false;
+
+                return ctx.BlockState.getBlock() == _HydroBlocks.ELEKTROLYZEUR;
+            });
     }
 
     public boolean IsConnectedToContext(Direction direction) {

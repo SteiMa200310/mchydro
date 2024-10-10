@@ -98,11 +98,20 @@ public class PipeStateEvaluator {
         //then i get an error state on the pipe even tho it should be the power level of the willing to connect pipe
         //so i again have to check here if the neighbors are connection willing
 
-        if (neighbor1 != null && (neighbor2 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace2) || neighbor2.PipeContextType == ContextType.Electrolytic)) {
+        boolean ActualAndElektro1 = (self.IsActualLogicPipe() && neighbor1 != null && neighbor1.BlockState.getBlock() == _HydroBlocks.ELEKTROLYZEUR);
+        boolean ActualAndElektro2 = (self.IsActualLogicPipe() && neighbor2 != null && neighbor2.BlockState.getBlock() == _HydroBlocks.ELEKTROLYZEUR);
+
+        boolean NotActualAndElektro1AndPipe2 = (!self.IsActualLogicPipe() && neighbor1 != null && neighbor1.BlockState.getBlock() == _HydroBlocks.ELEKTROLYZEUR && neighbor2 != null && neighbor2.PipeContextType == ContextType.Pipe);
+        boolean NotActualAndElektro2AndPipe1 = (!self.IsActualLogicPipe() && neighbor2 != null && neighbor2.BlockState.getBlock() == _HydroBlocks.ELEKTROLYZEUR && neighbor1 != null && neighbor1.PipeContextType == ContextType.Pipe);
+
+        boolean NullOrNotWilling1 = (neighbor1 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace1));
+        boolean NullOrNotWilling2 = (neighbor2 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace2));
+
+        if (neighbor1 != null && (NullOrNotWilling2 || ActualAndElektro2 || NotActualAndElektro1AndPipe2)) {
             return PipeStateEvaluator.EvaluateOneNotNull(self, neighbor1, openFace1, cOpenFace1, cOpenFace2);
         }
 
-        if ((neighbor1 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace1) || neighbor1.PipeContextType == ContextType.Electrolytic) && neighbor2 != null) {
+        if (neighbor2 != null && (NullOrNotWilling1 || ActualAndElektro1 || NotActualAndElektro2AndPipe1)) {
             return PipeStateEvaluator.EvaluateOneNotNull(self, neighbor2, openFace2, cOpenFace2, cOpenFace1);
         }
 
@@ -125,10 +134,10 @@ public class PipeStateEvaluator {
         if (neighbor.PipeContextType == ContextType.Pipe) {
             PowerLevelInfo neighborPowerLevelInfo = neighbor.GetPipePowerLevelInfo();
 
-            if (!neighborPowerLevelInfo.IsDefault() /*&& neighborPowerLevelInfo.flowTo() == cOpenFace1.getOpposite()*/) //not sure since values are invalid anyways
-//                return self.IsActualLogicPipe() ?
-//                    PowerLevelInfo.Construct(neighbor.GetPowerLevel(), cOpenFace1, cOpenFace2) : //i get power from neighbor
-//                    PowerLevelInfo.Construct(1, cOpenFace2, cOpenFace1); //cannot get power from neighbor since can only be from electrolytic
+            if (!neighborPowerLevelInfo.IsDefault() && neighborPowerLevelInfo.flowTo() == cOpenFace1.getOpposite()) //not sure since values are invalid anyways
+//                return (!self.IsActualLogicPipe() && self.IsElectrolyticArround()) ?
+//                    PowerLevelInfo.Construct(1, cOpenFace2, cOpenFace1) : //cannot get power from neighbor since can only be from electrolytic
+//                    PowerLevelInfo.Construct(neighbor.GetPowerLevel(), cOpenFace1, cOpenFace2); //i get power from neighbor
 
                 return PowerLevelInfo.Construct(neighbor.GetPowerLevel(), cOpenFace1, cOpenFace2);
             else {
@@ -187,6 +196,8 @@ public class PipeStateEvaluator {
 
             if (waterPowerLevel > 1 && cablePowerLevel > 2)
                 return PowerLevelInfo.Construct(1, cOpenFace1, cOpenFace2);
+            else
+                return PowerLevelInfo.Default();
         }
 
         AECHydro.LOGGER.error("Neighbor was not implemented");
