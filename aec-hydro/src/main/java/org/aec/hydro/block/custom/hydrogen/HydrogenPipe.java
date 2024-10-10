@@ -70,15 +70,7 @@ public class HydrogenPipe extends Block {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        EnergyContext info = new EnergyContext(
-                ctx.getWorld(),
-                ctx.getBlockPos(),
-                ContextType.Pipe,
-                HydrogenPipe.PowerProviders,
-                null,
-                _HydroBlocks.HYDROGENPIPE,
-                3
-        );
+        EnergyContext info = MakeContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe);
         info.EvaluateBase(); //is air at start
 
         Direction dir = ctx.getPlayerLookDirection().getOpposite();
@@ -89,15 +81,7 @@ public class HydrogenPipe extends Block {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        EnergyContext info = new EnergyContext(
-                world,
-                pos,
-                ContextType.Pipe,
-                HydrogenPipe.PowerProviders,
-                null,
-                _HydroBlocks.HYDROGENPIPE,
-                3
-        );
+        EnergyContext info = MakeContext(world, pos, ContextType.Pipe);
         info.EvaluateActual();
 
         world.setBlockState(pos, info.GetCorrectedState());
@@ -123,5 +107,17 @@ public class HydrogenPipe extends Block {
 
         // Call the super method to handle normal breaking logic
         super.onBreak(world, pos, state, player);
+    }
+
+    public static EnergyContext MakeContext(World world, BlockPos pos, ContextType contextType) {
+        return new EnergyContext(
+            world,
+            pos,
+            contextType,
+            HydrogenPipe.PowerProviders,
+            null,
+            _HydroBlocks.HYDROGENPIPE,
+            3
+        );
     }
 }

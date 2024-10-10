@@ -1,9 +1,15 @@
 package org.aec.hydro.pipeHandling.core;
 
+import net.minecraft.block.Block;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Pair;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Position;
 import org.aec.hydro.AECHydro;
+import org.aec.hydro.block._HydroBlocks;
+import org.aec.hydro.block.custom.cable.Cable;
+import org.aec.hydro.block.custom.water.WaterPipe;
 import org.aec.hydro.pipeHandling.utils.*;
 
 import java.util.HashMap;
@@ -92,11 +98,11 @@ public class PipeStateEvaluator {
         //then i get an error state on the pipe even tho it should be the power level of the willing to connect pipe
         //so i again have to check here if the neighbors are connection willing
 
-        if (neighbor1 != null && (neighbor2 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace2))) {
+        if (neighbor1 != null && (neighbor2 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace2) || neighbor2.PipeContextType == ContextType.Electrolytic)) {
             return PipeStateEvaluator.EvaluateOneNotNull(self, neighbor1, openFace1, cOpenFace1, cOpenFace2);
         }
 
-        if ((neighbor1 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace1)) && neighbor2 != null) {
+        if ((neighbor1 == null || !PipeStateEvaluator.IsNeighbourConnectionWilling(self, openFace1) || neighbor1.PipeContextType == ContextType.Electrolytic) && neighbor2 != null) {
             return PipeStateEvaluator.EvaluateOneNotNull(self, neighbor2, openFace2, cOpenFace2, cOpenFace1);
         }
 
@@ -119,9 +125,12 @@ public class PipeStateEvaluator {
         if (neighbor.PipeContextType == ContextType.Pipe) {
             PowerLevelInfo neighborPowerLevelInfo = neighbor.GetPipePowerLevelInfo();
 
-            if (!neighborPowerLevelInfo.IsDefault() &&
-                    neighborPowerLevelInfo.flowTo() == cOpenFace1.getOpposite())
-                return PowerLevelInfo.Construct(neighbor.GetPowerLevel(), cOpenFace1, cOpenFace2); //i get power from neighbor
+            if (!neighborPowerLevelInfo.IsDefault() /*&& neighborPowerLevelInfo.flowTo() == cOpenFace1.getOpposite()*/) //not sure since values are invalid anyways
+//                return self.IsActualLogicPipe() ?
+//                    PowerLevelInfo.Construct(neighbor.GetPowerLevel(), cOpenFace1, cOpenFace2) : //i get power from neighbor
+//                    PowerLevelInfo.Construct(1, cOpenFace2, cOpenFace1); //cannot get power from neighbor since can only be from electrolytic
+
+                return PowerLevelInfo.Construct(neighbor.GetPowerLevel(), cOpenFace1, cOpenFace2);
             else {
                 return PowerLevelInfo.Default();
             }
@@ -134,23 +143,50 @@ public class PipeStateEvaluator {
             Direction neighborFacing = neighbor.BlockState.get(Properties.HORIZONTAL_FACING);
             Direction possibleWaterPipeFacing = PipeStateEvaluator.GetElectrolyticOffSet(neighborFacing, 0);
             Direction possibleCableFacing = PipeStateEvaluator.GetElectrolyticOffSet(neighborFacing, 1);
+            //Big Fucking problem - water pipe is not recognized as a pipe by the cable or oxygen one this is by design
+            //But no i need different informations so either i init a context or i - well IDK
 
-            EnergyContext possibleCtxWaterPipeOrCombiner = neighbor.GetContextBasedOnDirection(possibleWaterPipeFacing);
-            EnergyContext possibleCtxCableOrCombiner = neighbor.GetContextBasedOnDirection(possibleCableFacing);
-            if (possibleCtxWaterPipeOrCombiner == null || possibleCtxCableOrCombiner == null)
+            BlockPos waterPos = neighbor.Pos.offset(possibleWaterPipeFacing);
+            BlockPos cablePos = neighbor.Pos.offset(possibleCableFacing);
+
+            Block waterBlock = neighbor.World.getBlockState(waterPos).getBlock();
+            Block cableBlock = neighbor.World.getBlockState(cablePos).getBlock();
+
+            EnergyContext waterCtx = null;
+            EnergyContext cableCtx = null;
+
+            if (waterBlock == _HydroBlocks.WATERPIPE) {
+                waterCtx = WaterPipe.MakeContext(neighbor.World, waterPos, ContextType.Pipe);
+            }
+            if (waterBlock == _HydroBlocks.WATERPIPECOMBINER) {
+                waterCtx = WaterPipe.MakeContext(neighbor.World, waterPos, ContextType.PipeCombiner);
+            }
+
+            if (cableBlock == _HydroBlocks.CABLE) {
+                cableCtx = Cable.MakeContext(neighbor.World, cablePos, ContextType.Pipe);
+            }
+            if (cableBlock == _HydroBlocks.CABLECOMBINER) {
+                cableCtx = Cable.MakeContext(neighbor.World, cablePos, ContextType.PipeCombiner);
+            }
+
+            if (waterCtx == null || cableCtx == null)
                 return PowerLevelInfo.Default();
 
-            if ((possibleCtxWaterPipeOrCombiner.PipeContextType == ContextType.Pipe || possibleCtxWaterPipeOrCombiner.PipeContextType == ContextType.PipeCombiner) &&
-                (possibleCtxCableOrCombiner.PipeContextType == ContextType.Pipe || possibleCtxCableOrCombiner.PipeContextType == ContextType.PipeCombiner)) {
-                boolean waterConnected = self.IsConnectedToContext(possibleWaterPipeFacing);
-                int waterPowerLevel = possibleCtxWaterPipeOrCombiner.GetPowerLevel();
+            waterCtx.EvaluateActual();
+            cableCtx.EvaluateActual();
 
-                boolean cableConnected = self.IsConnectedToContext(possibleCableFacing);
-                int cablePowerLevel = possibleCtxCableOrCombiner.GetPowerLevel();
+            boolean waterConnected = waterCtx.IsConnectedToContext(possibleWaterPipeFacing.getOpposite());
+            if (!waterConnected)
+                return PowerLevelInfo.Default();
+            int waterPowerLevel = waterCtx.GetPowerLevel();
 
-                if (waterConnected && cableConnected && waterPowerLevel > 1 && cablePowerLevel > 2)
-                    return PowerLevelInfo.Construct(1, cOpenFace1, cOpenFace2);
-            }
+            boolean cableConnected = cableCtx.IsConnectedToContext(possibleCableFacing.getOpposite());
+            if (!cableConnected)
+                return PowerLevelInfo.Default();
+            int cablePowerLevel = cableCtx.GetPowerLevel();
+
+            if (waterPowerLevel > 1 && cablePowerLevel > 2)
+                return PowerLevelInfo.Construct(1, cOpenFace1, cOpenFace2);
         }
 
         AECHydro.LOGGER.error("Neighbor was not implemented");

@@ -50,9 +50,7 @@ public class Elektrolyseur extends Block {
         Arrays.stream(Direction.values()).forEach((dir) -> {
             BlockPos neighborPos = pos.offset(dir);
             BlockState neighborState = world.getBlockState(neighborPos);
-            if (neighborState.getBlock().equals(_HydroBlocks.CABLE)) {
-                neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
-            }
+            neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
         });
     }
 

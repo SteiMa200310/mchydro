@@ -70,15 +70,7 @@ public class Cable extends Block {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        EnergyContext info = new EnergyContext(
-            ctx.getWorld(),
-            ctx.getBlockPos(),
-            ContextType.Pipe,
-            Cable.PowerProviders,
-            _HydroBlocks.CABLECOMBINER,
-            _HydroBlocks.CABLE,
-            1
-        );
+        EnergyContext info = MakeContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe);
         info.EvaluateBase(); //is air at start
 
         Direction dir = ctx.getPlayerLookDirection().getOpposite();
@@ -91,15 +83,7 @@ public class Cable extends Block {
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         System.out.println(pos);
 
-        EnergyContext info = new EnergyContext(
-            world,
-            pos,
-            ContextType.Pipe,
-            Cable.PowerProviders,
-            _HydroBlocks.CABLECOMBINER,
-            _HydroBlocks.CABLE,
-            1
-        );
+        EnergyContext info = MakeContext(world, pos, ContextType.Pipe);
         info.EvaluateActual();
 
         world.setBlockState(pos, info.GetCorrectedState());
@@ -157,5 +141,17 @@ public class Cable extends Block {
 
         // Call the super method to handle normal breaking logic
         super.onBreak(world, pos, state, player);
+    }
+
+    public static EnergyContext MakeContext(World world, BlockPos pos, ContextType contextType) {
+        return new EnergyContext(
+            world,
+            pos,
+            contextType,
+            Cable.PowerProviders,
+            _HydroBlocks.CABLECOMBINER,
+            _HydroBlocks.CABLE,
+            1
+        );
     }
 }
