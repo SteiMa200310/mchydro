@@ -1,4 +1,4 @@
-package org.aec.hydro.block.custom.pipe;
+package org.aec.hydro.block.custom.water;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,7 +16,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.aec.hydro.block._HydroBlocks;
-import org.aec.hydro.block.custom.cable.Cable;
 import org.aec.hydro.pipeHandling.core.PipeShapeWrapper;
 import org.aec.hydro.pipeHandling.utils.PipeID;
 import org.aec.hydro.pipeHandling.utils.PipeProperties;
@@ -42,7 +41,7 @@ import java.util.List;
 //In onUse override
 //        player.sendMessage(Text.of("Power Level: " + world.getBlockState(pos).get(PipeProperties.PowerLevel) + " || " + world.getBlockState(pos).get(PipeProperties.PIPE_ID)), true);
 
-public class Pipe extends Block {
+public class WaterPipe extends Block {
     private static final org.aec.hydro.pipeHandling.core.PipeShapeWrapper PipeShapeWrapper = new PipeShapeWrapper(
         VoxelGenerator.makePipeLongShape_NORTH_SOUTH(),
         VoxelGenerator.makePipeEdgeShape_NORTH_EAST()
@@ -50,7 +49,7 @@ public class Pipe extends Block {
 
     private static List<Block> PowerProviders = null;
 
-    public Pipe(Settings settings) {
+    public WaterPipe(Settings settings) {
         super(settings);
 
         this.setDefaultState(
@@ -76,7 +75,7 @@ public class Pipe extends Block {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        return Pipe.PipeShapeWrapper.GetShape(state.get(PipeProperties.PIPE_ID));
+        return WaterPipe.PipeShapeWrapper.GetShape(state.get(PipeProperties.PIPE_ID));
     }
 
     @Nullable
@@ -84,14 +83,7 @@ public class Pipe extends Block {
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
 
-        EnergyContext info = new EnergyContext(
-            ctx.getWorld(),
-            ctx.getBlockPos(),
-            ContextType.Pipe,
-            Pipe.PowerProviders,
-            _HydroBlocks.PIPECOMBINER,
-            _HydroBlocks.PIPE
-        );
+        EnergyContext info = MakeContext(ctx.getWorld(), ctx.getBlockPos(), ContextType.Pipe);
         info.EvaluateBase(); //is air at start
 
         Direction dir = ctx.getPlayerLookDirection().getOpposite();
@@ -103,14 +95,7 @@ public class Pipe extends Block {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        EnergyContext info = new EnergyContext(
-            world,
-            pos,
-            ContextType.Pipe,
-            Pipe.PowerProviders,
-            _HydroBlocks.PIPECOMBINER,
-            _HydroBlocks.PIPE
-        );
+        EnergyContext info = MakeContext(world, pos, ContextType.Pipe);
         info.EvaluateActual();
 
         world.setBlockState(pos, info.GetCorrectedState());
@@ -149,5 +134,17 @@ public class Pipe extends Block {
 
         // Call the super method to handle normal breaking logic
         super.onBreak(world, pos, state, player);
+    }
+
+    public static EnergyContext MakeContext(World world, BlockPos pos, ContextType contextType) {
+        return new EnergyContext(
+            world,
+            pos,
+            contextType,
+            WaterPipe.PowerProviders,
+            _HydroBlocks.WATERPIPECOMBINER,
+            _HydroBlocks.WATERPIPE,
+            0
+        );
     }
 }

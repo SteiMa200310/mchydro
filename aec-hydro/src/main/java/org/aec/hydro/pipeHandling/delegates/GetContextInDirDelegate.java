@@ -10,5 +10,5 @@ import java.util.List;
 
 @FunctionalInterface
 public interface GetContextInDirDelegate {
-    EnergyContext GetContextInDir(World world, BlockPos pos, List<Block> powerProviders, Block baseMergerBlock, Block basePipeBlock, Direction direction);
+    EnergyContext GetContextInDir(World world, BlockPos pos, List<Block> powerProviders, Block baseMergerBlock, Block basePipeBlock, int electrolyticFaceOffset, Direction direction);
 }

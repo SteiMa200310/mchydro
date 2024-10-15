@@ -1,7 +1,9 @@
-package org.aec.hydro.block.custom.pipe;
+package org.aec.hydro.block.custom.water;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtList;
@@ -9,37 +11,37 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.aec.hydro.block._HydroBlocks;
-import org.aec.hydro.pipeHandling.core.EnergyContext;
-import org.aec.hydro.pipeHandling.core.PipeShapeWrapper;
-import org.aec.hydro.pipeHandling.utils.ContextType;
-import org.aec.hydro.pipeHandling.utils.PipeID;
 import org.aec.hydro.pipeHandling.utils.PipeProperties;
-import org.aec.hydro.pipeHandling.utils.PowerFlowDirection;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
+public class Pump extends Block implements Waterloggable {
+    private static final VoxelShape UP_SHAPE = VoxelGenerator.makePumpShape(); //roberto exported as up thats why i use as default
 
-public class PipeCombiner extends Block {
-    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makePipeCombinerShape();
-    private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.rotateShape(0,2,0,NORTH_SHAPE);
-    private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(0,1,0,NORTH_SHAPE);
-    private static final VoxelShape WEST_SHAPE = VoxelGenerator.rotateShape(0,3,0,NORTH_SHAPE);
-    private static final VoxelShape UP_SHAPE = VoxelGenerator.rotateShape(1,0,0,NORTH_SHAPE);
-    private static final VoxelShape DOWN_SHAPE = VoxelGenerator.rotateShape(3,0,0,NORTH_SHAPE);
+    private static final VoxelShape NORTH_SHAPE = VoxelGenerator.rotateShape(3,0,0, UP_SHAPE);
+    private static final VoxelShape SOUTH_SHAPE = VoxelGenerator.rotateShape(1,0,0, UP_SHAPE);
+    private static final VoxelShape EAST_SHAPE = VoxelGenerator.rotateShape(3,1,0, UP_SHAPE);
+    private static final VoxelShape WEST_SHAPE = VoxelGenerator.rotateShape(3,3,0, UP_SHAPE);
 
-    public PipeCombiner(Settings settings) {
+    private static final VoxelShape DOWN_SHAPE = VoxelGenerator.rotateShape(2,0,0, UP_SHAPE);
+
+    public Pump(Settings settings) {
         super(settings);
+        this.setDefaultState(
+            this.stateManager.getDefaultState()
+                .with(Properties.WATERLOGGED, false)
+                .with(PipeProperties.PowerLevel, 1)
+        );
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(Properties.FACING);
+        builder.add(Properties.WATERLOGGED);
+        builder.add(PipeProperties.PowerLevel);
     }
 
     @Override
@@ -57,28 +59,29 @@ public class PipeCombiner extends Block {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
+        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+        return this.getDefaultState().with(Properties.WATERLOGGED, fluidState.getFluid() == Fluids.WATER).with(Properties.FACING, ctx.getSide());
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        //trigger neighbor update on all neighbor blocks even if self did not change
-        Arrays.stream(Direction.values()).forEach((dir) -> {
-            BlockPos neighborPos = pos.offset(dir);
-            BlockState neighborState = world.getBlockState(neighborPos);
-            if (neighborState.getBlock().equals(_HydroBlocks.PIPE)) {
-                neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
-            }
-        });
+    public FluidState getFluidState(BlockState state) {
+        return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.get(Properties.WATERLOGGED) && !state.isOf(newState.getBlock())) {
+            world.setBlockState(pos, Blocks.WATER.getDefaultState(), 3);
+        }
+        super.onStateReplaced(state, world, pos, newState, moved);
+    }
+
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient && !player.isCreative()) {
             NbtList canPlaceOn = new NbtList();
 
-            canPlaceOn.add(NbtString.of("minecraft:grass_block"));
-            canPlaceOn.add(NbtString.of("hydro:pipe"));
-            canPlaceOn.add(NbtString.of("hydro:pipecombiner"));
+            canPlaceOn.add(NbtString.of("minecraft:stone"));
 
             // Create an ItemStack of the block (the item form of the block)
             ItemStack itemStack = new ItemStack(this);
