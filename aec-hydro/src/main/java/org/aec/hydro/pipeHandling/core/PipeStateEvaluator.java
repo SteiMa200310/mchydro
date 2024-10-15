@@ -194,7 +194,7 @@ public class PipeStateEvaluator {
                 return PowerLevelInfo.Default();
             int cablePowerLevel = cableCtx.GetPowerLevel();
 
-            if (waterPowerLevel > 1 && cablePowerLevel > 2)
+            if (waterPowerLevel >= 5 && cablePowerLevel >= 20)
                 return PowerLevelInfo.Construct(1, cOpenFace1, cOpenFace2);
             else
                 return PowerLevelInfo.Default();
