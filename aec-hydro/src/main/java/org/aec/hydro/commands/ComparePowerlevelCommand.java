@@ -58,7 +58,7 @@ public class ComparePowerlevelCommand extends ACommand {
         int powerlevel = world.getBlockState(pos).get(PipeProperties.PowerLevel);
 
 
-        if(compareLevel == powerlevel) playerScore.setScore(1);
+        if(compareLevel <= powerlevel) playerScore.setScore(1);
         else playerScore.setScore(-1);
 
         return 1;
