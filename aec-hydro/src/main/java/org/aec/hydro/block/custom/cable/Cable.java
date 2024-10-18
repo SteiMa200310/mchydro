@@ -130,7 +130,7 @@ public class Cable extends Block {
             canPlaceOn.add(NbtString.of("hydro:solarpanel"));
             canPlaceOn.add(NbtString.of("hydro:waterwheel"));
             canPlaceOn.add(NbtString.of("hydro:windmill"));
-            canPlaceOn.add(NbtString.of("hydro:electrolyseur"));
+            canPlaceOn.add(NbtString.of("hydro:elektrolyseur"));
             canPlaceOn.add(NbtString.of("hydro:cable"));
             canPlaceOn.add(NbtString.of("hydro:cablecombiner"));
 

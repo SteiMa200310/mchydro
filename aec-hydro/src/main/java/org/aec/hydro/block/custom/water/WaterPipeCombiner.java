@@ -76,8 +76,8 @@ public class WaterPipeCombiner extends Block {
             NbtList canPlaceOn = new NbtList();
 
             canPlaceOn.add(NbtString.of("minecraft:grass_block"));
-            canPlaceOn.add(NbtString.of("hydro:pipe"));
-            canPlaceOn.add(NbtString.of("hydro:pipecombiner"));
+            canPlaceOn.add(NbtString.of("hydro:pipew"));
+            canPlaceOn.add(NbtString.of("hydro:pipewcombiner"));
 
             // Create an ItemStack of the block (the item form of the block)
             ItemStack itemStack = new ItemStack(this);

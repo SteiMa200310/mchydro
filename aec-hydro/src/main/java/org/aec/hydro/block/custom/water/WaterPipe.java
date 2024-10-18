@@ -123,6 +123,7 @@ public class WaterPipe extends Block {
             canPlaceOn.add(NbtString.of("hydro:pump"));
             canPlaceOn.add(NbtString.of("hydro:pipew"));
             canPlaceOn.add(NbtString.of("hydro:pipewcombiner"));
+            canPlaceOn.add(NbtString.of("hydro:elektrolyseur"));
 
             // Create an ItemStack of the block (the item form of the block)
             ItemStack itemStack = new ItemStack(this);
