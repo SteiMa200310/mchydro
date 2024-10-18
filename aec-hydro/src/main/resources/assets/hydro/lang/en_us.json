@@ -1,5 +1,7 @@
 {
-  "block.hydro.pipe": "Pipe",
+  "block.hydro.pipew": "Water Pipe",
+  "block.hydro.pipeh": "Hydrogen Pipe",
+  "block.hydro.pipeo": "Oxygen Pipe",
   "block.hydro.waterwheel": "Waterwheel",
   "block.hydro.solarpanel": "Solarpanel",
   "block.hydro.windmill": "Windmill",
@@ -28,10 +30,6 @@
   "generic.hydro.di_update": "Set all DI blocks for Pin %1$s to State %2$s",
   "generic.hydro.do_update": "Set DO Pin %1$s to State %2$s",
   "generic.hydro.configure_cmd": "Successfully configured Pins!",
-
-  "hud.hydro.block_pos": "Block: %1$s",
-  "hud.hydro.power_at_pos": "Power: %1$s",
-  "hud.hydro.pin_at_pos": "Pin: %1$s",
 
   "error.hydro.no_args": "No arguments were supplied!",
   "error.hydro.wrong_args": "Wrong number of arguments were supplied!",
