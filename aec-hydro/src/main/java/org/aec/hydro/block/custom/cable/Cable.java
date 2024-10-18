@@ -127,6 +127,10 @@ public class Cable extends Block {
             NbtList canPlaceOn = new NbtList();
 
             canPlaceOn.add(NbtString.of("minecraft:grass_block"));
+            canPlaceOn.add(NbtString.of("hydro:solarpanel"));
+            canPlaceOn.add(NbtString.of("hydro:waterwheel"));
+            canPlaceOn.add(NbtString.of("hydro:windmill"));
+            canPlaceOn.add(NbtString.of("hydro:electrolyseur"));
             canPlaceOn.add(NbtString.of("hydro:cable"));
             canPlaceOn.add(NbtString.of("hydro:cablecombiner"));
 

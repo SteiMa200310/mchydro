@@ -82,6 +82,8 @@ public class Pump extends Block implements Waterloggable {
             NbtList canPlaceOn = new NbtList();
 
             canPlaceOn.add(NbtString.of("minecraft:stone"));
+            canPlaceOn.add(NbtString.of("minecraft:granite"));
+            canPlaceOn.add(NbtString.of("minecraft:andesite"));
 
             // Create an ItemStack of the block (the item form of the block)
             ItemStack itemStack = new ItemStack(this);

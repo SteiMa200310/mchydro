@@ -92,6 +92,7 @@ public class OxygenPipe extends Block {
             NbtList canPlaceOn = new NbtList();
 
             canPlaceOn.add(NbtString.of("minecraft:grass_block"));
+            canPlaceOn.add(NbtString.of("hydro:electrolyseur"));
             canPlaceOn.add(NbtString.of("hydro:pipeo"));
 
             // Create an ItemStack of the block (the item form of the block)

@@ -7,7 +7,7 @@
   "block.hydro.windmill": "Windmill",
   "block.hydro.cable": "Cable",
   "block.hydro.cablecombiner": "Cable Merger",
-  "block.hydro.pipecombiner": "Pipe Merger",
+  "block.hydro.pipewcombiner": "Pipe Merger",
   "block.hydro.elektrolyseur": "Electrolyzer",
   "item.hydro.voltmeter": "Voltmeter",
   "item.hydro.anode": "Anode",
