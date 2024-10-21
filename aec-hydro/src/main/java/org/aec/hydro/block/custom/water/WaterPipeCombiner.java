@@ -70,7 +70,7 @@ public class WaterPipeCombiner extends Block {
                     return;
 
                 if (neighborState.getBlock() != _HydroBlocks.WATERPIPE && neighborState.getBlock() != _HydroBlocks.WATERPIPECOMBINER)
-                    return;
+                    continue;
 
                 neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
             }

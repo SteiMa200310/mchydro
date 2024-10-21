@@ -77,7 +77,7 @@ public class CableCombiner extends Block {
                 //server crash cased by ig delegate passing since the unknown function stack got pretty huge
                 //this could have been the problem -> furthermore this condition that prevents neighbor update on all other blocks was missing
                 if (neighborState.getBlock() != _HydroBlocks.CABLE && neighborState.getBlock() != _HydroBlocks.CABLECOMBINER)
-                    return;
+                    continue;
 
                 neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
             }

@@ -47,7 +47,7 @@ public class Elektrolyseur extends Block {
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         //trigger neighbor update on all neighbor blocks even if self did not change
-        Arrays.stream(Direction.values()).forEach((dir) -> {
+        for(Direction dir : Direction.values()) {
             BlockPos neighborPos = pos.offset(dir);
             BlockState neighborState = world.getBlockState(neighborPos);
 
@@ -55,7 +55,7 @@ public class Elektrolyseur extends Block {
                 return;
 
             neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
-        });
+        }
     }
 
     @Override
