@@ -72,7 +72,7 @@ public class CableCombiner extends Block {
                 BlockState neighborState = world.getBlockState(neighborPos);
 
                 if (neighborPos.getX() == fromPos.getX() && neighborPos.getZ() == fromPos.getZ() && neighborPos.getY() == fromPos.getY())
-                    return;
+                    continue;
 
                 //server crash cased by ig delegate passing since the unknown function stack got pretty huge
                 //this could have been the problem -> furthermore this condition that prevents neighbor update on all other blocks was missing
