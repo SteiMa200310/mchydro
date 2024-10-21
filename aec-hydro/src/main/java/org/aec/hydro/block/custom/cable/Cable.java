@@ -26,6 +26,7 @@ import org.aec.hydro.pipeHandling.utils.ContextType;
 import org.aec.hydro.pipeHandling.utils.PipeID;
 import org.aec.hydro.pipeHandling.utils.PipeProperties;
 import org.aec.hydro.pipeHandling.utils.PowerFlowDirection;
+import org.aec.hydro.utils.HudDataManager;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,17 +103,17 @@ public class Cable extends Block {
 
             if (providerFace == PowerFlowDirection.NONE && recieverFace == PowerFlowDirection.NONE) {
                 if (powerLevel == 0) {
-                    player.sendMessage(Text.of("No Energy Flow"), true);
+                    HudDataManager.setPipeStatus("No Energy Flow");
                 }
 
                 if (powerLevel == 30) {
-                    player.sendMessage(Text.of("Cable Error"), true);
+                    HudDataManager.setPipeStatus("Cable Error");
                 }
                 return ActionResult.SUCCESS;
             }
 
             if (!world.isClient) {
-                player.sendMessage(Text.of("Power Level: " + powerLevel), true);
+                HudDataManager.setPipeStatus(String.valueOf(powerLevel));
             }
 
             return ActionResult.SUCCESS;
