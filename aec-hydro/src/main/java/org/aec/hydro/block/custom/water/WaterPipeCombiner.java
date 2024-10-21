@@ -13,6 +13,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.aec.hydro.AECHydro;
 import org.aec.hydro.block._HydroBlocks;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
@@ -57,19 +58,27 @@ public class WaterPipeCombiner extends Block {
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         //trigger neighbor update on all neighbor blocks even if self did not change
-        Arrays.stream(Direction.values()).forEach((dir) -> {
-            BlockPos neighborPos = pos.offset(dir);
-            BlockState neighborState = world.getBlockState(neighborPos);
-//            if (neighborState.getBlock().equals(_HydroBlocks.WATERPIPE)) {
-//                neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
-//            }
+        try {
+            for (Direction dir : Direction.values()) {
+                BlockPos neighborPos = pos.offset(dir);
+                BlockState neighborState = world.getBlockState(neighborPos);
+                //            if (neighborState.getBlock().equals(_HydroBlocks.WATERPIPE)) {
+                //                neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
+                //            }
 
-            if (neighborPos.getX() == fromPos.getX() && neighborPos.getZ() == fromPos.getZ() && neighborPos.getY() == fromPos.getY())
-                return;
+                if (neighborPos.getX() == fromPos.getX() && neighborPos.getZ() == fromPos.getZ() && neighborPos.getY() == fromPos.getY())
+                    return;
 
-            neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
-        });
+                if (neighborState.getBlock() != _HydroBlocks.WATERPIPE && neighborState.getBlock() != _HydroBlocks.WATERPIPECOMBINER)
+                    return;
+
+                neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
+            }
+        } catch (StackOverflowError e) {
+            AECHydro.LOGGER.error("StackOverflowError: " + e.getMessage());
+        }
     }
+
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient && !player.isCreative()) {

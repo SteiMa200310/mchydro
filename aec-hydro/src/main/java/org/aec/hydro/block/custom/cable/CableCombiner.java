@@ -13,6 +13,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.aec.hydro.AECHydro;
 import org.aec.hydro.block._HydroBlocks;
 import org.aec.hydro.pipeHandling.core.EnergyContext;
 import org.aec.hydro.pipeHandling.core.PipeShapeWrapper;
@@ -22,8 +23,10 @@ import org.aec.hydro.pipeHandling.utils.PipeProperties;
 import org.aec.hydro.pipeHandling.utils.PowerFlowDirection;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
+import java.util.*;
 
 import java.util.Arrays;
+import java.util.Stack;
 
 public class CableCombiner extends Block {
     private static final VoxelShape NORTH_SHAPE = VoxelGenerator.makeCableCombinerShape();
@@ -63,15 +66,24 @@ public class CableCombiner extends Block {
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         //trigger neighbor update on all neighbor blocks even if self did not change
-        Arrays.stream(Direction.values()).forEach((dir) -> {
-            BlockPos neighborPos = pos.offset(dir);
-            BlockState neighborState = world.getBlockState(neighborPos);
+        try {
+            for(Direction dir : Direction.values()) {
+                BlockPos neighborPos = pos.offset(dir);
+                BlockState neighborState = world.getBlockState(neighborPos);
 
-            if (neighborPos.getX() == fromPos.getX() && neighborPos.getZ() == fromPos.getZ() && neighborPos.getY() == fromPos.getY())
-                return;
+                if (neighborPos.getX() == fromPos.getX() && neighborPos.getZ() == fromPos.getZ() && neighborPos.getY() == fromPos.getY())
+                    return;
 
-            neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
-        });
+                //server crash cased by ig delegate passing since the unknown function stack got pretty huge
+                //this could have been the problem -> furthermore this condition that prevents neighbor update on all other blocks was missing
+                if (neighborState.getBlock() != _HydroBlocks.CABLE && neighborState.getBlock() != _HydroBlocks.CABLECOMBINER)
+                    return;
+
+                neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
+            }
+        } catch (StackOverflowError e) {
+            AECHydro.LOGGER.error("StackOverflowError: " + e.getMessage());
+        }
     }
 
     @Override
