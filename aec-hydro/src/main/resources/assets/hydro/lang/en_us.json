@@ -18,27 +18,8 @@
 
   "generic.hydro.initialize": "Initializing Hydro...",
   "generic.hydro.shutdown": "Shutting down Hydro...",
-  "generic.hydro.configure": "Configuring RPI Pins...",
-  "generic.hydro.pi4j_helper": "Starting Pi4J Helper...",
 
-  "generic.hydro.config_folder": "Successfully created hydro folder!",
-  "generic.hydro.config_created": "Successfully created config!",
-
-  "generic.hydro.power_at_pos": "Power at [%1$s,%2$s,%3$s]: %4$s",
-  "generic.hydro.pin_at_pos": "Pin at [%1$s,%2$s,%3$s]: %4$s",
-  "generic.hydro.di_update": "Set all DI blocks for Pin %1$s to State %2$s",
-  "generic.hydro.do_update": "Set DO Pin %1$s to State %2$s",
-  "generic.hydro.configure_cmd": "Successfully configured Pins!",
-
-  "hud.hydro.block_pos": "Block: %1$s",
-  "hud.hydro.power_at_pos": "Power: %1$s",
-  "hud.hydro.pin_at_pos": "Pin: %1$s",
-
-  "error.hydro.no_args": "No arguments were supplied!",
-  "error.hydro.wrong_args": "Wrong number of arguments were supplied!",
-  "error.hydro.not_player": "Command can only be executed by a player!",
-  "error.hydro.not_di": "Command only works on DI Blocks",
-  "error_interrupted_exception": "Thread with ID %1$d was interrupted!",
+  "hydro.noToolError": "No tool equipped",
 
   "itemGroup.hydro": "Hydro"
 }
