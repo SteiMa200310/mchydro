@@ -101,6 +101,9 @@ public class HydrogenPipe extends Block {
 
             itemStack.getOrCreateNbt().put("CanPlaceOn", canPlaceOn);
 
+            if (pos.getX() == -1 && pos.getY() == 65 && pos.getZ() == -104)
+                return;
+
             // Drop the item stack (with NBT data) when the block is broken
             Block.dropStack(world, pos, itemStack);
         }

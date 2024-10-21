@@ -149,6 +149,201 @@
         "y": 0,
         "x": 90
       }
+    },
+    {
+      "when": {
+        "pipe_id": "f1",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewerror",
+        "y": 0,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "f2",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewerror",
+        "y": 90,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "f3",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewerror",
+        "y": 0,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e1",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 90,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e2",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 180,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e3",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 270,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e4",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 0,
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e5",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 90,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e6",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 90,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e7",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 180,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e8",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 180,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e9",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 270,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e10",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 270,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e11",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 0,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "pipe_id": "e12",
+        "powerlevel": 30,
+        "providerface": "none",
+        "recieverface": "none"
+      },
+      "apply": {
+        "model": "hydro:block/pipewedgeerror",
+        "y": 0,
+        "x": 90
+      }
     }
   ]
 }
