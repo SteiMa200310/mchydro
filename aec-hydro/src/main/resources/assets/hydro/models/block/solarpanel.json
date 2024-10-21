@@ -5,6 +5,9 @@
     256,
     256
   ],
+  "textures": {
+    "particle": "hydro:block/solarpanel"
+  },
   "display": {
     "thirdperson_righthand": {
       "translation": [

@@ -5,6 +5,9 @@
     256,
     256
   ],
+  "textures": {
+    "particle": "hydro:block/windmill"
+  },
   "display": {
     "thirdperson_righthand": {
       "translation": [
