@@ -26,7 +26,6 @@ import org.aec.hydro.pipeHandling.utils.ContextType;
 import org.aec.hydro.pipeHandling.utils.PipeID;
 import org.aec.hydro.pipeHandling.utils.PipeProperties;
 import org.aec.hydro.pipeHandling.utils.PowerFlowDirection;
-import org.aec.hydro.utils.HudDataManager;
 import org.aec.hydro.utils.VoxelGenerator;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,38 +87,6 @@ public class Cable extends Block {
         info.EvaluateActual();
 
         world.setBlockState(pos, info.GetCorrectedState());
-    }
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player.getStackInHand(hand);
-        if (itemStack.getItem().equals(ModItemGroups.VOLTMETER)) {
-            if (!state.getBlock().equals(_HydroBlocks.CABLE))
-                return ActionResult.PASS;
-
-            int powerLevel = state.get(PipeProperties.PowerLevel);
-            PowerFlowDirection providerFace = state.get(PipeProperties.ProviderFace);
-            PowerFlowDirection recieverFace = state.get(PipeProperties.RecieverFace);
-
-            if (providerFace == PowerFlowDirection.NONE && recieverFace == PowerFlowDirection.NONE) {
-                if (powerLevel == 0) {
-                    HudDataManager.setPipeStatus("No Energy Flow");
-                }
-
-                if (powerLevel == 30) {
-                    HudDataManager.setPipeStatus("Cable Error");
-                }
-                return ActionResult.SUCCESS;
-            }
-
-            if (!world.isClient) {
-                HudDataManager.setPipeStatus(String.valueOf(powerLevel));
-            }
-
-            return ActionResult.SUCCESS;
-        }
-
-        return ActionResult.PASS;
     }
 
     @Override

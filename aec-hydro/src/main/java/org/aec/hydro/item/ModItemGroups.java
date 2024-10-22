@@ -21,6 +21,7 @@ public class ModItemGroups {
 
     //Custom Items
     public static final Item VOLTMETER = registerItem("voltmeter", new Item(new FabricItemSettings()));
+    public static final Item BAROMETER = registerItem("barometer", new Item(new FabricItemSettings()));
     public static final Item ANODE = registerItem("anode", new Item(new FabricItemSettings()));
     public static final Item KATHODE = registerItem("kathode", new Item(new FabricItemSettings()));
     public static final Item MEMBRAN = registerItem("membran", new Item(new FabricItemSettings()));
@@ -50,6 +51,7 @@ public class ModItemGroups {
                         entries.add(_HydroBlocks.COLORBLOCK);
 
                         entries.add(VOLTMETER);
+                        entries.add(BAROMETER);
                         entries.add(ANODE);
                         entries.add(KATHODE);
                         entries.add(MEMBRAN);

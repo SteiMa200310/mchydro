@@ -10,6 +10,7 @@
   "block.hydro.pipewcombiner": "Pipe Merger",
   "block.hydro.elektrolyseur": "Electrolyzer",
   "item.hydro.voltmeter": "Voltmeter",
+  "item.hydro.barometer": "Barometer",
   "item.hydro.anode": "Anode",
   "item.hydro.kathode": "Cathode",
   "item.hydro.membran": "Membrane",
@@ -20,7 +21,8 @@
   "generic.hydro.initialize": "Initializing Hydro...",
   "generic.hydro.shutdown": "Shutting down Hydro...",
 
-  "hydro.noToolError": "No tool equipped",
+  "hud.hydro.volt": "Power: %s PU/m",
+  "hud.hydro.pressure": "Pressure: %s WU/m",
 
   "itemGroup.hydro": "Hydro"
 }
