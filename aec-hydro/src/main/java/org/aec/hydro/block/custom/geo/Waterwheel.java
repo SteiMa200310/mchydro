@@ -82,16 +82,17 @@ public class Waterwheel extends BlockWithEntity {
         powerProvider.add(_HydroBlocks.SOLAR_PANEL);
 
         if(isSameBlockInRadius(world, pos, radius, powerProvider)){
-            NbtList canPlaceOn = new NbtList();
+            //NbtList canPlaceOn = new NbtList();
 
-            canPlaceOn.add(NbtString.of("minecraft:oak_log"));
+            //canPlaceOn.add(NbtString.of("minecraft:oak_log"));
 
             // Create an ItemStack of the block (the item form of the block)
-            ItemStack solarItemStack = new ItemStack(this);
+            //ItemStack solarItemStack = new ItemStack(this);
 
-            itemStack.getOrCreateNbt().put("CanPlaceOn", canPlaceOn);
+            //itemStack.getOrCreateNbt().put("CanPlaceOn", canPlaceOn);
 
-            placer.setStackInHand(Hand.MAIN_HAND, solarItemStack);
+            //placer.setStackInHand(Hand.MAIN_HAND, solarItemStack);
+            placer.getMainHandStack().increment(1);
             world.removeBlock(pos, false);
         }
     }

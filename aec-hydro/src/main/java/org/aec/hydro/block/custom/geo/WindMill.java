@@ -87,16 +87,17 @@ public class WindMill extends BlockWithEntity {
         powerProvider.add(_HydroBlocks.SOLAR_PANEL);
 
         if(isSameBlockInRadius(world, pos, radius, powerProvider)){
-            NbtList canPlaceOn = new NbtList();
+            //NbtList canPlaceOn = new NbtList();
 
-            canPlaceOn.add(NbtString.of("minecraft:grass_block"));
+            //canPlaceOn.add(NbtString.of("minecraft:grass_block"));
 
             // Create an ItemStack of the block (the item form of the block)
-            ItemStack solarItemStack = new ItemStack(this);
+            //ItemStack solarItemStack = new ItemStack(this);
 
-            solarItemStack.getOrCreateNbt().put("CanPlaceOn", canPlaceOn);
+            //solarItemStack.getOrCreateNbt().put("CanPlaceOn", canPlaceOn);
 
-            placer.setStackInHand(Hand.MAIN_HAND, solarItemStack);
+            //placer.setStackInHand(Hand.MAIN_HAND, solarItemStack);
+            placer.getMainHandStack().increment(1);
             world.removeBlock(pos, false);
         }
     }
