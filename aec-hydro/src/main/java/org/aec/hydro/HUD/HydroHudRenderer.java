@@ -1,13 +1,16 @@
 package org.aec.hydro.HUD;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import org.aec.hydro.block._HydroBlocks;
 import org.aec.hydro.item.ModItemGroups;
 import org.aec.hydro.pipeHandling.utils.PipeProperties;
 
@@ -28,20 +31,17 @@ public class HydroHudRenderer implements HudRenderCallback {
                 BlockPos blockPos = blockHitResult.getBlockPos();
                 assert client.world != null;
                 BlockState blockState = client.world.getBlockState(blockPos);
-                int powerlevel;
-                try {
-                    powerlevel = blockState.get(PipeProperties.PowerLevel);
-                } catch (Exception e) {
-                    return;
-                }
+                Block targetBlock = blockState.getBlock();
 
-                if(client.player.getMainHandStack().getItem() != ModItemGroups.VOLTMETER){
-                    drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hydro.noToolError"), 10, 10, 0xFFFFFF);
-                    return;
-                }
 
-                // Display block information on the HUD
-                drawContext.drawTextWithShadow(client.textRenderer, "Power level: " + powerlevel, 10, 10, 0xFFFFFF);
+                if(client.player.getMainHandStack().getItem() != ModItemGroups.VOLTMETER && client.player.getMainHandStack().getItem() != ModItemGroups.BAROMETER) return;
+
+                if(targetBlock == _HydroBlocks.CABLE && client.player.getMainHandStack().getItem() == ModItemGroups.VOLTMETER)
+                    drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.hydro.volt", blockState.get(PipeProperties.PowerLevel)), 10, 10, 0xFFFFFF);
+
+                if ((targetBlock == _HydroBlocks.WATERPIPE || targetBlock == _HydroBlocks.HYDROGENPIPE || targetBlock == _HydroBlocks.OXYGENPIPE)
+                                && client.player.getMainHandStack().getItem() == ModItemGroups.BAROMETER)
+                    drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.hydro.pressure", blockState.get(PipeProperties.PowerLevel)), 10, 10, 0xFFFFFF);
             }
         }
     }

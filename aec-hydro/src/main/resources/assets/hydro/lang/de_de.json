@@ -10,6 +10,7 @@
   "block.hydro.pipewcombiner": "Rohr Verbinder",
   "block.hydro.elektrolyseur": "Elektrolyseur",
   "item.hydro.voltmeter": "Messgerät",
+  "item.hydro.barometer": "Druckmessgerät",
   "item.hydro.anode": "Anode",
   "item.hydro.kathode": "Kathode",
   "item.hydro.membran": "Membrane",
@@ -17,6 +18,7 @@
   "block.hydro.pump": "Pumpe",
   "generic.hydro.initialize": "Initializing Hydro...",
   "generic.hydro.shutdown": "Shutting down Hydro...",
-  "hydro.noToolError": "Kein Messgerät in der Hand",
+  "hud.hydro.volt": "Strom: %s SE/m",
+  "hud.hydro.pressure": "Druck: %s WE/m",
   "itemGroup.hydro": "Wasserstoff"
 }
