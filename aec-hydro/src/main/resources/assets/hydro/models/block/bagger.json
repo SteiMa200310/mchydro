@@ -1,0 +1,72 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    512,
+    512
+  ],
+  "textures": {
+    "particle": "hydro:block/bagger"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        87,
+        0,
+        0
+      ],
+      "scale": [
+        0.09,
+        0.09,
+        0.09
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        67,
+        0,
+        0
+      ],
+      "scale": [
+        0.09,
+        0.09,
+        0.09
+      ]
+    },
+    "firstperson_righthand": {
+      "scale": [
+        0.17,
+        0.17,
+        0.17
+      ]
+    },
+    "firstperson_lefthand": {
+      "scale": [
+        0.17,
+        0.17,
+        0.17
+      ]
+    },
+    "ground": {
+      "scale": [
+        0.17,
+        0.17,
+        0.17
+      ]
+    },
+    "gui": {
+      "scale": [
+        0.17,
+        0.17,
+        0.17
+      ]
+    },
+    "fixed": {
+      "scale": [
+        0.17,
+        0.17,
+        0.17
+      ]
+    }
+  }
+}

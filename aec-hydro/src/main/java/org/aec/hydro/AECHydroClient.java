@@ -21,5 +21,6 @@ public class AECHydroClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(_HydroBlockEntities.WINDMILL_BLOCK_ENTITY, WindMillRenderer::new);
         BlockEntityRendererFactories.register(_HydroBlockEntities.SOLARPANEL_BLOCK_ENTITY, SolarPanelRenderer::new);
         BlockEntityRendererFactories.register(_HydroBlockEntities.WATERWHEEL_BLOCK_ENTITY, WaterwheelRenderer::new);
+        BlockEntityRendererFactories.register(_HydroBlockEntities.BAGGER_BLOCK_ENTITY, BaggerRenderer::new);
     }
 }

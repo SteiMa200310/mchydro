@@ -100,9 +100,7 @@ public class OxygenPipe extends Block {
 
             itemStack.getOrCreateNbt().put("CanPlaceOn", canPlaceOn);
 
-            //prevent pipe from droping there - (is in truck) - could add block property but who cares no one block in the world just doesnt drop ;)
-            if (pos.getX() == -1 && pos.getY() == 65 && pos.getZ() == -93)
-            //if (pos.getX() == 0 && pos.getY() == 0 && pos.getZ() == 0)
+            if (pos.getX() == -1 && pos.getY() == 65 && pos.getZ() == -104)
                 return;
 
             // Drop the item stack (with NBT data) when the block is broken

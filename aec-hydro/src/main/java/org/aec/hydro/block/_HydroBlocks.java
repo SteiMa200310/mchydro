@@ -14,6 +14,7 @@ import org.aec.hydro.block.custom.ColorBlock;
 import org.aec.hydro.block.custom.cable.Cable;
 import org.aec.hydro.block.custom.cable.CableCombiner;
 import org.aec.hydro.block.custom.cell.Elektrolyseur;
+import org.aec.hydro.block.custom.geo.Bagger;
 import org.aec.hydro.block.custom.geo.SolarPanel;
 import org.aec.hydro.block.custom.geo.Waterwheel;
 import org.aec.hydro.block.custom.geo.WindMill;
@@ -31,6 +32,7 @@ public class _HydroBlocks {
     public static final Block WIND_MILL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "windmill"), new WindMill(FabricBlockSettings.create().breakInstantly()));
     public static final Block SOLAR_PANEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "solarpanel"), new SolarPanel(FabricBlockSettings.create().breakInstantly()));
     public static final Block WATERWHEEL = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "waterwheel"), new Waterwheel(FabricBlockSettings.create().breakInstantly()));
+    public static final Block BAGGER = Registry.register(Registries.BLOCK, new Identifier(AECHydro.MOD_ID, "bagger"), new Bagger(FabricBlockSettings.create().breakInstantly()));
 
     //Power Providers NEED TO BE BEFORE PIPE to not again and again create a list of proverproviders
     public static final Block WATERPIPE = registerBlock("pipew", new WaterPipe(FabricBlockSettings.create().breakInstantly()));

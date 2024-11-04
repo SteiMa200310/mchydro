@@ -18,6 +18,7 @@ public class ModItemGroups {
     public static final Item WIND_MILL_ITEM = registerItem("windmill", new WindMillItem(_HydroBlocks.WIND_MILL, new FabricItemSettings()));
     public static final Item SOLAR_PANEL_ITEM = registerItem("solarpanel", new SolarPanelItem(_HydroBlocks.SOLAR_PANEL, new FabricItemSettings()));
     public static final Item WATERWHEEL_ITEM = registerItem("waterwheel", new WaterwheelItem(_HydroBlocks.WATERWHEEL, new FabricItemSettings()));
+    public static final Item BAGGER_ITEM = registerItem("bagger", new BaggerItem(_HydroBlocks.BAGGER, new FabricItemSettings()));
 
     //Custom Items
     public static final Item VOLTMETER = registerItem("voltmeter", new Item(new FabricItemSettings()));
@@ -36,6 +37,8 @@ public class ModItemGroups {
                         entries.add(WIND_MILL_ITEM);
                         entries.add(SOLAR_PANEL_ITEM);
                         entries.add(WATERWHEEL_ITEM);
+
+                        entries.add(BAGGER_ITEM);
 
                         entries.add(_HydroBlocks.WATERPIPE);
                         entries.add(_HydroBlocks.WATERPIPECOMBINER);

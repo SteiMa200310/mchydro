@@ -18,6 +18,9 @@ public class _HydroBlockEntities {
     public static BlockEntityType<WaterwheelBlockEntity> WATERWHEEL_BLOCK_ENTITY =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(AECHydro.MOD_ID, "waterwheel_entity"),
                     FabricBlockEntityTypeBuilder.create(WaterwheelBlockEntity::new, _HydroBlocks.WATERWHEEL).build());
+    public static BlockEntityType<BaggerBlockEntity> BAGGER_BLOCK_ENTITY =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(AECHydro.MOD_ID, "bagger_entity"),
+                    FabricBlockEntityTypeBuilder.create(BaggerBlockEntity::new, _HydroBlocks.BAGGER).build());
 
     public static void registerHydroBlockEntities(){
         AECHydro.LOGGER.info("Registering Hydro Block Entities for " + AECHydro.MOD_ID);
