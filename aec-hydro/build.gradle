@@ -33,14 +33,6 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	// https://mvnrepository.com/artifact/org.json/json
-	implementation group: 'org.json', name: 'json', version: '20240303'
-
-	implementation 'com.pi4j:pi4j-core:2.3.0'
-	implementation 'com.pi4j:pi4j-plugin-raspberrypi:2.3.0'
-	implementation 'com.pi4j:pi4j-plugin-pigpio:2.3.0'
-	implementation 'com.pi4j:pi4j-plugin-linuxfs:2.3.0'
 }
 
 processResources {
@@ -61,18 +53,6 @@ java {
 	targetCompatibility = JavaVersion.VERSION_17
 }
 
-def libsToInclude = ["pi4j-plugin-raspberrypi-2.3.0.jar",
-					 "pi4j-plugin-pigpio-2.3.0.jar",
-					 "pi4j-library-pigpio-2.3.0.jar",
-					 "pi4j-core-2.3.0.jar",
-					 "gson-2.10.jar",
-					 "json-20240303.jar"
-
-					 //"jsch-0.1.55.jar",
-					 //"pi4j-plugin-linuxfs-2.3.0.jar",
-					 //"pi4j-library-linuxfs-2.3.0.jar"
-]
-
 jar {
 	from("LICENSE") {
 		rename { "${it}_${archives_base_name}"}
@@ -86,10 +66,7 @@ jar {
 	tasks.withType(Jar).configureEach {
 		duplicatesStrategy = DuplicatesStrategy.INCLUDE
 	}
-
-	from { configurations.runtimeClasspath.collect { libsToInclude.contains(it.name) ? zipTree(it) : it; }}
 }
-
 
 // configure the maven publication
 publishing {

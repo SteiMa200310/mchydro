@@ -4,14 +4,12 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
-import org.aec.hydro.HUD.HydroHudRenderer;
 import org.aec.hydro.block._HydroBlocks;
 
 import org.aec.hydro.block.entity._HydroBlockEntities;
 
 import org.aec.hydro.commands.base.CommandSetup;
 import org.aec.hydro.item.ModItemGroups;
-import org.aec.hydro.utils.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.bernie.geckolib.GeckoLib;
@@ -23,9 +21,6 @@ public class AECHydro implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info(Text.translatable("generic.hydro.initialize").getString());
-
-		//check if config exists
-		Config.saveConfig();
 
 		_HydroBlocks.registerHydroBlocks();
 
