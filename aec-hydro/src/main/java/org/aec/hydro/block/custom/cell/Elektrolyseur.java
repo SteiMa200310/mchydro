@@ -52,7 +52,7 @@ public class Elektrolyseur extends Block {
             BlockState neighborState = world.getBlockState(neighborPos);
 
             if (neighborPos.getX() == sourcePos.getX() && neighborPos.getZ() == sourcePos.getZ() && neighborPos.getY() == sourcePos.getY())
-                return;
+                continue;
 
             neighborState.neighborUpdate(world, neighborPos, state.getBlock(), pos, notify);
         }
