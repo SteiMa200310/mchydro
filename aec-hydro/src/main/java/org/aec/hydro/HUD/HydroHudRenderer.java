@@ -39,9 +39,11 @@ public class HydroHudRenderer implements HudRenderCallback {
                 if(targetBlock == _HydroBlocks.CABLE && client.player.getMainHandStack().getItem() == ModItemGroups.VOLTMETER)
                     drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.hydro.volt", blockState.get(PipeProperties.PowerLevel)), 10, 10, 0xFFFFFF);
 
-                if ((targetBlock == _HydroBlocks.WATERPIPE || targetBlock == _HydroBlocks.HYDROGENPIPE || targetBlock == _HydroBlocks.OXYGENPIPE)
-                                && client.player.getMainHandStack().getItem() == ModItemGroups.BAROMETER)
+                if (targetBlock == _HydroBlocks.WATERPIPE && client.player.getMainHandStack().getItem() == ModItemGroups.BAROMETER)
                     drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.hydro.pressure", blockState.get(PipeProperties.PowerLevel)), 10, 10, 0xFFFFFF);
+
+                if((targetBlock == _HydroBlocks.HYDROGENPIPE || targetBlock == _HydroBlocks.OXYGENPIPE) && client.player.getMainHandStack().getItem() == ModItemGroups.BAROMETER)
+                    drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.hydro.gas", blockState.get(PipeProperties.PowerLevel)), 10, 10, 0xFFFFFF);
             }
         }
     }

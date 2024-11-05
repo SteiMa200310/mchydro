@@ -24,6 +24,7 @@
 
   "hud.hydro.volt": "Power: %s PU/m",
   "hud.hydro.pressure": "Pressure: %s WU/m",
+  "hud.hydro.gas": "Gas: %s GU/m",
 
   "itemGroup.hydro": "Hydro"
 }
