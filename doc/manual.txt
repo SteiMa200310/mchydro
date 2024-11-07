@@ -9,7 +9,7 @@ Goal:
 	
 Level 2
 Now its time to craft the electrolyzer.
-Beneath your feet you can see the required recipe to solve the task.
+On the wall you can see the required recipe to solve the task.
 You are currently in the bosch ressource storage.
 Fun fact
 	one rod is considerd the annode (red) and the other the catode (blue)
