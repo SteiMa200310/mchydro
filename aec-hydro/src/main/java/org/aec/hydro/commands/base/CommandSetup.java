@@ -1,10 +1,7 @@
 package org.aec.hydro.commands.base;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import org.aec.hydro.commands.ComparePowerlevelCommand;
-import org.aec.hydro.commands.GetPowerlevelCommand;
-import org.aec.hydro.commands.SetPowerlevelCommand;
-import org.aec.hydro.commands.TogglePipeLookingDirectionCommand;
+import org.aec.hydro.commands.*;
 
 import java.util.List;
 
@@ -16,7 +13,9 @@ public class CommandSetup {
         new TogglePipeLookingDirectionCommand("togglePipeLookingDirection"),
             new GetPowerlevelCommand("getPowerlevel"),
             new SetPowerlevelCommand("setPowerlevel"),
-            new ComparePowerlevelCommand("comparePower")
+            new ComparePowerlevelCommand("comparePower"),
+            new ResetLevelCommand("reset"),
+            new SetblockAndUpdateCommand("updateBlock")
     );
 
     public static void RegisterCommands() {

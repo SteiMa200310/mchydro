@@ -5,6 +5,10 @@ setblock 359 76 36 minecraft:target
 setblock 359 76 9 minecraft:target
 setblock 368 76 36 minecraft:target
 setblock 375 76 30 minecraft:target
+setblock 375 76 24 minecraft:target
+setblock 380 76 18 minecraft:target
+setblock 381 76 15 minecraft:target
+setblock 379 76 -13 minecraft:target
 
 tp @p 64.48 129.00 64.47
 
