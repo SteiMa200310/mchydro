@@ -1,0 +1,88 @@
+#include <windows.h>
+#include <iostream>
+
+HANDLE g_deviceHandle = NULL;  // Global device handle
+BYTE g_lastKey = 0;  // Global variable to store the last key detected
+
+// Function to register raw input for keyboards
+void RegisterRawInput(HWND hwnd) {
+    RAWINPUTDEVICE rid[1];
+
+    rid[0].usUsagePage = 0x01;  // Generic desktop controls
+    rid[0].usUsage = 0x06;      // Keyboard
+    rid[0].dwFlags = RIDEV_INPUTSINK;  // Capture input even if window is not focused
+    rid[0].hwndTarget = hwnd;
+
+    if (RegisterRawInputDevices(rid, 1, sizeof(rid[0])) == FALSE) {
+        std::cerr << "Failed to register raw input device." << std::endl;
+    }
+}
+
+// Process raw input messages to capture key presses and their device handles
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    if (msg == WM_INPUT) {
+        UINT dwSize = 0;
+        GetRawInputData((HRAWINPUT)lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
+
+        LPBYTE lpb = new BYTE[dwSize];
+        if (lpb) {
+            if (GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) == dwSize) {
+                RAWINPUT* raw = (RAWINPUT*)lpb;
+                if (raw->header.dwType == RIM_TYPEKEYBOARD) {
+                    // Capture the key and device handle
+                    g_lastKey = raw->data.keyboard.VKey;
+                    g_deviceHandle = raw->header.hDevice;
+                    std::cout << "Captured key: " << g_lastKey 
+                              << " from device handle: " << g_deviceHandle << std::endl;
+                }
+            }
+            delete[] lpb;
+        }
+    }
+    return DefWindowProc(hwnd, msg, wParam, lParam);
+}
+
+// Low-level keyboard hook to capture key presses globally
+LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
+    if (nCode == HC_ACTION) {
+        KBDLLHOOKSTRUCT* pKbd = (KBDLLHOOKSTRUCT*)lParam;
+
+        // Compare the key with the last captured key from WM_INPUT
+        if (pKbd->vkCode == g_lastKey) {
+            // Print the key to console (swallow the key)
+            std::cout << "Swallowed key: " << pKbd->vkCode << std::endl;
+            return 1;  // Return 1 to prevent the key from being passed to the system
+        }
+    }
+    return CallNextHookEx(NULL, nCode, wParam, lParam);  // Continue processing other keys
+}
+
+int main() {
+    // Create window to process raw input messages
+    HINSTANCE hInstance = GetModuleHandle(NULL);
+    WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0, 0, hInstance, NULL, NULL, NULL, NULL, "RawInputExample", NULL };
+    RegisterClassEx(&wc);
+    HWND hwnd = CreateWindowW(L"RawInputExample", L"Raw Input Example", 0, 0, 0, 0, 0, NULL, NULL, hInstance, NULL);
+
+    // Register raw input for keyboard
+    RegisterRawInput(hwnd);
+
+    // Set up the low-level keyboard hook
+    HHOOK hKeyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, hInstance, 0);
+    if (hKeyboardHook == NULL) {
+        std::cerr << "Failed to install hook!" << std::endl;
+        return 1;
+    }
+
+    // Message loop to process input events
+    MSG msg;
+    while (GetMessage(&msg, NULL, 0, 0) > 0) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    // Remove the hook before exiting
+    UnhookWindowsHookEx(hKeyboardHook);
+
+    return 0;
+}
