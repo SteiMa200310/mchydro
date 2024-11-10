@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 
 namespace AecHandlerV1
 {
@@ -102,7 +103,7 @@ namespace AecHandlerV1
         #endregion
 
         #region Consts
-        // Win32 Hook Ids
+        // Win32 Hook Ids (WM -> standing for Windows Message and LL for a certain windows even)
         private const int WH_KEYBOARD_LL = 13;
         private const int WH_MOUSE_LL = 14;
 
@@ -112,6 +113,7 @@ namespace AecHandlerV1
         private const int WM_LBUTTONDOWN = 0x0201;
         private const int WM_RBUTTONDOWN = 0x0204;
         private const int WM_MOUSEMOVE = 0x0200;
+        //also trigger on keyup btw - that is why i specify only to proceed on keydown codes - does also mean that on Guarding in only block down not up
         #endregion
 
         #region Default HookProcedures
@@ -119,27 +121,29 @@ namespace AecHandlerV1
         {
             TimeOfLastInteraction = DateTime.UtcNow;
 
-            if (BlockAll || BlockKeyboard)
+            if (GuardAll || GuardKeyboard)
                 return (IntPtr)1;
 
-            if (nCode >= 0 && ((int)wParam == WM_KEYDOWN || (int)wParam == WM_SYSKEYDOWN))
+            if (nCode < 0 || ((int)wParam != WM_KEYDOWN && (int)wParam != WM_SYSKEYDOWN))
+                return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+
+            int vkCode = Marshal.ReadInt32(lParam);
+            Keys key = (Keys)vkCode;
+
+            if (RequiredKeySequence != null) //can only validate in here since lParam might be invalid if nCode is not fine
             {
-                int vkCode = Marshal.ReadInt32(lParam);
-                Keys key = (Keys)vkCode;
+                if (RequiredKeySequence.IsDone() || RequiredKeySequence.GetCurrentKey() != key)
+                    return (IntPtr)1;
 
-                if (KeyAllowence != null) //can only validate in here since lParam might be invalid if nCode is not fine
+                RequiredKeySequence.Move();
+                if (RequiredKeySequence.IsDone())
                 {
-                    if (KeyAllowence.GetCurrentKey() != key)
-                        return (IntPtr)1;
-
-                    if (KeyAllowence.IsDone())
-                        KeyAllowence = null; //done
-                    else
-                        KeyAllowence.Move();
+                    RequiredKeySequence.CompletionSource.SetResult(true);
                 }
-
-                Console.WriteLine("Key Pressed: " + key);
             }
+
+            Console.WriteLine("Key Pressed: " + key);
+
             return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         };
 
@@ -147,36 +151,37 @@ namespace AecHandlerV1
         {
             TimeOfLastInteraction = DateTime.UtcNow;
 
-            if (BlockAll || BlockMouse || KeyAllowence != null)
+            if (GuardAll || GuardMouse || RequiredKeySequence != null)
                 return (IntPtr)1;
 
-            if (nCode >= 0)
-            {
-                MSLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<MSLLHOOKSTRUCT>(lParam);
+            if (nCode < 0)
+                return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
 
-                switch ((int)wParam)
-                {
-                    case WM_LBUTTONDOWN:
-                        Console.WriteLine("Left Button Down");
-                        break;
-                    case WM_RBUTTONDOWN:
-                        Console.WriteLine("Right Button Down");
-                        break;
-                    case WM_MOUSEMOVE:
-                        //Console.WriteLine($"Mouse Moved: {hookStruct.pt.x}, {hookStruct.pt.y}");
-                        break;
-                }
+            MSLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<MSLLHOOKSTRUCT>(lParam);
+
+            switch ((int)wParam)
+            {
+                case WM_LBUTTONDOWN:
+                    Console.WriteLine("Left Button Down");
+                    break;
+                case WM_RBUTTONDOWN:
+                    Console.WriteLine("Right Button Down");
+                    break;
+                case WM_MOUSEMOVE:
+                    Console.WriteLine($"Mouse Moved: {hookStruct.pt.x}, {hookStruct.pt.y}");
+                    break;
             }
+
             return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         };
         #endregion
 
-        public static bool BlockAll { get; set; } = false;
-        public static bool BlockMouse { get; set; } = false;
-        public static bool BlockKeyboard { get; set; } = false;
+        public static bool GuardAll { get; set; } = false;
+        public static bool GuardMouse { get; set; } = false;
+        public static bool GuardKeyboard { get; set; } = false;
 
         public static DateTime? TimeOfLastInteraction { get; set; } = null;
-        public static SerialKeyAllowence? KeyAllowence { get; set; } = null;
+        public static RequiredKeySequence? RequiredKeySequence { get; set; } = null;
 
         //API
         public static List<nint> RegisterKeyboardAndMouse()
@@ -229,19 +234,20 @@ namespace AecHandlerV1
         private static extern IntPtr GetModuleHandle(string lpModuleName);
     }
 
-    public class SerialKeyAllowence
+    public class RequiredKeySequence
     {
         private int CurrentIndex { get; set; } = 0;
-        public Keys[] ToExecute { get; set; }
+        private Keys[] Sequence { get; set; }
+        public TaskCompletionSource<bool> CompletionSource { get; set; } = new();
 
-        public SerialKeyAllowence(Keys[] toExecute)
+        public RequiredKeySequence(Keys[] toExecute)
         {
-            this.ToExecute = toExecute;
+            this.Sequence = toExecute;
         }
 
         public Keys GetCurrentKey()
         {
-            return this.ToExecute[CurrentIndex];
+            return this.Sequence[CurrentIndex];
         }
 
         public void Move()
@@ -251,7 +257,8 @@ namespace AecHandlerV1
 
         public bool IsDone()
         {
-            return this.CurrentIndex >= this.ToExecute.Length - 1;
+            return this.CurrentIndex >= this.Sequence.Length;
+            //since i move and then check im only done when im already one bigger than the actual last index that is why i dont do -1
         }
     }
 }
