@@ -188,7 +188,17 @@ async Task HandleVlcToMc(int mcProcessId, int vlcProcessId)
         Keys.Enter]);
     SendKeys.SendWait("{ENTER}");
     await Task.Delay(50);
-    SendKeys.SendWait("/reset");
+    SendKeys.SendWait("/");
+    await Task.Delay(50);
+    SendKeys.SendWait("r");
+    await Task.Delay(50);
+    SendKeys.SendWait("e");
+    await Task.Delay(50);
+    SendKeys.SendWait("s");
+    await Task.Delay(50);
+    SendKeys.SendWait("e");
+    await Task.Delay(50);
+    SendKeys.SendWait("t");
     await Task.Delay(50);
     SendKeys.SendWait("{ENTER}");
     await Task.Delay(50);

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AecHandlerV1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0116d0404b1493daaf77dbf9a0b440e4b0e38cd3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dcb40b813b9661a8c7c5464179e192a8e569d6c5")]
 [assembly: System.Reflection.AssemblyProductAttribute("AecHandlerV1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AecHandlerV1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -168,7 +168,7 @@ namespace AecHandlerV1
                     Console.WriteLine("Right Button Down");
                     break;
                 case WM_MOUSEMOVE:
-                    Console.WriteLine($"Mouse Moved: {hookStruct.pt.x}, {hookStruct.pt.y}");
+                    //Console.WriteLine($"Mouse Moved: {hookStruct.pt.x}, {hookStruct.pt.y}");
                     break;
             }
 
