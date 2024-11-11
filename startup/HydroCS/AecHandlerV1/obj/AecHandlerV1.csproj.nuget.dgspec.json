@@ -1,34 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "C:\\_GitHUB\\@LVR-S\\mchydro\\startup\\HydroCS\\AecHandlerV1\\AecHandlerV1.csproj": {}
+    "C:\\_repos\\mchydro\\startup\\HydroCS\\AecHandlerV1\\AecHandlerV1.csproj": {}
   },
   "projects": {
-    "C:\\_GitHUB\\@LVR-S\\mchydro\\startup\\HydroCS\\AecHandlerV1\\AecHandlerV1.csproj": {
+    "C:\\_repos\\mchydro\\startup\\HydroCS\\AecHandlerV1\\AecHandlerV1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\_GitHUB\\@LVR-S\\mchydro\\startup\\HydroCS\\AecHandlerV1\\AecHandlerV1.csproj",
+        "projectUniqueName": "C:\\_repos\\mchydro\\startup\\HydroCS\\AecHandlerV1\\AecHandlerV1.csproj",
         "projectName": "AecHandlerV1",
-        "projectPath": "C:\\_GitHUB\\@LVR-S\\mchydro\\startup\\HydroCS\\AecHandlerV1\\AecHandlerV1.csproj",
-        "packagesPath": "C:\\Users\\Matthias\\.nuget\\packages\\",
-        "outputPath": "C:\\_GitHUB\\@LVR-S\\mchydro\\startup\\HydroCS\\AecHandlerV1\\obj\\",
+        "projectPath": "C:\\_repos\\mchydro\\startup\\HydroCS\\AecHandlerV1\\AecHandlerV1.csproj",
+        "packagesPath": "C:\\Users\\sehre\\.nuget\\packages\\",
+        "outputPath": "C:\\_repos\\mchydro\\startup\\HydroCS\\AecHandlerV1\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Matthias\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\sehre\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0-windows"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -41,11 +34,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -70,7 +58,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

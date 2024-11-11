@@ -179,17 +179,20 @@ async Task HandleVlcToMc(int mcProcessId, int vlcProcessId)
     WindowsHookRegistrations.RequiredKeySequence = new RequiredKeySequence([
         Keys.Enter,
         Keys.LShiftKey,
-        Keys.D7,
+        Keys.D7]);
+    SendKeys.SendWait("{ENTER}");
+    await Task.Delay(50);
+    SendKeys.SendWait("/");
+    await Task.Delay(50);
+    await WindowsHookRegistrations.RequiredKeySequence.CompletionSource.Task;
+
+    WindowsHookRegistrations.RequiredKeySequence = new RequiredKeySequence([
         Keys.R,
         Keys.E,
         Keys.S,
         Keys.E,
         Keys.T,
         Keys.Enter]);
-    SendKeys.SendWait("{ENTER}");
-    await Task.Delay(50);
-    SendKeys.SendWait("/");
-    await Task.Delay(50);
     SendKeys.SendWait("r");
     await Task.Delay(50);
     SendKeys.SendWait("e");

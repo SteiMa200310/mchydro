@@ -3,7 +3,7 @@
     "Default": {
       "commandName": "Executable",
       "executablePath": ".\\AecHandlerV1.exe",
-      "commandLineArgs": "21160 32168 5000"
+      "commandLineArgs": "18216 11448 5000"
     }
   }
 }
