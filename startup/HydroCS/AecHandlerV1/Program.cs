@@ -128,15 +128,20 @@ async Task HandleMcToVlc(int mcProcessId, int vlcProcessId)
     WindowManager.ActivateWindow(mcProcessId);
     await Task.Delay(50);
 
-    WindowsHookRegistrations.RequiredKeySequence = new RequiredKeySequence([Keys.Escape]);
+    WindowsHookRegistrations.RequiredKeySequence = new RequiredKeySequence([
+        Keys.Escape,
+        Keys.F11]);
     SendKeys.SendWait("{ESC}");
+    await Task.Delay(50);
+    SendKeys.SendWait("{F11}");
     await Task.Delay(50);
     await WindowsHookRegistrations.RequiredKeySequence.CompletionSource.Task;
 
     WindowManager.ActivateWindow(vlcProcessId);
     await Task.Delay(50);
 
-    WindowsHookRegistrations.RequiredKeySequence = new RequiredKeySequence([Keys.LControlKey,
+    WindowsHookRegistrations.RequiredKeySequence = new RequiredKeySequence([
+        Keys.LControlKey,
         Keys.Left,
         Keys.LControlKey,
         Keys.Left,
@@ -171,7 +176,11 @@ async Task HandleVlcToMc(int mcProcessId, int vlcProcessId)
     WindowManager.ActivateWindow(mcProcessId);
     await Task.Delay(50);
 
-    WindowsHookRegistrations.RequiredKeySequence = new RequiredKeySequence([Keys.Escape]);
+    WindowsHookRegistrations.RequiredKeySequence = new RequiredKeySequence([
+        Keys.F11,
+        Keys.Escape]);
+    SendKeys.SendWait("{F11}");
+    await Task.Delay(50);
     SendKeys.SendWait("{ESC}");
     await Task.Delay(50);
     await WindowsHookRegistrations.RequiredKeySequence.CompletionSource.Task;
@@ -224,3 +233,6 @@ enum CurrentProcess
     Minecraft,
     Vlc
 }
+
+//for some reason on some win 10 instances when i grab the window the whole application lags as if there is some type of breakpoint hit
+//and the function that is invoked on input is interrupted

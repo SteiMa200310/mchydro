@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "0T9aSqXD1kUTS3Lpcc+sikr+YewjofZUNxFUnExrFjsxb+JLvQ2HH1pB4iMcBYiI0Spc+BNH5sORuOGl4xL99w==",
+  "dgSpecHash": "khQ+rYEA1H/l3yu8vtZxTUoGcW5AYUrseljzp2eAfhgPqGVihKd4Ui9ThTx5GMWJg0DC+rKbS+slT4FZ3HkNWw==",
   "success": true,
-  "projectFilePath": "C:\\_repos\\mchydro\\startup\\HydroCS\\AecHandlerV1\\AecHandlerV1.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\_GitHUB\\@LVR-S\\mchydro\\startup\\HydroCS\\AecHandlerV1\\AecHandlerV1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Matthias\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.4\\microsoft.net.illink.tasks.8.0.4.nupkg.sha512",
+    "C:\\Users\\Matthias\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\8.0.4\\microsoft.aspnetcore.app.runtime.win-x64.8.0.4.nupkg.sha512",
+    "C:\\Users\\Matthias\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\8.0.4\\microsoft.windowsdesktop.app.runtime.win-x64.8.0.4.nupkg.sha512",
+    "C:\\Users\\Matthias\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\8.0.4\\microsoft.netcore.app.runtime.win-x64.8.0.4.nupkg.sha512"
+  ],
   "logs": []
 }

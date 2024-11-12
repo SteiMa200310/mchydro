@@ -6,6 +6,28 @@
       <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!--<PublishSingleFile>true</PublishSingleFile>-->
+    
+    <!--<PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>-->
+
+    <PublishSingleFile>true</PublishSingleFile>
+    <!-- 
+      Enable single file - This btw just means that all logic of this application is compiled into the .exe
+      Where as such things are by default compiled into a .dll that contains all the logic and the .exe is just an executable that calls the entry point "Main()" in the .dll file
+      It does not contain all other framework dependencies into the project directory and certainly not into one exe
+      //So you basicly erase one .dll and just put its functionality into the .exe
+    -->
+    <SelfContained>true</SelfContained>
+    <!-- 
+      Self-contained app - This means that all necessary framework dependencies are published into the project directory to not required the .net frame but be "self contained"
+    -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <!-- or another OS like linux-x64 -->
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <!-- Ensures all dependencies go into the single file -->
+    <!--<PublishTrimmed>true</PublishTrimmed>-->
+    <!-- Optional: Reduce size by trimming unused code -->
   </PropertyGroup>
 
 </Project>
